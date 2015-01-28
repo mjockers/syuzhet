@@ -7,7 +7,7 @@
  vector of strings.  The Stanford tagger automatically
  detects sentence boundaries and treats each sentence as a
  distinct instance to measure. As a result, the vector
- that gets returned will not be the same lenght as the
+ that gets returned will not be the same length as the
  input vector.}
 \usage{
 get_stanford_sentiment(text_vector, path_to_stanford_tagger)
@@ -23,7 +23,7 @@ Get Sentiment from the Stanford Tagger
  vector of strings.  The Stanford tagger automatically
  detects sentence boundaries and treats each sentence as a
  distinct instance to measure. As a result, the vector
- that gets returned will not be the same lenght as the
+ that gets returned will not be the same length as the
  input vector.
 }
 

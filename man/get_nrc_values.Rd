@@ -7,7 +7,7 @@
 get_nrc_values(word_vector)
 }
 \arguments{
-\item{word_vector}{A character verctor}
+\item{word_vector}{A character vector}
 }
 \value{
 a vector of values for the emotions and valence

@@ -2,7 +2,7 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_sent_values}
 \alias{get_sent_values}
-\title{Assigns Sentiment Values to Words Based on preloaded dictionay}
+\title{Assigns Sentiment Values to Words Based on preloaded dictionary}
 \usage{
 get_sent_values(char_v, method = "bing")
 }
@@ -16,6 +16,6 @@ a single numerical value (positive or negative)
 based on the assessed sentiment in the string
 }
 \description{
-Assigns Sentiment Values to Words Based on preloaded dictionay
+Assigns Sentiment Values to Words Based on preloaded dictionary
 }
 

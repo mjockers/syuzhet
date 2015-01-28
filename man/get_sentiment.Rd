@@ -2,7 +2,7 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_sentiment}
 \alias{get_sentiment}
-\title{Get Sentiment Values for String}
+\title{Get Sentiment Values for a String}
 \usage{
 get_sentiment(char_v, method = "", path_to_tagger = NULL)
 }
