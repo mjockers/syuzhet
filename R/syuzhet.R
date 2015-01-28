@@ -15,6 +15,7 @@ get_text_as_string <- function(path_to_file){
 #' @export
 #' 
 get_sentences <- function(text_of_file){
+  if (!is.character(text_of_file)) stop("Data must be a character vector.")
   text_of_file <- NLP::as.String(text_of_file)
   sent_token_annotator <- openNLP::Maxent_Sent_Token_Annotator()
   sentence_bounds <- NLP::annotate(text_of_file, sent_token_annotator)
@@ -46,6 +47,7 @@ get_sentences <- function(text_of_file){
 #' @export
 #' 
 get_sentiment <- function(char_v, method = "", path_to_tagger = NULL){
+  if (!is.character(char_v)) stop("Data must be a character vector.")
   if(method == "afinn" || method == "bing"){
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
     result <- unlist(lapply(word_l, get_sent_values, method))
@@ -58,7 +60,7 @@ get_sentiment <- function(char_v, method = "", path_to_tagger = NULL){
     result <- get_stanford_sentiment(char_v, path_to_tagger)
   }
   else if(method == ""){
-    stop("invalid method")
+    stop("invalid method: be sure to use afinn, bing, nrc, or stanford")
   } else {
     return(result)
   }
@@ -97,6 +99,7 @@ get_sent_values<-function(char_v, method = "bing"){
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 get_nrc_sentiment<-function(char_v){
+  if (!is.character(char_v)) stop("Data must be a character vector.")
   word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
   nrc_data <- lapply(word_l, get_nrc_values)
   result_df <- as.data.frame(do.call(rbind, nrc_data), stringsAsFactors=F)
@@ -149,6 +152,7 @@ get_nrc_values <- function(word_vector){
 #'  get_transformed_values(raw_values)
 #'  
 get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len = 100, rescale_vals = TRUE){
+  if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
   values_fft <- fft(raw_values)
   keepers <- values_fft[1:low_pass_size]
   padded_keepers <- c(keepers, rep(0, x_reverse_len - low_pass_size))
@@ -168,6 +172,7 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
 #'@return A vector of mean values from each chunk
 #'
 get_percentage_values <- function(raw_values){
+  if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
   if(length(raw_values) < 100){
     chunk.max <- length(raw_values)
   } else {

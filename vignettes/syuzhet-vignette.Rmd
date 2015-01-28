@@ -161,7 +161,7 @@ While such smoothing can be useful for visualizing the emotional trajectory of a
 
 In addition to being able to remove the noise in the graph, we'd also like a way of reducing arcs into some finite set of universal forms or archetypes.  The problem with the type of smoothing used above is that it does not allows us to extract and compare the plot arcs from books of differing lengths. In the plots above, the size of the x-axis is always a function of the length of the book being plotted.   
 
-A simple and perhaps naive way of dealing with this problem is to divide each text into an equal number of percentage based chunks.  The mean sentiment valence of each chunk can then be taken and used for comparison. This approach is implemented with the ```get_percentage_values``` function and is demonstrated here using Joyce's Portrait (since it does not make much sense to divide a 12 sentence text into 100 chunks!)
+A simple, and perhaps naive, way of dealing with this problem is to divide each text into an equal number of percentage based chunks.  The mean sentiment valence of each chunk can then be calculated and used for comparison. This approach is implemented with the ```get_percentage_values``` function and is demonstrated here using Joyce's Portrait (since it does not make much sense to divide a 12 sentence text into 100 chunks!)
 
 ```{r, fig.width = 6}
 percent_vals <- get_percentage_values(poa_sent)
@@ -239,5 +239,19 @@ These last two columns are the ones used by the ```nrc``` method in the ```get_s
 valence <- (nrc_data[, 9]*-1) + nrc_data[, 10]
 valence
 ```
+
+Finally, the percentage of each emotion in the text can be plotted as a bar graph:
+
+```{r, fig.width=6}
+barplot(
+  sort(colSums(prop.table(nrc_data[, 1:8]))), 
+  horiz = TRUE, 
+  cex.names = 0.7, 
+  las = 1, 
+  main = "Emotions in Sample text", xlab="Percentage"
+  )
+
+```
+
 
 
