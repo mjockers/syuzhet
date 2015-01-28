@@ -21,7 +21,7 @@ get_sentences <- function(text_of_file){
   text_of_file[sentence_bounds]
 }
 
-#' Get Sentiment Values for String
+#' Get Sentiment Values for a String
 #' 
 #' Iterates over a vector of strings and returns sentiment values based on user supplied method
 #' 
@@ -64,7 +64,7 @@ get_sentiment <- function(char_v, method = "", path_to_tagger = NULL){
   }
 }
 
-#' Assigns Sentiment Values to Words Based on preloaded dictionay
+#' Assigns Sentiment Values to Words Based on preloaded dictionary
 #'
 #' @param char_v a string
 #' @param method a string indicating which sentiment dictionary to use
@@ -87,8 +87,8 @@ get_sent_values<-function(char_v, method = "bing"){
 #' Get Emotions and Valence Values Using NRC Dictionary
 #'
 #' Calls the NRC sentiment dictionary to calculate
-#' the presence of eight differnt emotions and their
-#' cooresponding valence in a text file
+#' the presence of eight different emotions and their
+#' corresponding valence in a text file
 #' @export
 #' @param char_v a character vector
 #' @return a data frame where each row represents a sentence
@@ -120,7 +120,7 @@ get_nrc_sentiment<-function(char_v){
 #'
 #' Access the NRC dictionary to compute emotion types and
 #' valence for a set of words in the input vector
-#' @param word_vector A character verctor
+#' @param word_vector A character vector
 #' @return a vector of values for the emotions and valence
 #' detected in the input vector
 #'
@@ -183,17 +183,17 @@ get_percentage_values <- function(raw_values){
 #'  vector of strings.  The Stanford tagger automatically
 #'  detects sentence boundaries and treats each sentence as a 
 #'  distinct instance to measure. As a result, the vector 
-#'  that gets returned will not be the same lenght as the
+#'  that gets returned will not be the same length as the
 #'  input vector.
 #'  @param text_vector A vector of strings
 #'  @param path_to_stanford_tagger a local file path indicating where the coreNLP package is installed.
 #'  
 get_stanford_sentiment <- function(text_vector, path_to_stanford_tagger){
   cmd <- paste(
-  'cd ', 
-  path_to_stanford_tagger, 
-  '; java -cp "*" -mx5g edu.stanford.nlp.sentiment.SentimentPipeline -stdin', 
-  sep=""
+    'cd ', 
+    path_to_stanford_tagger, 
+    '; java -cp "*" -mx5g edu.stanford.nlp.sentiment.SentimentPipeline -stdin', 
+    sep=""
   )
   results <- system(cmd, input = text_vector, intern = TRUE, ignore.stderr = TRUE)
   c_results <- gsub(".*Very positive", "1", results)
