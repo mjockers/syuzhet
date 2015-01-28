@@ -9,11 +9,8 @@ script: "./travis-tool.sh run_tests"
 after_failure:
 - "./travis-tool.sh dump_logs"
 notifications:
-  slack:
-    secure: PJD7ovk1ttw9CQliDLfEdUzgHWmfoP8Ld7dAE2piHRX1axAmkAOzDIg6NubQrIgGPKDTbP+X9GIrrCYzF5o47wCt/HxG0zk4uhsT+d16EUabVZ3sWQ7b/6nl+U7NlWhzkJ6k2g5mvvH34NSwl/jO/uGr7SwpW83eAFtLh6Dhc44=
-  email:
+    email:
     on_success: change
     on_failure: always
 github_packages:
 - devtools
-- testthat
