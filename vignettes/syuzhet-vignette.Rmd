@@ -4,17 +4,19 @@ author: "Matthew Jockers"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Introduction to the Syuzhet Package}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
 
 # Introduction
-This vignette demonstrates use of the four basic functions of the Syuchet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford.  Use of this later method requires that you have already installed the coreNLP package (see http://nlp.stanford.edu/software/corenlp.shtml).  The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files.  This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized.  A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L."Syuchet: Revealing Plot and Sentiment Arcs." 2015.
+This vignette demonstrates use of the six basic functions of the Syuchet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford.  Use of this later method requires that you have already installed the coreNLP package (see http://nlp.stanford.edu/software/corenlp.shtml).  
+
+The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files.  This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized.  A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L. "Syuchet: Revealing Plot and Sentiment Arcs." 2015.
 
 ## get_sentences
 
-After loading the library using ```library(syuzhet)```, you will begin by parsing a text into a vector of sentences.  For this you will utilize the ```get_sentences()``` function which implements the ```openNLP``` sentence tokenizer.  In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the ```get_text_as_string()``` function.  ```get_text_as_string()``` is described below.)
+After loading the library (```library(syuzhet)```), you begin by parsing a text into a vector of sentences.  For this you will utilize the ```get_sentences()``` function which implements the ```openNLP``` sentence tokenizer.  In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the ```get_text_as_string()``` function.  ```get_text_as_string()``` is described below.)
 
 ```{r} 
 library(syuzhet)
@@ -43,15 +45,15 @@ head(s_v)
 
 ## get_text_as_string
 
-The ```get_text_as_string``` function is useful if you wish to load a larger file.  The function takes a single path argument pointing to either a file on your local drive or a URL.  In this example, we will load the Project Gutenberg version of James Joyce's *Portrait of the Artist as a Young Man* from a URL.
+The ```get_text_as_string``` function is useful if you wish to load a larger file.  The function takes a single ```path``` argument pointing to either a file on your local drive or a URL.  In this example, we will load the Project Gutenberg version of James Joyce's *Portrait of the Artist as a Young Man* from a URL.
 
-```{r, echo=FALSE}
+```{r, echo = FALSE}
 path_to_a_text_file <- "~/Documents/Lectures-Workshops/Stanford.so.what/So.What/code/SentimentPredictionPackage/samples/POA.txt"
 joyces_portrait <- get_text_as_string(path_to_a_text_file)
 poa_v <- get_sentences(joyces_portrait)
 ```
 
-```{r, eval=FALSE}
+```{r, eval = FALSE}
 path_to_a_text_file <- "http://www.gutenberg.org/cache/epub/4217/pg4217.txt"
 joyces_portrait <- get_text_as_string(path_to_a_text_file)
 poa_v <- get_sentences(joyces_portrait)
@@ -223,14 +225,14 @@ s_v[joy_items]
 
 It is simple to view all of the emotions and their values:
 
-```{r}
-nrc_data[, 1:8]
+```{r, results='asis'}
+pander::pandoc.table(nrc_data[, 1:8])
 ```
 
 Or you can examine only the positive and negative valence:
 
-```{r}
-nrc_data[, 9:10]
+```{r, results='asis'}
+pander::pandoc.table(nrc_data[, 9:10])
 ```
 
 These last two columns are the ones used by the ```nrc``` method in the ```get_sentiment`` function discussed above. To calculate a single value of positive or negative valence for each sentence, the values in the negative column are converted to negative numbers and then added to the values in the positive column, like this.  
