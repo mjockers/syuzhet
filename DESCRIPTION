@@ -8,11 +8,12 @@ Authors@R: person("Matthew", "Jockers", email = "mjockers@gmail.com",
 Maintainer: Matthew L. Jockers <mjockers@gmail.com>
 Description: Extracts sentiment and sentiment-derived plot arcs from text using four possible methods.  Provides several methods of plot arc normailzation.
 URL: https://github.com/mjockers/syuzhet
-License: GPL-3
+License: MIT + file LICENSE
 Imports: 
     openNLP,
     NLP
 lazyData: true
-Suggests: knitr
+Suggests: knitr,
+    pander
 NeedsCompilation: no
 VignetteBuilder: knitr
