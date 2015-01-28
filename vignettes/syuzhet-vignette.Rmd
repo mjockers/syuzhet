@@ -1,0 +1,243 @@
+---
+title: "Introduction to the Syuzhet Package"
+author: "Matthew Jockers"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+# Introduction
+This vignette demonstrates use of the four basic functions of the Syuchet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford.  Use of this later method requires that you have already installed the coreNLP package (see http://nlp.stanford.edu/software/corenlp.shtml).  The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files.  This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized.  A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L."Syuchet: Revealing Plot and Sentiment Arcs." 2015.
+
+## get_sentences
+
+After loading the library using ```library(syuzhet)```, you will begin by parsing a text into a vector of sentences.  For this you will utilize the ```get_sentences()``` function which implements the ```openNLP``` sentence tokenizer.  In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the ```get_text_as_string()``` function.  ```get_text_as_string()``` is described below.)
+
+```{r} 
+library(syuzhet)
+my_example_text <- "I begin this story with a neutral statement.  
+  Basically this is a very silly test.  
+  You are testing the syuchet package using short, inane sentences.  
+  I am actually very happy today. 
+  I have finally finished writing this package.  
+  Tomorrow I will be very sad. 
+  I won't have anything left to do. 
+  I might get angry and decide to do something horrible.  
+  I might destroy the entire package and start from scratch.  
+  Then again, I might find it satisfying to have completed my first R package. 
+  Honestly this use of the Fourier transformation is really quite elegant.  
+  You might even say it's beautiful!"
+s_v <- get_sentences(my_example_text)
+```
+
+The result of calling ```get_sentences()``` is a new character vector named ```s_v```.  This vector contains 12 items, one for each tokenized sentence.  If you wish to examine the sentences, you can inspect the resultant character vector as you would any other character vector in R.  For example,
+
+```{r}
+class(s_v)
+str(s_v)
+head(s_v)
+```
+
+## get_text_as_string
+
+The ```get_text_as_string``` function is useful if you wish to load a larger file.  The function takes a single path argument pointing to either a file on your local drive or a URL.  In this example, we will load the Project Gutenberg version of James Joyce's *Portrait of the Artist as a Young Man* from a URL.
+
+```{r, echo=FALSE}
+path_to_a_text_file <- "~/Documents/Lectures-Workshops/Stanford.so.what/So.What/code/SentimentPredictionPackage/samples/POA.txt"
+joyces_portrait <- get_text_as_string(path_to_a_text_file)
+poa_v <- get_sentences(joyces_portrait)
+```
+
+```{r, eval=FALSE}
+path_to_a_text_file <- "http://www.gutenberg.org/cache/epub/4217/pg4217.txt"
+joyces_portrait <- get_text_as_string(path_to_a_text_file)
+poa_v <- get_sentences(joyces_portrait)
+```
+
+## get_sentiment()
+
+After you have collected the sentences from a text into a vector, you will send them to the ```get_sentiment``` function which will asses the sentiment of each sentence. This function take two arguments: a character vector (of sentences) and a "method."  The method you select determines which of the four available sentiment extraction methods to employ.  In the example that follows below, the "bing" method is called.  This method is based on the sentiment research of Minqing Hu and Bing Liu et. al. (see Minqing Hu and Bing Liu. "Mining and Summarizing Customer Reviews." Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD-2004), Aug 22-25, 2004, Seattle, Washington, USA. http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html).  The documentation for the function, offers details about the other methods ("afinn", "nrc", and "stanford") that can be called.  To find the documentation, simply enter ```?get_sentiment``` into your console.
+
+```{r} 
+sentiment_vector <- get_sentiment(s_v, method="bing")
+```
+
+If you examine the contents of the new ```sentiment_vector``` object, you will see that it now contains a set of 12 values corresponding to the original 12 sentences.  The values are the model's assessment of the sentiment in each sentence.  Here are the "bing" values for the example:
+
+```{r} 
+sentiment_vector
+```
+
+Notice, however, that the different methods will return slightly different results.  
+
+```{r}
+afinn_vector <- get_sentiment(s_v, method="afinn")
+afinn_vector
+
+nrc_vector <- get_sentiment(s_v, method="nrc")
+nrc_vector
+
+tagger_path <- "/Applications/stanford-corenlp-full-2014-01-04"
+stanford_vector <- get_sentiment(s_v, method="stanford", tagger_path)
+stanford_vector
+```
+
+Discussion of these differences is beyond the scope of this vignette (please see Jockers, 2015 for details). 
+
+We have a number of options in terms of what we can do with these values.  We might, for example, wish to sum the values in order to get a measure of the overall emotional valence in the passage:
+
+```{r}
+sum(sentiment_vector)
+```
+
+The result, `r sum(sentiment_vector)` is fairly negative, a fact that may indicate that overall, the passage is kind of a bummer.  As an alternative, we may wish to understand the central tendency, the mean emotional valence.
+
+```{r}
+mean(sentiment_vector)
+```
+
+This mean, as well as similar summary statistics can offer us a better sense of how the emotions in the passage are distributed. You might use the summary function for this.
+
+```{r}
+summary(sentiment_vector)
+```
+
+While these global measures of sentiment in the text can be informative, they tell us very little in terms of how the narrative is structured and how these positive and negative sentiments are activated across the text.  You may, therefore, find it useful to plot the values in a graph where the x-axis represents the passage of time from the beginning to the end of the text, and the y-axis measures the degrees of positive and negative sentiment.  Here is an example:
+
+```{r, fig.width = 6} 
+plot(
+  sentiment_vector, 
+  type="l", 
+  main="Example Plot Trajectory", 
+  xlab = "Narrative Time", 
+  ylab= "Emotional Valence"
+  )
+```
+
+With a small piece of prose, such as the one we are using in this example, the resulting plot is not very difficult to interpret.  The story here begins in neutral territory, moves slightly negative and then enters a period of neutral-to-lightly-positive language.  At the seventh sentence (visible between the sixth and eighth tic marks on the x-axis), however, the sentiment takes a rather negative turn downward, and reaches the low point of the passage. But after two largely negative sentences (eight and nine), the sentiment recovers with very positive tenth and eleventh and twelfth sentences, a "happy ending" if you will.  
+
+What is observed here is useful for demonstration purposes but is hardly typical of what is seen in a 200,000 page novel. Over the course of three- or four-hundred pages, one will encounter quite a lot of affectual noise.  Here, for example, is a plot of Joyce's *Portrait of the Artist as a Young man*.
+
+```{r, fig.width = 6}
+poa_sent <- get_sentiment(poa_v, method="bing")
+plot(
+  poa_sent, 
+  type="h", 
+  main="Example Plot Trajectory", 
+  xlab = "Narrative Time", 
+  ylab= "Emotional Valence"
+  )
+```
+
+While this raw data may be useful for certain applications, for visualization it is generally preferable to remove the noise and reveal the core shape of the trajectory.  One way to do that would be to apply a simple trend line.  The next plot applies a trend line to the simple example text containing twelve sentences. 
+
+```{r, echo=FALSE, fig.width = 6}
+plot(
+  sentiment_vector, 
+  type="l", 
+  main="Example Plot Trajectory", 
+  xlab = "Narrative Time", 
+  ylab= "Emotional Valence"
+  )
+
+lines(
+    get_transformed_values(
+      sentiment_vector, 
+      low_pass_size = 3, 
+      x_reverse_len = 12, 
+      rescale=TRUE
+      ), 
+  col="red", 
+  lwd=2
+  )
+```
+
+While such smoothing can be useful for visualizing the emotional trajectory of a single text, it is much less useful if the goal is to compare the trajectories in one or more books. The ```get_percentage_values``` and ```get_transformed_values``` function offer two approaches to x-axis normalization. 
+
+## get_percentage_values
+
+In addition to being able to remove the noise in the graph, we'd also like a way of reducing arcs into some finite set of universal forms or archetypes.  The problem with the type of smoothing used above is that it does not allows us to extract and compare the plot arcs from books of differing lengths. In the plots above, the size of the x-axis is always a function of the length of the book being plotted.   
+
+A simple and perhaps naive way of dealing with this problem is to divide each text into an equal number of percentage based chunks.  The mean sentiment valence of each chunk can then be taken and used for comparison. This approach is implemented with the ```get_percentage_values``` function and is demonstrated here using Joyce's Portrait (since it does not make much sense to divide a 12 sentence text into 100 chunks!)
+
+```{r, fig.width = 6}
+percent_vals <- get_percentage_values(poa_sent)
+plot(
+  percent_vals, 
+  type="l", 
+  main="Joyce's Portrait using Percentage-Based Means", 
+  xlab = "Narrative Time", 
+  ylab= "Emotional Valence", 
+  col="red"
+  )
+```
+
+## get_transformed_values
+
+Unfortunately, when a series of sentence values are combined into a larger chunk using a percentage based measure, extremes of emotional valence tend to get watered down.  This is especially true when the segments of text that percentage based chunking returns are especially large.  When averaged, a passage of 1000 sentences is far more likely to contain a wide range of values than a 100 sentence passage.  Indeed, the means of longer passages tend to converge toward 0.  But this is not the only problem with percentage-based normalization.  In addition to dulling the emotional variance, percentage-based normalization makes book to book comparison somewhat futile.  A comparison of the first tenth of a very long book, such as Melville's *Moby Dick* with the first tenth of a short novella such as Oscar Wilde's *Picture of Dorian Grey* is simply not all that fruitful because in one case the first tenth is composed of 1000 sentences and in the other just 100.  
+
+The ```Syuzhet``` package provides an alternative to  percentage-based comparison using an implementation of the Fourier Transformation and a low pass filter.  The transformation and filtering is achieved using the ```get_transformed_values``` function as shown below.
+
+```{r, fig.width = 6} 
+ft_values <- get_transformed_values(
+      poa_sent, 
+      low_pass_size = 3, 
+      x_reverse_len = 100,
+      rescale = TRUE
+      )
+plot(
+  ft_values, 
+  type ="h", 
+  main ="Joyce's Portrait using Transformed Values", 
+  xlab = "Narrative Time", 
+  ylab = "Emotional Valence", 
+  col = "red"
+  )
+```
+
+## get_nrc_sentiment
+The ```get_nrc_sentiment``` implements Saif Mohammad's NRC Emotion lexicon.  According to Mohammad, "the NRC emotion lexicon is a list of words and their associations with
+eight emotions (anger, fear, anticipation, trust, surprise, sadness,
+joy, and disgust) and two sentiments (negative and positive)" (See http://www.purl.org/net/NRCemotionlexicon).  The ```get_nrc_sentiment``` function returns a data frame in which each row represents a sentence from the original file.  The columns include one for each emotion type was well as the positive or negative sentiment valence. The example below calls the function using the simple twelve sentence example passage stored in the ```s_v``` object from above.
+
+```{r}
+nrc_data <- get_nrc_sentiment(s_v)
+```
+
+One the data has been returned, it can be accessed as you would any other data frame.  The data in the columns (`r paste(colnames(nrc_data), collapse=", ")`) can be accessed individually or in sets.  Here we identify the item(s) with the most "anger" and use it as a reference to find the corresponding sentence from the passage.
+
+```{r}
+angry_items <- which(nrc_data$anger > 0)
+s_v[angry_items]
+```
+
+Likewise, it is easy to identify items that the NRC lexicon identified as joyful:
+
+```{r}
+joy_items <- which(nrc_data$joy > 0)
+s_v[joy_items]
+```
+
+It is simple to view all of the emotions and their values:
+
+```{r}
+nrc_data[, 1:8]
+```
+
+Or you can examine only the positive and negative valence:
+
+```{r}
+nrc_data[, 9:10]
+```
+
+These last two columns are the ones used by the ```nrc``` method in the ```get_sentiment`` function discussed above. To calculate a single value of positive or negative valence for each sentence, the values in the negative column are converted to negative numbers and then added to the values in the positive column, like this.  
+
+```{r}
+valence <- (nrc_data[, 9]*-1) + nrc_data[, 10]
+valence
+```
+
+
