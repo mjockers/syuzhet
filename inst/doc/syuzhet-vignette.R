@@ -99,7 +99,7 @@ percent_vals <- get_percentage_values(poa_sent)
 plot(
   percent_vals, 
   type="l", 
-  main="Joyce's Portrait using Percentage-Based Means", 
+  main="Joyce's Portrait Using Percentage-Based Means", 
   xlab = "Narrative Time", 
   ylab= "Emotional Valence", 
   col="red"
