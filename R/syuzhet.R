@@ -57,6 +57,7 @@ get_sentiment <- function(char_v, method = "", path_to_tagger = NULL){
     result <- (result$negative*-1) + result$positive
   } 
   else if(method == "stanford") {
+    if(is.null(path_to_tagger)) stop("You must include a path to your installation of the coreNLP package.  See http://nlp.stanford.edu/software/corenlp.shtml")
     result <- get_stanford_sentiment(char_v, path_to_tagger)
   }
   else if(method == ""){
