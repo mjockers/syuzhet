@@ -1,7 +1,8 @@
-#' Load Text from File
-#' Load a file as a single text sting. 
+#' Load Text from a file
+#' Loads a file as a single text sting. 
 #' @param path_to_file file path
 #' @export
+#' @return a character vector of length 1 containing the text of the file in the path_to_file argument.
 #' 
 get_text_as_string <- function(path_to_file){
   text_of_file <- scan(file = path_to_file, what = "character")
