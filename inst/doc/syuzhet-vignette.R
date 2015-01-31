@@ -20,7 +20,7 @@ str(s_v)
 head(s_v)
 
 ## ----, echo = FALSE------------------------------------------------------
-path_to_a_text_file <- "~/Documents/Lectures-Workshops/Stanford.so.what/So.What/code/SentimentPredictionPackage/samples/POA.txt"
+path_to_a_text_file <- "~/Documents/Research/syuzhet.paper/portrait.txt"
 joyces_portrait <- get_text_as_string(path_to_a_text_file)
 poa_v <- get_sentences(joyces_portrait)
 
@@ -77,10 +77,10 @@ plot(
 ## ----, echo=FALSE, fig.width = 6-----------------------------------------
 plot(
   sentiment_vector, 
-  type="l", 
-  main="Example Plot Trajectory", 
+  type = "l", 
+  main = "Example Plot Trajectory", 
   xlab = "Narrative Time", 
-  ylab= "Emotional Valence"
+  ylab = "Emotional Valence"
   )
 
 lines(
@@ -88,10 +88,10 @@ lines(
       sentiment_vector, 
       low_pass_size = 3, 
       x_reverse_len = 12, 
-      rescale=TRUE
+      scale_range = TRUE
       ), 
-  col="red", 
-  lwd=2
+  col = "red", 
+  lwd = 2
   )
 
 ## ----, fig.width = 6-----------------------------------------------------
@@ -110,7 +110,8 @@ ft_values <- get_transformed_values(
       poa_sent, 
       low_pass_size = 3, 
       x_reverse_len = 100,
-      rescale = TRUE
+      scale_vals = TRUE,
+      scale_range = FALSE
       )
 plot(
   ft_values, 

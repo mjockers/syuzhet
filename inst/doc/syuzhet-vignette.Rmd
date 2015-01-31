@@ -48,7 +48,7 @@ head(s_v)
 The ```get_text_as_string``` function is useful if you wish to load a larger file.  The function takes a single ```path``` argument pointing to either a file on your local drive or a URL.  In this example, we will load the Project Gutenberg version of James Joyce's *Portrait of the Artist as a Young Man* from a URL.
 
 ```{r, echo = FALSE}
-path_to_a_text_file <- "~/Documents/Lectures-Workshops/Stanford.so.what/So.What/code/SentimentPredictionPackage/samples/POA.txt"
+path_to_a_text_file <- "~/Documents/Research/syuzhet.paper/portrait.txt"
 joyces_portrait <- get_text_as_string(path_to_a_text_file)
 poa_v <- get_sentences(joyces_portrait)
 ```
@@ -139,10 +139,10 @@ While this raw data may be useful for certain applications, for visualization it
 ```{r, echo=FALSE, fig.width = 6}
 plot(
   sentiment_vector, 
-  type="l", 
-  main="Example Plot Trajectory", 
+  type = "l", 
+  main = "Example Plot Trajectory", 
   xlab = "Narrative Time", 
-  ylab= "Emotional Valence"
+  ylab = "Emotional Valence"
   )
 
 lines(
@@ -150,10 +150,10 @@ lines(
       sentiment_vector, 
       low_pass_size = 3, 
       x_reverse_len = 12, 
-      rescale=TRUE
+      scale_range = TRUE
       ), 
-  col="red", 
-  lwd=2
+  col = "red", 
+  lwd = 2
   )
 ```
 
@@ -181,14 +181,15 @@ plot(
 
 Unfortunately, when a series of sentence values are combined into a larger chunk using a percentage based measure, extremes of emotional valence tend to get watered down.  This is especially true when the segments of text that percentage based chunking returns are especially large.  When averaged, a passage of 1000 sentences is far more likely to contain a wide range of values than a 100 sentence passage.  Indeed, the means of longer passages tend to converge toward 0.  But this is not the only problem with percentage-based normalization.  In addition to dulling the emotional variance, percentage-based normalization makes book to book comparison somewhat futile.  A comparison of the first tenth of a very long book, such as Melville's *Moby Dick* with the first tenth of a short novella such as Oscar Wilde's *Picture of Dorian Grey* is simply not all that fruitful because in one case the first tenth is composed of 1000 sentences and in the other just 100.  
 
-The ```Syuzhet``` package provides an alternative to  percentage-based comparison using an implementation of the Fourier Transformation and a low pass filter.  The transformation and filtering is achieved using the ```get_transformed_values``` function as shown below.
+The ```Syuzhet``` package provides an alternative to  percentage-based comparison using an implementation of the Fourier Transformation and a low pass filter.  The transformation and filtering is achieved using the ```get_transformed_values``` function as shown below. The ```scale_vals``` and ```scale_range``` arguments are described in the help documentation.
 
 ```{r, fig.width = 6} 
 ft_values <- get_transformed_values(
       poa_sent, 
       low_pass_size = 3, 
       x_reverse_len = 100,
-      rescale = TRUE
+      scale_vals = TRUE,
+      scale_range = FALSE
       )
 plot(
   ft_values, 

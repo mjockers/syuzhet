@@ -5,7 +5,7 @@
 \title{Fourier Transform and Reverse Transform Values}
 \usage{
 get_transformed_values(raw_values, low_pass_size = 3, x_reverse_len = 100,
-  rescale_vals = TRUE)
+  scale_vals = FALSE, scale_range = FALSE)
 }
 \arguments{
 \item{raw_values}{the raw sentiment values
@@ -16,8 +16,9 @@ to retain in the low pass filtering. Default = 3}
 
 \item{x_reverse_len}{the number of values to return. Default = 100}
 
-\item{rescale_vals}{Logical determines whether or not to scale the values from -1 to +1.  Default = TRUE
-for the uniform y-axis}
+\item{scale_vals}{Logical determines whether or not to normalize the values using the scale function  Default = FALSE}
+
+\item{scale_range}{Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE}
 }
 \value{
 The transformed values
