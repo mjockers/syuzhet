@@ -180,7 +180,7 @@ get_percentage_values <- function(raw_values){
   if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
   chunk_size <- length(raw_values) / 100
   if(chunk_size < 2){
-    stop("Input vector needs to be longer than 200 values to make percentage based segmetation viable")
+    stop("Input vector needs to be longer than 200 values to make percentage based segmentation viable")
   }
   x <- seq_along(raw_values)
   chunks <- split(raw_values, ceiling(x/chunk_size))
