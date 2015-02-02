@@ -29,7 +29,6 @@ get_sentences <- function(text_of_file){
 #' 
 #' @param char_v A vector of strings for evaluation
 #' @param method A string indicating which sentiment method to use. Options include "bing", "afinn", "nrc" and "stanford."  See references for more detail.
-#' @details In this version there are four possible methods to choose, as follows: "bing", "afinn", "nrc" and "stanford." 
 #' 
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
@@ -44,11 +43,12 @@ get_sentences <- function(text_of_file){
 #' @references Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher Manning, Andrew Ng and Christopher Potts.  "Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank Conference on Empirical Methods in Natural Language Processing" (EMNLP 2013).  See: http://nlp.stanford.edu/sentiment/
 #' 
 #' @param path_to_tagger local path to location of Stanford CoreNLP package
-#' @return Return format is based on method.  When method is "bing," "afinn" or "stanford" the return value is a numeric vector of sentiment values, one value for each input sentence.  When the method is "nrc" the return is a data frame with the ten columns and a row for each input sentence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive."  For details see 
+#' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = "", path_to_tagger = NULL){
+get_sentiment <- function(char_v, method = c("afinn", "bing", "nrc", "stanford"), path_to_tagger = NULL){
   if (!is.character(char_v)) stop("Data must be a character vector.")
+  method <- match.arg(method)
   if(method == "afinn" || method == "bing"){
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
     result <- unlist(lapply(word_l, get_sent_values, method))
@@ -97,7 +97,7 @@ get_sent_values<-function(char_v, method = "bing"){
 #' @param char_v a character vector
 #' @return a data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
-#' emotion type was well as a positive or negative valence
+#' emotion type was well as a positive or negative valence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive." 
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 get_nrc_sentiment<-function(char_v){
@@ -170,7 +170,7 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
   }
 }
 
-#' Get Percentage Means
+#' Chunk text into 100 Percentage based segments and calculate means
 #'
 #'@param raw_values Raw sentiment values
 #'@export
@@ -178,13 +178,12 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
 #'
 get_percentage_values <- function(raw_values){
   if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
-  if(length(raw_values) < 100){
-    chunk.max <- length(raw_values)
-  } else {
-    chunk.max <- length(raw_values)/100
+  chunk_size <- length(raw_values) / 100
+  if(chunk_size < 2){
+    stop("Input vector needs to be longer than 200 values to make percentage based segmetation viable")
   }
   x <- seq_along(raw_values)
-  chunks <- split(raw_values, ceiling(x/chunk.max))
+  chunks <- split(raw_values, ceiling(x/chunk_size))
   unlist(lapply(chunks, mean))
 }
 

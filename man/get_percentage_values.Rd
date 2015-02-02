@@ -2,7 +2,7 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_percentage_values}
 \alias{get_percentage_values}
-\title{Get Percentage Means}
+\title{Chunk text into 100 Percentage based segments and calculate means}
 \usage{
 get_percentage_values(raw_values)
 }
@@ -13,6 +13,6 @@ get_percentage_values(raw_values)
 A vector of mean values from each chunk
 }
 \description{
-Get Percentage Means
+Chunk text into 100 Percentage based segments and calculate means
 }
 
