@@ -10,19 +10,19 @@ vignette: >
 ---
 
 # Introduction
-This vignette demonstrates use of the six basic functions of the Syuchet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford.  Use of this later method requires that you have already installed the coreNLP package (see http://nlp.stanford.edu/software/corenlp.shtml).  
+This vignette demonstrates use of the six basic functions of the Syuzhet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford.  Use of this later method requires that you have already installed the coreNLP package (see http://nlp.stanford.edu/software/corenlp.shtml).  
 
-The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files.  This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized.  A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L. "Syuchet: Revealing Plot and Sentiment Arcs." 2015.
+The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files.  This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized.  A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L. "Syuzhet: Revealing Plot and Sentiment Arcs." 2015 [Forthcoming].
 
 ## get_sentences
 
-After loading the library (```library(syuzhet)```), you begin by parsing a text into a vector of sentences.  For this you will utilize the ```get_sentences()``` function which implements the ```openNLP``` sentence tokenizer.  In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the ```get_text_as_string()``` function.  ```get_text_as_string()``` is described below.)
+After loading the package (```library(syuzhet)```), you begin by parsing a text into a vector of sentences.  For this you will utilize the ```get_sentences()``` function which implements the ```openNLP``` sentence tokenizer.  In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the ```get_text_as_string()``` function.  ```get_text_as_string()``` is described below.)
 
 ```{r} 
 library(syuzhet)
 my_example_text <- "I begin this story with a neutral statement.  
   Basically this is a very silly test.  
-  You are testing the syuchet package using short, inane sentences.  
+  You are testing the Syuzhet package using short, inane sentences.  
   I am actually very happy today. 
   I have finally finished writing this package.  
   Tomorrow I will be very sad. 

@@ -10,7 +10,7 @@
 
 <meta name="author" content="Matthew Jockers" />
 
-<meta name="date" content="2015-01-31" />
+<meta name="date" content="2015-02-02" />
 
 <title>Introduction to the Syuzhet Package</title>
 
@@ -54,21 +54,21 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Introduction to the Syuzhet Package</h1>
 <h4 class="author"><em>Matthew Jockers</em></h4>
-<h4 class="date"><em>2015-01-31</em></h4>
+<h4 class="date"><em>2015-02-02</em></h4>
 </div>
 
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>This vignette demonstrates use of the six basic functions of the Syuchet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford. Use of this later method requires that you have already installed the coreNLP package (see <a href="http://nlp.stanford.edu/software/corenlp.shtml">http://nlp.stanford.edu/software/corenlp.shtml</a>).</p>
-<p>The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files. This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized. A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L. “Syuchet: Revealing Plot and Sentiment Arcs.” 2015.</p>
+<p>This vignette demonstrates use of the six basic functions of the Syuzhet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford. Use of this later method requires that you have already installed the coreNLP package (see <a href="http://nlp.stanford.edu/software/corenlp.shtml">http://nlp.stanford.edu/software/corenlp.shtml</a>).</p>
+<p>The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files. This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized. A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L. “Syuzhet: Revealing Plot and Sentiment Arcs.” 2015 [Forthcoming].</p>
 <div id="get_sentences" class="section level2">
 <h2>get_sentences</h2>
-<p>After loading the library (<code>library(syuzhet)</code>), you begin by parsing a text into a vector of sentences. For this you will utilize the <code>get_sentences()</code> function which implements the <code>openNLP</code> sentence tokenizer. In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the <code>get_text_as_string()</code> function. <code>get_text_as_string()</code> is described below.)</p>
+<p>After loading the package (<code>library(syuzhet)</code>), you begin by parsing a text into a vector of sentences. For this you will utilize the <code>get_sentences()</code> function which implements the <code>openNLP</code> sentence tokenizer. In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the <code>get_text_as_string()</code> function. <code>get_text_as_string()</code> is described below.)</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(syuzhet)
 my_example_text &lt;-<span class="st"> &quot;I begin this story with a neutral statement.  </span>
 <span class="st">  Basically this is a very silly test.  </span>
-<span class="st">  You are testing the syuchet package using short, inane sentences.  </span>
+<span class="st">  You are testing the Syuzhet package using short, inane sentences.  </span>
 <span class="st">  I am actually very happy today. </span>
 <span class="st">  I have finally finished writing this package.  </span>
 <span class="st">  Tomorrow I will be very sad. </span>
@@ -87,7 +87,7 @@ s_v &lt;-<span class="st"> </span><span class="kw">get_sentences</span>(my_examp
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(s_v)</code></pre>
 <pre><code>## [1] &quot;I begin this story with a neutral statement.&quot;                     
 ## [2] &quot;Basically this is a very silly test.&quot;                             
-## [3] &quot;You are testing the syuchet package using short, inane sentences.&quot;
+## [3] &quot;You are testing the Syuzhet package using short, inane sentences.&quot;
 ## [4] &quot;I am actually very happy today.&quot;                                  
 ## [5] &quot;I have finally finished writing this package.&quot;                    
 ## [6] &quot;Tomorrow I will be very sad.&quot;</code></pre>
