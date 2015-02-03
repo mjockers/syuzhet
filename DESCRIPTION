@@ -6,7 +6,7 @@ Date: 2015-01-20
 Authors@R: person("Matthew", "Jockers", email = "mjockers@gmail.com",
   role = c("aut", "cre"))
 Maintainer: Matthew L. Jockers <mjockers@gmail.com>
-Description: Extracts sentiment and sentiment-derived plot arcs from text using four possible methods.  Provides several methods of plot arc normailzation.
+Description: Extracts sentiment and sentiment-derived plot arcs from text using four possible methods.  Provides several methods of plot arc normalization.
 URL: https://github.com/mjockers/syuzhet
 License: MIT + file LICENSE
 Imports: 
