@@ -55,7 +55,8 @@ poa_v <- get_sentences(joyces_portrait)
 
 ```{r, echo = FALSE}
 # Loading locally so I don't keep hitting www.gutenberg.org while testing (and get banned)
-path_to_a_text_file <- "~/Documents/Research/syuzhet.paper/portrait.txt"
+path_to_a_text_file <- system.file("extdata", "portrait.txt",
+                                   package = "syuzhet")
 joyces_portrait <- get_text_as_string(path_to_a_text_file)
 poa_v <- get_sentences(joyces_portrait)
 ```
