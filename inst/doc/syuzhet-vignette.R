@@ -19,15 +19,17 @@ class(s_v)
 str(s_v)
 head(s_v)
 
-## ----, echo = FALSE------------------------------------------------------
-path_to_a_text_file <- "~/Documents/Research/syuzhet.paper/portrait.txt"
-joyces_portrait <- get_text_as_string(path_to_a_text_file)
-poa_v <- get_sentences(joyces_portrait)
-
 ## ----, eval = FALSE------------------------------------------------------
 #  path_to_a_text_file <- "http://www.gutenberg.org/cache/epub/4217/pg4217.txt"
 #  joyces_portrait <- get_text_as_string(path_to_a_text_file)
 #  poa_v <- get_sentences(joyces_portrait)
+
+## ----, echo = FALSE------------------------------------------------------
+# Loading locally so I don't keep hitting www.gutenberg.org while testing (and get banned)
+path_to_a_text_file <- system.file("extdata", "portrait.txt",
+                                   package = "syuzhet")
+joyces_portrait <- get_text_as_string(path_to_a_text_file)
+poa_v <- get_sentences(joyces_portrait)
 
 ## ------------------------------------------------------------------------
 sentiment_vector <- get_sentiment(s_v, method="bing")
