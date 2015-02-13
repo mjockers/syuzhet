@@ -5,7 +5,7 @@
 #' @return a character vector of length 1 containing the text of the file in the path_to_file argument.
 #' 
 get_text_as_string <- function(path_to_file){
-  text_of_file <- scan(file = path_to_file, what = "character")
+  text_of_file <- readLines(path_to_file)
   return(NLP::as.String(paste(text_of_file, collapse = " ")))
 }
 
