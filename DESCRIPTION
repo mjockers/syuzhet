@@ -15,6 +15,7 @@ Imports:
 LazyData: true
 Suggests: 
     knitr,
-    pander
+    pander,
+    testthat (>= 0.9.1)
 NeedsCompilation: no
 VignetteBuilder: knitr
