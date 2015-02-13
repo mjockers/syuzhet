@@ -15,6 +15,6 @@ This package is not currently available on CRAN, but you can easily install it w
 
 ```R
 # install.packages("devtools")
-devtools::install_github("mjocker/syuzhet")
+devtools::install_github("mjockers/syuzhet")
 ```
 
