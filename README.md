@@ -9,3 +9,12 @@ A deeper discussion and theoretical justification for the approach implemented i
 
 *Thanks to Lincoln Mullen for early feedback on this package (see http://rpubs.com/lmullen/58030)*.
 
+## Installation
+
+This package is not currently available on CRAN, but you can easily install it with the devtools package:
+
+```R
+# install.packages("devtools")
+devtools::install_github("mjocker/syuzhet")
+```
+
