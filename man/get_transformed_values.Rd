@@ -16,9 +16,9 @@ to retain in the low pass filtering. Default = 3}
 
 \item{x_reverse_len}{the number of values to return. Default = 100}
 
-\item{scale_vals}{Logical determines whether or not to normalize the values using the scale function  Default = FALSE}
+\item{scale_vals}{Logical determines whether or not to normalize the values using the scale function  Default = FALSE.  If TRUE, values will be scaled by subtracting the means and scaled by dividing by their standard deviations.  See ?scale}
 
-\item{scale_range}{Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE}
+\item{scale_range}{Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE.  If set to TRUE, the lowest value in the vector will be set to -1 and the highest values set to +1 and all the values scaled accordingly in between.}
 }
 \value{
 The transformed values
@@ -30,7 +30,8 @@ Converts input values into a standardized
 }
 \examples{
 s_v <- get_sentences("I begin this story with a neutral statement.
- Basically this is a very silly test.")
+ Now I add a statement about how much I despise cats.
+ I am allergic to them. Basically this is a very silly test.")
  raw_values <- get_sentiment(s_v, method = "bing")
  get_transformed_values(raw_values)
 }

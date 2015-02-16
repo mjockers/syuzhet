@@ -143,18 +143,20 @@ get_nrc_values <- function(word_vector){
 #'  @param low_pass_size The number of components
 #'  to retain in the low pass filtering. Default = 3
 #'  @param x_reverse_len the number of values to return. Default = 100
-#'  @param scale_range Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE
-#'  @param scale_vals Logical determines whether or not to normalize the values using the scale function  Default = FALSE
+#'  @param scale_range Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE.  If set to TRUE, the lowest value in the vector will be set to -1 and the highest values set to +1 and all the values scaled accordingly in between.
+#'  @param scale_vals Logical determines whether or not to normalize the values using the scale function  Default = FALSE.  If TRUE, values will be scaled by subtracting the means and scaled by dividing by their standard deviations.  See ?scale 
 #'  @return The transformed values
 #'  @export
 #'  @examples
-#'  s_v <- get_sentences("I begin this story with a neutral statement. 
-#'  Basically this is a very silly test.")
+#'  s_v <- get_sentences("I begin this story with a neutral statement.
+#'  Now I add a statement about how much I despise cats.  
+#'  I am allergic to them. Basically this is a very silly test.")
 #'  raw_values <- get_sentiment(s_v, method = "bing")
 #'  get_transformed_values(raw_values)
 #'  
 get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len = 100, scale_vals = FALSE, scale_range = FALSE){
   if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
+  if(low_pass_size > length(raw_values)) stop("low_pass_size must be less than or equal to the length of raw_values input vector")
   values_fft <- fft(raw_values)
   keepers <- values_fft[1:low_pass_size]
   padded_keepers <- c(keepers, rep(0, x_reverse_len - low_pass_size))
