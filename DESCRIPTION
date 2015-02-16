@@ -12,8 +12,10 @@ License: MIT + file LICENSE
 Imports: 
     openNLP,
     NLP
-lazyData: true
-Suggests: knitr,
-    pander
+LazyData: true
+Suggests: 
+    knitr,
+    pander,
+    testthat (>= 0.9.1)
 NeedsCompilation: no
 VignetteBuilder: knitr
