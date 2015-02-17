@@ -15,11 +15,6 @@ script: ./travis-tool.sh run_tests
 after_failure:
   - ./travis-tool.sh dump_logs
 
-env:
-  - BOOTSTRAP_LATEX=1
-  - _R_CHECK_FORCE_SUGGESTS_=0
-  - WARNINGS_ARE_ERRORS=1
-
 notifications:
   email:
     on_success: change
@@ -27,3 +22,4 @@ notifications:
 
 github_packages:
 - devtools
+- testthat
