@@ -1,3 +1,4 @@
+[![Travis-CI Build Status](https://travis-ci.org/mjockers/syuzhet.png?branch=master)](https://travis-ci.org/mjockers/syuzhet)
 # Syuzhet
 An R package for the extraction of sentiment and sentiment-based plot arcs from text.
 
