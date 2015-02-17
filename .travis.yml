@@ -1,6 +1,7 @@
 # Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
 
 language: c
+language: java
 
 before_install:
   - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
@@ -8,10 +9,9 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
+  - sudo R CMD javareconf
+  - ./travis-tool.sh aptget_install r-cran-xml
   - ./travis-tool.sh install_deps
-
-env:
-  - _R_CHECK_FORCE_SUGGESTS_=0
 
 script: ./travis-tool.sh run_tests
 
