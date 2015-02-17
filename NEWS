@@ -1,0 +1,12 @@
+syuzhet 0.2.0
+==========
+
+* Corrections to .travis.yml (via Ben Marwick)
+
+* Bug fix and documentation updates for `get_transformed_values`
+
+* Addition of tests (via Lincoln Mullen)
+
+* Addition of data files necessary for building vignette (via Lincoln Mullen)
+
+* Install instructions for github added to readme (contributed by Hadley Wickham)
