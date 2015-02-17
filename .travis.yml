@@ -10,6 +10,9 @@ before_install:
 install:
   - ./travis-tool.sh install_deps
 
+env:
+  - _R_CHECK_FORCE_SUGGESTS_=0
+
 script: ./travis-tool.sh run_tests
 
 after_failure:
@@ -18,7 +21,7 @@ after_failure:
 notifications:
   email:
     on_success: change
-    on_failure: change
+    on_failure: always
 
 github_packages:
 - devtools
