@@ -16,7 +16,7 @@ Description: Extracts sentiment and sentiment-derived plot arcs
   implementing Stanford's coreNLP sentiment parser. The package provides 
   several methods for plot arc normalization. 
 URL: https://github.com/mjockers/syuzhet
-License: MIT + file LICENSE
+License: GPL-3
 Imports: 
     openNLP,
     NLP
