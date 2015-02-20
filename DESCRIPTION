@@ -6,7 +6,15 @@ Date: 2015-01-20
 Authors@R: person("Matthew", "Jockers", email = "mjockers@gmail.com",
   role = c("aut", "cre"))
 Maintainer: Matthew Jockers <mjockers@gmail.com>
-Description: Extracts sentiment and sentiment-derived plot arcs from text using four possible methods.  Provides several methods of plot arc normalization.
+Description: Extracts sentiment and sentiment-derived plot arcs 
+  from text using three sentiment dictionaries conveniently 
+  packaged for consumption by R users.  Implemented dictionaries include
+  "afinn" developed by Finn {\AA}rup Nielsen, "bing" developed by Minqing Hu 
+  and Bing Liu, and "nrc" developed by Mohammad, Saif M. and Turney, Peter D. 
+  Applicable references are available in README.md and in the documentation 
+  for the "get_sentiment" function.  The package also provides a method for 
+  implementing Stanford's coreNLP sentiment parser. The package provides 
+  several methods for plot arc normalization. 
 URL: https://github.com/mjockers/syuzhet
 License: MIT + file LICENSE
 Imports: 

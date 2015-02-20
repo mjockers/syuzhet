@@ -19,13 +19,9 @@ class(s_v)
 str(s_v)
 head(s_v)
 
-## ----, eval = FALSE------------------------------------------------------
-#  path_to_a_text_file <- "http://www.gutenberg.org/cache/epub/4217/pg4217.txt"
-#  joyces_portrait <- get_text_as_string(path_to_a_text_file)
-#  poa_v <- get_sentences(joyces_portrait)
-
 ## ----, echo = FALSE------------------------------------------------------
-# Loading locally so I don't keep hitting www.gutenberg.org while testing (and get banned)
+# Loading locally so I don't keep hitting www.gutenberg.org while testing
+# (and get banned)
 path_to_a_text_file <- system.file("extdata", "portrait.txt",
                                    package = "syuzhet")
 joyces_portrait <- get_text_as_string(path_to_a_text_file)
@@ -44,9 +40,10 @@ afinn_vector
 nrc_vector <- get_sentiment(s_v, method="nrc")
 nrc_vector
 
-tagger_path <- "/Applications/stanford-corenlp-full-2014-01-04"
-stanford_vector <- get_sentiment(s_v, method="stanford", tagger_path)
-stanford_vector
+# Stanford Example: Requires installation of coreNLP and path to directory
+# tagger_path <- "/Applications/stanford-corenlp-full-2014-01-04"
+# stanford_vector <- get_sentiment(s_v, method="stanford", tagger_path)
+# stanford_vector
 
 ## ------------------------------------------------------------------------
 sum(sentiment_vector)
