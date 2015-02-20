@@ -2,8 +2,7 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_text_as_string}
 \alias{get_text_as_string}
-\title{Load Text from a file
-Loads a file as a single text sting.}
+\title{Load Text from a File}
 \usage{
 get_text_as_string(path_to_file)
 }
@@ -11,10 +10,9 @@ get_text_as_string(path_to_file)
 \item{path_to_file}{file path}
 }
 \value{
-a character vector of length 1 containing the text of the file in the path_to_file argument.
+A character vector of length 1 containing the text of the file in the path_to_file argument.
 }
 \description{
-Load Text from a file
 Loads a file as a single text sting.
 }
 

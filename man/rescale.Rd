@@ -2,8 +2,7 @@
 % Please edit documentation in R/syuzhet.R
 \name{rescale}
 \alias{rescale}
-\title{Vector Value Rescaling
- Rescale Transformed values from -1 to 1}
+\title{Vector Value Rescaling}
 \usage{
 rescale(x)
 }
@@ -11,7 +10,6 @@ rescale(x)
 \item{x}{A vector of values}
 }
 \description{
-Vector Value Rescaling
- Rescale Transformed values from -1 to 1
+Rescale Transformed values from -1 to 1
 }
 

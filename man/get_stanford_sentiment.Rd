@@ -2,13 +2,7 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_stanford_sentiment}
 \alias{get_stanford_sentiment}
-\title{Get Sentiment from the Stanford Tagger
- Call the Stanford Sentiment tagger with a
- vector of strings.  The Stanford tagger automatically
- detects sentence boundaries and treats each sentence as a
- distinct instance to measure. As a result, the vector
- that gets returned will not be the same length as the
- input vector.}
+\title{Get Sentiment from the Stanford Tagger}
 \usage{
 get_stanford_sentiment(text_vector, path_to_stanford_tagger)
 }
@@ -18,8 +12,7 @@ get_stanford_sentiment(text_vector, path_to_stanford_tagger)
 \item{path_to_stanford_tagger}{a local file path indicating where the coreNLP package is installed.}
 }
 \description{
-Get Sentiment from the Stanford Tagger
- Call the Stanford Sentiment tagger with a
+Call the Stanford Sentiment tagger with a
  vector of strings.  The Stanford tagger automatically
  detects sentence boundaries and treats each sentence as a
  distinct instance to measure. As a result, the vector

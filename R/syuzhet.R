@@ -1,8 +1,9 @@
-#' Load Text from a file
+#' Load Text from a File
+#' @description
 #' Loads a file as a single text sting. 
 #' @param path_to_file file path
 #' @export
-#' @return a character vector of length 1 containing the text of the file in the path_to_file argument.
+#' @return A character vector of length 1 containing the text of the file in the path_to_file argument.
 #' 
 get_text_as_string <- function(path_to_file){
   text_of_file <- readLines(path_to_file)
@@ -10,7 +11,8 @@ get_text_as_string <- function(path_to_file){
 }
 
 #' Sentence Tokenization
-#' Parses a string into a vector of sentences
+#' @description
+#' Parses a string into a vector of sentences.
 #' @param text_of_file A Text String
 #' @return A Character Vector of Sentences
 #' @export
@@ -24,11 +26,11 @@ get_sentences <- function(text_of_file){
 }
 
 #' Get Sentiment Values for a String
+#' @description
+#' Iterates over a vector of strings and returns sentiment values based on user supplied method.
 #' 
-#' Iterates over a vector of strings and returns sentiment values based on user supplied method
-#' 
-#' @param char_v A vector of strings for evaluation
-#' @param method A string indicating which sentiment method to use. Options include "bing", "afinn", "nrc" and "stanford."  See references for more detail.
+#' @param char_v A vector of strings for evaluation.
+#' @param method A string indicating which sentiment method to use. Options include "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
 #' 
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
@@ -68,11 +70,13 @@ get_sentiment <- function(char_v, method = c("afinn", "bing", "nrc", "stanford")
   }
 }
 
-#' Assigns Sentiment Values to Words Based on preloaded dictionary
+#' Assigns Sentiment Values
+#' @description
+#' Assigns sentiment values to words based on preloaded dictionary
 #'
-#' @param char_v a string
-#' @param method a string indicating which sentiment dictionary to use
-#' @return a single numerical value (positive or negative)
+#' @param char_v A string
+#' @param method A string indicating which sentiment dictionary to use
+#' @return A single numerical value (positive or negative)
 #' based on the assessed sentiment in the string
 #'
 get_sent_values<-function(char_v, method = "bing"){
@@ -88,14 +92,14 @@ get_sent_values<-function(char_v, method = "bing"){
   return(result)
 }
 
-#' Get Emotions and Valence Values Using NRC Dictionary
-#'
+#' Get Emotions and Valence from NRC Dictionary
+#' @description
 #' Calls the NRC sentiment dictionary to calculate
 #' the presence of eight different emotions and their
-#' corresponding valence in a text file
+#' corresponding valence in a text file.
 #' @export
-#' @param char_v a character vector
-#' @return a data frame where each row represents a sentence
+#' @param char_v A character vector
+#' @return A data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
 #' emotion type was well as a positive or negative valence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive." 
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
@@ -121,20 +125,20 @@ get_nrc_sentiment<-function(char_v){
   result_df[, my_col_order]
 }
 
-#' Summarize NRC values
-#'
+#' Summarize NRC Values
+#' @description
 #' Access the NRC dictionary to compute emotion types and
-#' valence for a set of words in the input vector
-#' @param word_vector A character vector
-#' @return a vector of values for the emotions and valence
-#' detected in the input vector
+#' valence for a set of words in the input vector.
+#' @param word_vector A character vector.
+#' @return A vector of values for the emotions and valence
+#' detected in the input vector.
 #'
 get_nrc_values <- function(word_vector){
   colSums(nrc[which(rownames(nrc) %in% word_vector), ])
 }
 
 #'  Fourier Transform and Reverse Transform Values
-#'
+#' @description
 #'  Converts input values into a standardized
 #'  set of filtered and reverse transformed values for
 #'  easy plotting and/or comparison.
@@ -172,7 +176,9 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
   }
 }
 
-#' Chunk text into 100 Percentage based segments and calculate means
+#' Chunk a Text and Get Means
+#' @description
+#' Chunks text into 100 Percentage based segments and calculates means.
 #'
 #'@param raw_values Raw sentiment values
 #'@export
@@ -190,6 +196,7 @@ get_percentage_values <- function(raw_values){
 }
 
 #'  Get Sentiment from the Stanford Tagger
+#' @description
 #'  Call the Stanford Sentiment tagger with a
 #'  vector of strings.  The Stanford tagger automatically
 #'  detects sentence boundaries and treats each sentence as a 
@@ -216,6 +223,7 @@ get_stanford_sentiment <- function(text_vector, path_to_stanford_tagger){
 }
 
 #'  Vector Value Rescaling
+#'  @description
 #'  Rescale Transformed values from -1 to 1
 #'  @param x A vector of values
 #'  

@@ -8,9 +8,9 @@ get_sentiment(char_v, method = c("afinn", "bing", "nrc", "stanford"),
   path_to_tagger = NULL)
 }
 \arguments{
-\item{char_v}{A vector of strings for evaluation}
+\item{char_v}{A vector of strings for evaluation.}
 
-\item{method}{A string indicating which sentiment method to use. Options include "bing", "afinn", "nrc" and "stanford."  See references for more detail.}
+\item{method}{A string indicating which sentiment method to use. Options include "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.}
 
 \item{path_to_tagger}{local path to location of Stanford CoreNLP package}
 }
@@ -18,7 +18,7 @@ get_sentiment(char_v, method = c("afinn", "bing", "nrc", "stanford"),
 Return value is a numeric vector of sentiment values, one value for each input sentence.
 }
 \description{
-Iterates over a vector of strings and returns sentiment values based on user supplied method
+Iterates over a vector of strings and returns sentiment values based on user supplied method.
 }
 \references{
 Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.

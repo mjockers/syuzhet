@@ -2,22 +2,22 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_nrc_sentiment}
 \alias{get_nrc_sentiment}
-\title{Get Emotions and Valence Values Using NRC Dictionary}
+\title{Get Emotions and Valence from NRC Dictionary}
 \usage{
 get_nrc_sentiment(char_v)
 }
 \arguments{
-\item{char_v}{a character vector}
+\item{char_v}{A character vector}
 }
 \value{
-a data frame where each row represents a sentence
+A data frame where each row represents a sentence
 from the original file.  The columns include one for each
 emotion type was well as a positive or negative valence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive."
 }
 \description{
 Calls the NRC sentiment dictionary to calculate
 the presence of eight different emotions and their
-corresponding valence in a text file
+corresponding valence in a text file.
 }
 \references{
 Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html

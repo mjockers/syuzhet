@@ -2,19 +2,19 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_nrc_values}
 \alias{get_nrc_values}
-\title{Summarize NRC values}
+\title{Summarize NRC Values}
 \usage{
 get_nrc_values(word_vector)
 }
 \arguments{
-\item{word_vector}{A character vector}
+\item{word_vector}{A character vector.}
 }
 \value{
-a vector of values for the emotions and valence
-detected in the input vector
+A vector of values for the emotions and valence
+detected in the input vector.
 }
 \description{
 Access the NRC dictionary to compute emotion types and
-valence for a set of words in the input vector
+valence for a set of words in the input vector.
 }
 

@@ -2,8 +2,7 @@
 % Please edit documentation in R/syuzhet.R
 \name{get_sentences}
 \alias{get_sentences}
-\title{Sentence Tokenization
-Parses a string into a vector of sentences}
+\title{Sentence Tokenization}
 \usage{
 get_sentences(text_of_file)
 }
@@ -14,7 +13,6 @@ get_sentences(text_of_file)
 A Character Vector of Sentences
 }
 \description{
-Sentence Tokenization
-Parses a string into a vector of sentences
+Parses a string into a vector of sentences.
 }
 

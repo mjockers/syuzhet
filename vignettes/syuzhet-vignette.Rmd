@@ -79,9 +79,10 @@ afinn_vector
 nrc_vector <- get_sentiment(s_v, method="nrc")
 nrc_vector
 
-tagger_path <- "/Applications/stanford-corenlp-full-2014-01-04"
-stanford_vector <- get_sentiment(s_v, method="stanford", tagger_path)
-stanford_vector
+# Stanford Example: Requires installation of coreNLP and path to directory
+# tagger_path <- "/Applications/stanford-corenlp-full-2014-01-04"
+# stanford_vector <- get_sentiment(s_v, method="stanford", tagger_path)
+# stanford_vector
 ```
 
 Discussion of these differences is beyond the scope of this vignette (please see Jockers, 2015 for details). 

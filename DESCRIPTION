@@ -1,11 +1,11 @@
 Package: syuzhet
 Type: Package
-Title: Extracts Sentiment and Sentiment-Based Plot Arcs from Text
+Title: Extracts Sentiment and Sentiment-Derived Plot Arcs from Text
 Version: 0.2.0
 Date: 2015-01-20
 Authors@R: person("Matthew", "Jockers", email = "mjockers@gmail.com",
   role = c("aut", "cre"))
-Maintainer: Matthew L. Jockers <mjockers@gmail.com>
+Maintainer: Matthew Jockers <mjockers@gmail.com>
 Description: Extracts sentiment and sentiment-derived plot arcs from text using four possible methods.  Provides several methods of plot arc normalization.
 URL: https://github.com/mjockers/syuzhet
 License: MIT + file LICENSE
@@ -19,3 +19,4 @@ Suggests:
     testthat (>= 0.9.1)
 NeedsCompilation: no
 VignetteBuilder: knitr
+
