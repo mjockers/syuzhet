@@ -12,7 +12,7 @@ A deeper discussion and theoretical justification for the approach implemented i
 
 ## Installation
 
-This package is not currently available on CRAN, but you can easily install it with the devtools package:
+This package is now available on CRAN (http://cran.r-project.org/web/packages/syuzhet/), but you can easily install the most current development version from gitHub using the devtools package:
 
 ```R
 # install.packages("devtools")
