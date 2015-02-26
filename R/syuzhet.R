@@ -181,7 +181,7 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
 #' Chunks text into 100 Percentage based segments and calculates means.
 #'
 #'@param raw_values Raw sentiment values
-#'@param num_chunks The number of bins to split the input vector.
+#'@param bins The number of bins to split the input vector.
 #' Default is 100 bins.
 #'@export
 #'@return A vector of mean values from each chunk

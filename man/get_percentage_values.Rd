@@ -9,7 +9,7 @@ get_percentage_values(raw_values, bins = 100)
 \arguments{
 \item{raw_values}{Raw sentiment values}
 
-\item{num_chunks}{The number of bins to split the input vector.
+\item{bins}{The number of bins to split the input vector.
 Default is 100 bins.}
 }
 \value{
