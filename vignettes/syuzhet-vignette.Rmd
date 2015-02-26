@@ -175,6 +175,20 @@ plot(
   )
 ```
 
+Using the optional ```bins``` argument, you can control how many sentences are included inside each percentage based chunk:
+
+```{r, fig.width = 6}
+percent_vals <- get_percentage_values(poa_sent, bins = 20)
+plot(
+  percent_vals, 
+  type="l", 
+  main="Joyce's Portrait Using Percentage-Based Means", 
+  xlab = "Narrative Time", 
+  ylab= "Emotional Valence", 
+  col="red"
+  )
+```
+
 ## get_transformed_values
 
 Unfortunately, when a series of sentence values are combined into a larger chunk using a percentage based measure, extremes of emotional valence tend to get watered down.  This is especially true when the segments of text that percentage based chunking returns are especially large.  When averaged, a passage of 1000 sentences is far more likely to contain a wide range of values than a 100 sentence passage.  Indeed, the means of longer passages tend to converge toward 0.  But this is not the only problem with percentage-based normalization.  In addition to dulling the emotional variance, percentage-based normalization makes book to book comparison somewhat futile.  A comparison of the first tenth of a very long book, such as Melville's *Moby Dick* with the first tenth of a short novella such as Oscar Wilde's *Picture of Dorian Grey* is simply not all that fruitful because in one case the first tenth is composed of 1000 sentences and in the other just 100.  
