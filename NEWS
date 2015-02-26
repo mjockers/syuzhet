@@ -1,3 +1,7 @@
+syuzhet 0.2.1
+==========
+* Added "bins" argument to get_percentage_values() to allow for chunk control.
+
 syuzhet 0.2.0
 ==========
 
