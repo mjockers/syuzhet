@@ -4,10 +4,14 @@
 \alias{get_sentences}
 \title{Sentence Tokenization}
 \usage{
-get_sentences(text_of_file)
+get_sentences(text_of_file, strip_quotes = TRUE)
 }
 \arguments{
 \item{text_of_file}{A Text String}
+
+\item{strip_quotes}{Logical. Default of TRUE results in
+removal of quote marks from text input prior to sentence
+parsing.}
 }
 \value{
 A Character Vector of Sentences

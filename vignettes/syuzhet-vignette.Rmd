@@ -16,7 +16,7 @@ The goal of this vignette is to introduce the main functions in the package so t
 
 ## get_sentences
 
-After loading the package (```library(syuzhet)```), you begin by parsing a text into a vector of sentences.  For this you will utilize the ```get_sentences()``` function which implements the ```openNLP``` sentence tokenizer.  In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the ```get_text_as_string()``` function.  ```get_text_as_string()``` is described below.)
+After loading the package (```library(syuzhet)```), you begin by parsing a text into a vector of sentences.  For this you will utilize the ```get_sentences()``` function which implements the ```openNLP``` sentence tokenizer.  The ```get_sentences()``` function includes an argument that determines how to handle quoted text. By default, quotes are stripped out before sentence parsing.  (Thanks to Annie Swafford who observed that sentence parsing with openNLP improves when quotations are removed.)  In the example that follows, a very simple text passage containing twelve sentences is loaded directly. (You could just as easily load a text file from your local hard drive or from a URL using the ```get_text_as_string()``` function.  ```get_text_as_string()``` is described below.)
 
 ```{r} 
 library(syuzhet)

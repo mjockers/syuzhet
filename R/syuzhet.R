@@ -14,12 +14,18 @@ get_text_as_string <- function(path_to_file){
 #' @description
 #' Parses a string into a vector of sentences.
 #' @param text_of_file A Text String
+#' @param strip_quotes Logical. Default of TRUE results in 
+#' removal of quote marks from text input prior to sentence 
+#' parsing.
 #' @return A Character Vector of Sentences
 #' @export
 #' 
-get_sentences <- function(text_of_file){
+get_sentences <- function(text_of_file, strip_quotes = TRUE){
   if (!is.character(text_of_file)) stop("Data must be a character vector.")
   text_of_file <- NLP::as.String(text_of_file)
+  if(strip_quotes){
+    text_of_file <- gsub("\"", "", text_of_file)
+  }
   sent_token_annotator <- openNLP::Maxent_Sent_Token_Annotator()
   sentence_bounds <- NLP::annotate(text_of_file, sent_token_annotator)
   text_of_file[sentence_bounds]
