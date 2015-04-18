@@ -10,7 +10,7 @@ transform_for_comparison(raw_values, arbitrary_max)
 \item{raw_values}{the raw sentiment values
 calculated for each sentence}
 
-\item{arbitrary_max}{an arbitrary value that is something larger the lenght of the longest sentence vector in a corpus of books being compared.}
+\item{arbitrary_max}{should be set to a value that is something larger the length of the longest sentence vector in a corpus of books being compared.}
 }
 \description{
 Uses the Fourier transform and reverse transform with all frequency components retained and a arbitrary maximum length argument to return a time normalized vector of sentiment values.

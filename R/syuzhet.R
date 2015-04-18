@@ -194,13 +194,13 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
 #'
 get_percentage_values <- function(raw_values, bins = 100){
   if(!is.numeric(raw_values)) stop("Input must be a numeric vector")
-  chunk_size <- length(raw_values) / bins
-  if(chunk_size < 2){
-    stop("Input vector needs to be longer than 200 values to make percentage based segmentation viable")
+  if(length(raw_values)/bins < 2){
+    stop("Input vector needs to be twice as long as value number to make percentage based segmentation viable")
   }
-  x <- seq_along(raw_values)
-  chunks <- split(raw_values, ceiling(x/chunk_size))
-  unlist(lapply(chunks, mean))
+  chunks <- split(raw_values, cut(1:length(raw_values),bins))
+  means = sapply(chunks, mean)
+  names(means) = 1:bins
+  return(means)
 }
 
 #'  Get Sentiment from the Stanford Tagger
