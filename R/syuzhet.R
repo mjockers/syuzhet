@@ -107,7 +107,7 @@ get_sent_values<-function(char_v, method = "bing"){
 #' @param char_v A character vector
 #' @return A data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
-#' emotion type was well as a positive or negative valence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive." 
+#' emotion type as well as a positive or negative valence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive." 
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 get_nrc_sentiment<-function(char_v){
@@ -234,9 +234,27 @@ get_stanford_sentiment <- function(text_vector, path_to_stanford_tagger){
 #'  @description
 #'  Rescale Transformed values from -1 to 1
 #'  @param x A vector of values
-#'  
+#'  @export
 rescale <- function(x){
   2 * (x - min(x))/( max(x) - min(x)) -1
+}
+
+#'  Transformation to normalize narrative time axis
+#'  @description
+#'  Uses the Fourier transform and reverse transform with all frequency components retained and a arbitrary maximum length argument to return a time normalized vector of sentiment values.
+#'  @param raw_values the raw sentiment values
+#'  calculated for each sentence
+#'  @param arbitrary_max should be set to a value that is something larger the length of the longest sentence vector in a corpus of books being compared.
+#'  @export
+transform_for_comparison <- function(raw_values, arbitrary_max){
+  if(!is.numeric(raw_values)) stop("raw_values must be a numeric vector")
+  if(!is.numeric(arbitrary_max)) stop("arbitrary_max must be a numeric vector")
+  values_fft <- fft(raw_values)
+  if(length(values_fft) >= arbitrary_max) stop("arbitrary_max must be greater than the length of raw_values")
+  keepers <- values_fft[1:length(values_fft)]
+  padded_keepers <- c(keepers, rep(0,  arbitrary_max - length(values_fft)))
+  inverse_values <- fft(padded_keepers, inverse=T)
+  Re(inverse_values)
 }
 
 

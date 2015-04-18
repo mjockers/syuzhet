@@ -12,7 +12,7 @@ get_nrc_sentiment(char_v)
 \value{
 A data frame where each row represents a sentence
 from the original file.  The columns include one for each
-emotion type was well as a positive or negative valence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive."
+emotion type as well as a positive or negative valence.  The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive."
 }
 \description{
 Calls the NRC sentiment dictionary to calculate
