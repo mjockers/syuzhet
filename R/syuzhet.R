@@ -239,6 +239,18 @@ rescale <- function(x){
   2 * (x - min(x))/( max(x) - min(x)) -1
 }
 
+#'  Bi-Directional x and y axis Rescaling
+#'  @description
+#'  Rescale Transformed values from -1 to 1 on the y-axis and scale from zero to 1 on the x-axis
+#'  @param v A vector of values
+#'  @export
+rescale2 <- function(v){
+  x <- 1:length(v)/length(v)
+  y <- v/max(v)
+  z <- 2 * (v - min(v))/(max(v) - min(v)) - 1
+  return (list(x=x,y=y,z=z))
+}
+
 #'  Transformation to normalize narrative time axis
 #'  @description
 #'  Uses the Fourier transform and reverse transform with all frequency components retained and a arbitrary maximum length argument to return a time normalized vector of sentiment values.
