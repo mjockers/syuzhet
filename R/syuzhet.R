@@ -10,6 +10,18 @@ get_text_as_string <- function(path_to_file){
   return(NLP::as.String(paste(text_of_file, collapse = " ")))
 }
 
+#' Word Tokenization
+#' @description
+#' Parses a string into a vector of word tokens
+#' @param text_of_file A Text String
+#' @return A Character Vector of Words
+#' @export
+#' 
+get_tokens <- function(text_of_file, pattern = "\\W"){
+  tokens <- unlist(strsplit(text_of_file, pattern))
+  tolower(tokens[which(tokens != "")])
+}
+
 #' Sentence Tokenization
 #' @description
 #' Parses a string into a vector of sentences.

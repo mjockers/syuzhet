@@ -56,12 +56,22 @@ joyces_portrait <- get_text_as_string(path_to_a_text_file)
 poa_v <- get_sentences(joyces_portrait)
 ```
 
+## get_tokens
+
+The `get_tokens` funciton allows you to tokenize by words instead of sentences.  You can enter a custom regular expression for defining word boundaaries.  By default, the patter uses the "\\W" regex to identify word boundaries.  Note that "\\W" does not remove underscores.
+
+```{r}
+poa_word_v <- get_tokens(joyces_portrait)
+```
+
 ## get_sentiment()
 
-After you have collected the sentences from a text into a vector, you will send them to the ```get_sentiment``` function which will asses the sentiment of each sentence. This function take two arguments: a character vector (of sentences) and a "method."  The method you select determines which of the four available sentiment extraction methods to employ.  In the example that follows below, the "bing" method is called.  This method is based on the sentiment research of Minqing Hu and Bing Liu et. al. (see Minqing Hu and Bing Liu. "Mining and Summarizing Customer Reviews." Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD-2004), Aug 22-25, 2004, Seattle, Washington, USA. http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html).  The documentation for the function, offers details about the other methods ("afinn", "nrc", and "stanford") that can be called.  To find the documentation, simply enter ```?get_sentiment``` into your console.
+After you have collected the sentences or word tokens from a text into a vector, you will send them to the ```get_sentiment``` function which will asses the sentiment of each word token or sentence. This function takes two arguments: a character vector (of sentences or words) and a "method."  The method you select determines which of the four available sentiment extraction methods to employ.  In the example that follows below, the "bing" method is called.  This method is based on the sentiment research of Minqing Hu and Bing Liu et. al. (see Minqing Hu and Bing Liu. "Mining and Summarizing Customer Reviews." Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD-2004), Aug 22-25, 2004, Seattle, Washington, USA. http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html).  The documentation for the function offers details about the other methods ("afinn", "nrc", and "stanford") that can be called.  To find the documentation, simply enter ```?get_sentiment``` into your console.
 
 ```{r} 
 sentiment_vector <- get_sentiment(s_v, method="bing")
+# OR if using the word token vector from above
+# sentiment_vector <- get_sentiment(poa_word_v, method="bing")
 ```
 
 If you examine the contents of the new ```sentiment_vector``` object, you will see that it now contains a set of 12 values corresponding to the original 12 sentences.  The values are the model's assessment of the sentiment in each sentence.  Here are the "bing" values for the example:
