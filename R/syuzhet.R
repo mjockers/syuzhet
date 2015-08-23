@@ -172,7 +172,7 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
   padding.len <- raw_values.len * padding_factor
   # Add padding, then fft
   values_fft <- fft( c(raw_values, rep(0, padding.len)) )
-  low_pass_size <- low_pass_size * (1 + padding)
+  low_pass_size <- low_pass_size * (1 + padding_factor)
   keepers <- values_fft[1:low_pass_size]
   # Preserve frequency domain structure
   modified_spectrum <- c(keepers,
