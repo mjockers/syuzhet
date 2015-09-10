@@ -188,8 +188,8 @@ get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len 
   keepers <- values_fft[1:low_pass_size]
   # Preserve frequency domain structure
   modified_spectrum <- c(keepers,
-                         rep(0, (x_reverse_len * (1+padding_factor)) - (2*low_pass_size) + 1),
-                         rev(Conj( keepers[2:(length(keepers))] )))
+    rep(0, (x_reverse_len * (1+padding_factor)) - (2*low_pass_size) + 1),
+    rev(Conj( keepers[2:(length(keepers))] )))
   inverse_values <- fft(modified_spectrum, inverse=T)
   # Strip padding
   inverse_values <- inverse_values[1:(x_reverse_len)]
