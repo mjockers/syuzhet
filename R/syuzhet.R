@@ -165,7 +165,7 @@ get_nrc_values <- function(word_vector){
 #'  @param low_pass_size The number of components
 #'  to retain in the low pass filtering. Default = 3
 #'  @param x_reverse_len the number of values to return. Default = 100
-#'  @param padding_factor the amount of zero values to pad raw_values with, as a factor of the size of raw_values. Default = 1.25.
+#'  @param padding_factor the amount of zero values to pad raw_values with, as a factor of the size of raw_values. Default = 2.
 #'  @param scale_range Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE.  If set to TRUE, the lowest value in the vector will be set to -1 and the highest values set to +1 and all the values scaled accordingly in between.
 #'  @param scale_vals Logical determines whether or not to normalize the values using the scale function  Default = FALSE.  If TRUE, values will be scaled by subtracting the means and scaled by dividing by their standard deviations.  See ?scale 
 #'  @return The transformed values
