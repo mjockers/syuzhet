@@ -153,6 +153,7 @@ get_nrc_values <- function(word_vector){
 #'  @param low_pass_size The number of components
 #'  to retain in the low pass filtering. Default = 3
 #'  @param x_reverse_len the number of values to return. Default = 100
+#'  @param padding_factor the amount of zero values to pad raw_values with, as a factor of the size of raw_values. Default = 1.25.
 #'  @param scale_range Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE.  If set to TRUE, the lowest value in the vector will be set to -1 and the highest values set to +1 and all the values scaled accordingly in between.
 #'  @param scale_vals Logical determines whether or not to normalize the values using the scale function  Default = FALSE.  If TRUE, values will be scaled by subtracting the means and scaled by dividing by their standard deviations.  See ?scale 
 #'  @return The transformed values
@@ -164,13 +165,22 @@ get_nrc_values <- function(word_vector){
 #'  raw_values <- get_sentiment(s_v, method = "bing")
 #'  get_transformed_values(raw_values)
 #'  
-get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len = 100, scale_vals = FALSE, scale_range = FALSE){
+get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len = 100, padding_factor = 2, scale_vals = FALSE, scale_range = FALSE){
   if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
   if(low_pass_size > length(raw_values)) stop("low_pass_size must be less than or equal to the length of raw_values input vector")
-  values_fft <- fft(raw_values)
+  raw_values.len <- length(raw_values)
+  padding.len <- raw_values.len * padding_factor
+  # Add padding, then fft
+  values_fft <- fft( c(raw_values, rep(0, padding.len)) )
+  low_pass_size <- low_pass_size * (1 + padding_factor)
   keepers <- values_fft[1:low_pass_size]
-  padded_keepers <- c(keepers, rep(0, x_reverse_len - low_pass_size))
-  inverse_values <- fft(padded_keepers, inverse=T)
+  # Preserve frequency domain structure
+  modified_spectrum <- c(keepers,
+                         rep(0, (x_reverse_len * (1+padding_factor)) - (2*low_pass_size) + 1),
+                         rev(Conj( keepers[2:(length(keepers))] )))
+  inverse_values <- fft(modified_spectrum, inverse=T)
+  # Strip padding
+  inverse_values <- inverse_values[1:(x_reverse_len)]
   transformed_values <- Re(inverse_values)
   if(scale_vals & scale_range) stop("ERROR: scale_vals and scale_range cannot both be true.")
   if(scale_vals){
