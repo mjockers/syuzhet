@@ -58,7 +58,7 @@ poa_v <- get_sentences(joyces_portrait)
 
 ## get_tokens
 
-The `get_tokens` funciton allows you to tokenize by words instead of sentences.  You can enter a custom regular expression for defining word boundaaries.  By default, the patter uses the "\\W" regex to identify word boundaries.  Note that "\\W" does not remove underscores.
+The `get_tokens` function allows you to tokenize by words instead of sentences.  You can enter a custom regular expression for defining word boundaries.  By default, the function uses the "\\W" regex to identify word boundaries.  Note that "\\W" does not remove underscores.
 
 ```{r}
 poa_word_v <- get_tokens(joyces_portrait)
