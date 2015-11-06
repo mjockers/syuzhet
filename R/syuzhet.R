@@ -177,7 +177,7 @@ get_nrc_values <- function(word_vector){
 #'  raw_values <- get_sentiment(s_v, method = "bing")
 #'  get_transformed_values(raw_values)
 #'  
-get_transformed_values <- function(raw_values, low_pass_size = 3, x_reverse_len = 100, padding_factor = 2, scale_vals = FALSE, scale_range = FALSE){
+get_transformed_values <- function(raw_values, low_pass_size = 2, x_reverse_len = 100, padding_factor = 2, scale_vals = FALSE, scale_range = FALSE){
   if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
   if(low_pass_size > length(raw_values)) stop("low_pass_size must be less than or equal to the length of raw_values input vector")
   raw_values.len <- length(raw_values)
