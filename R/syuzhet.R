@@ -274,7 +274,7 @@ rescale2 <- function(v){
 }
 
 #'  Plots simple and rolling shapes overlayed
-#'  @description
+#'  @description A Simple function for comparing three smoothers
 #'  @param raw_values the raw sentiment values
 #'  calculated for each sentence
 #'  @param title for image
