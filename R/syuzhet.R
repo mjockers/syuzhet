@@ -273,22 +273,25 @@ rescale2 <- function(v){
   return (list(x=x,y=y,z=z))
 }
 
-#'  Transformation to normalize narrative time axis
+#'  Plots simple and rolling shapes overlayed
 #'  @description
-#'  Uses the Fourier transform and reverse transform with all frequency components retained and a arbitrary maximum length argument to return a time normalized vector of sentiment values.
 #'  @param raw_values the raw sentiment values
 #'  calculated for each sentence
-#'  @param arbitrary_max should be set to a value that is something larger the length of the longest sentence vector in a corpus of books being compared.
+#'  @param title for image
+#'  @param legend_pos positon for legend
 #'  @export
-transform_for_comparison <- function(raw_values, arbitrary_max){
-  if(!is.numeric(raw_values)) stop("raw_values must be a numeric vector")
-  if(!is.numeric(arbitrary_max)) stop("arbitrary_max must be a numeric vector")
-  values_fft <- fft(raw_values)
-  if(length(values_fft) >= arbitrary_max) stop("arbitrary_max must be greater than the length of raw_values")
-  keepers <- values_fft[1:length(values_fft)]
-  padded_keepers <- c(keepers, rep(0,  arbitrary_max - length(values_fft)))
-  inverse_values <- fft(padded_keepers, inverse=T)
-  Re(inverse_values)
+simple_plot <- function(raw_values, title="Syuzhet Plot", legend_pos="top"){
+  wdw <- round(length(raw_values)*.1) # wdw = 10% of length
+  rolled <- zoo::rollmean(raw_values, k = wdw, fill = 0)
+  trans <- get_transformed_values(raw_values, x_reverse_len = length(raw_values), scale_range = T)
+  x <- 1:length(raw_values)
+  y <- raw_values
+  raw_lo <- loess(y ~ x, span=.5)
+  low_line <- rescale(predict(raw_lo))
+  plot(low_line, type = "l", ylim = c(-1,1), main = title, xlab = "Narrative Time", ylab = "Scaled Sentiment")
+  lines(rescale(rolled), col="blue")
+  lines(trans, col="red")
+  legend(legend_pos, c("Loess Smooth", "Rolling Mean", "Simple Syuzhet"), lty=1, lwd=1,col=c('black', 'blue', 'red'), bty='n', cex=.75)
 }
 
 
