@@ -14,6 +14,7 @@ get_text_as_string <- function(path_to_file){
 #' @description
 #' Parses a string into a vector of word tokens
 #' @param text_of_file A Text String
+#' @param pattern A regular expression for token breaking
 #' @return A Character Vector of Words
 #' @export
 #' 
@@ -294,6 +295,42 @@ simple_plot <- function(raw_values, title="Syuzhet Plot", legend_pos="top"){
   legend(legend_pos, c("Loess Smooth", "Rolling Mean", "Simple Syuzhet"), lty=1, lwd=1,col=c('black', 'blue', 'red'), bty='n', cex=.75)
 }
 
+#'  Discrete Cosine Transformation with Reverse Transform to Time Domain
+#'  @description
+#'  Converts input values into a standardized
+#'  set of filtered and reverse transformed values for
+#'  easy plotting and/or comparison.
+#'  @param raw_values the raw sentiment values
+#'  calculated for each sentence
+#'  @param low_pass_size The number of components
+#'  to retain in the low pass filtering. Default = 10
+#'  @param x_reverse_len the number of values to return via decimation. Default = 100
+#'  @param scale_range Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE.  If set to TRUE, the lowest value in the vector will be set to -1 and the highest values set to +1 and all the values scaled accordingly in between.
+#'  @param scale_vals Logical determines whether or not to normalize the values using the scale function  Default = FALSE.  If TRUE, values will be scaled by subtracting the means and scaled by dividing by their standard deviations.  See ?scale 
+#'  @return The transformed values
+#'  @export
+#'  
+get_dct_transform <- function(raw_values, low_pass_size = 10, x_reverse_len = 100, scale_vals = FALSE, scale_range = FALSE){
+  if (!is.numeric(raw_values)) 
+    stop("Input must be an numeric vector")
+  if (low_pass_size > length(raw_values)) 
+    stop("low_pass_size must be less than or equal to the length of raw_values input vector")
+  values_dct <- dtt::dct(raw_values, variant = 2)
+  keepers <- values_dct[1:low_pass_size]
+  padded_keepers <- c(keepers, rep(0, x_reverse_len-low_pass_size))
+  dct_out <- dtt::dct(padded_keepers, inverted = T)
+  if (scale_vals & scale_range) 
+    stop("ERROR: scale_vals and scale_range cannot both be true.")
+  if (scale_vals) {
+    return(scale(dct_out))
+  }
+  else if (scale_range & !scale_vals) {
+    return(rescale(dct_out))
+  }
+  else {
+    return(dct_out)
+  }
+}
 
 
 

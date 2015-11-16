@@ -20,7 +20,8 @@ License: GPL-3
 Imports: 
     openNLP,
     NLP,
-    zoo
+    zoo,
+    dtt
 LazyData: true
 Suggests: 
     knitr,

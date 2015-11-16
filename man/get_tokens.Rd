@@ -8,6 +8,8 @@ get_tokens(text_of_file, pattern = "\\\\W")
 }
 \arguments{
 \item{text_of_file}{A Text String}
+
+\item{pattern}{A regular expression for token breaking}
 }
 \value{
 A Character Vector of Words
