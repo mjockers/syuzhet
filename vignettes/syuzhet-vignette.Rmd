@@ -10,9 +10,9 @@ vignette: >
 ---
 
 # Introduction
-This vignette demonstrates use of the six basic functions of the Syuzhet package. The package comes with three sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford.  Use of this later method requires that you have already installed the coreNLP package (see http://nlp.stanford.edu/software/corenlp.shtml).  
+This vignette demonstrates use of the basic functions of the Syuzhet package. The package comes with four sentiment dictionaries and provides a method for accessing the robust, but computationally expensive, sentiment extraction tool developed in the NLP group at Stanford.  Use of this later method requires that you have already installed the coreNLP package (see http://nlp.stanford.edu/software/corenlp.shtml).  
 
-The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files.  This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized.  A deeper discussion and theoretical justification for the approach implemented in this package can be found in Jockers, Matthew L. "Syuzhet: Revealing Plot and Sentiment Arcs." 2015 [Forthcoming].
+The goal of this vignette is to introduce the main functions in the package so that you can quickly extract plot and sentiment data from your own text files.  This document will use a short example passage to demonstrate the functions and the various ways that the extracted data can be returned and or visualized.
 
 ## get_sentences
 
@@ -35,7 +35,7 @@ my_example_text <- "I begin this story with a neutral statement.
 s_v <- get_sentences(my_example_text)
 ```
 
-The result of calling ```get_sentences()``` is a new character vector named ```s_v```.  This vector contains 12 items, one for each tokenized sentence.  If you wish to examine the sentences, you can inspect the resultant character vector as you would any other character vector in R.  For example,
+The result of calling ```get_sentences()``` in this example is a new character vector named ```s_v```.  This vector contains 12 items, one for each tokenized sentence.  If you wish to examine the sentences, you can inspect the resultant character vector as you would any other character vector in R.  For example,
 
 ```{r}
 class(s_v)
@@ -50,8 +50,7 @@ The ```get_text_as_string``` function is useful if you wish to load a larger fil
 ```{r, echo = FALSE}
 # Loading locally so I don't keep hitting www.gutenberg.org while testing
 # (and get banned)
-path_to_a_text_file <- system.file("extdata", "portrait.txt",
-                                   package = "syuzhet")
+path_to_a_text_file <- system.file("extdata", "portrait.txt",package = "syuzhet")
 joyces_portrait <- get_text_as_string(path_to_a_text_file)
 poa_v <- get_sentences(joyces_portrait)
 ```
@@ -61,65 +60,95 @@ poa_v <- get_sentences(joyces_portrait)
 The `get_tokens` function allows you to tokenize by words instead of sentences.  You can enter a custom regular expression for defining word boundaries.  By default, the function uses the "\\W" regex to identify word boundaries.  Note that "\\W" does not remove underscores.
 
 ```{r}
-poa_word_v <- get_tokens(joyces_portrait)
+poa_word_v <- get_tokens(joyces_portrait, pattern = "\\W")
 ```
 
 ## get_sentiment()
 
-After you have collected the sentences or word tokens from a text into a vector, you will send them to the ```get_sentiment``` function which will asses the sentiment of each word token or sentence. This function takes two arguments: a character vector (of sentences or words) and a "method."  The method you select determines which of the four available sentiment extraction methods to employ.  In the example that follows below, the "bing" method is called.  This method is based on the sentiment research of Minqing Hu and Bing Liu et. al. (see Minqing Hu and Bing Liu. "Mining and Summarizing Customer Reviews." Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD-2004), Aug 22-25, 2004, Seattle, Washington, USA. http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html).  The documentation for the function offers details about the other methods ("afinn", "nrc", and "stanford") that can be called.  To find the documentation, simply enter ```?get_sentiment``` into your console.
+After you have collected the sentences or word tokens from a text into a vector, you will send them to the ```get_sentiment``` function which will asses the sentiment of each word or sentence. This function takes two arguments: a character vector (of sentences or words) and a "method."  The method you select determines which of the four available sentiment extraction methods to employ.  In the example that follows below, the "syuzhet" (default) method is called.  
+
+Other methods include "bing", "afinn", "nrc", and "stanford"). The documentation for the function provides bibliographic citations for the dictionaries. To see the documentation, simply enter ```?get_sentiment``` into your console.
 
 ```{r} 
-sentiment_vector <- get_sentiment(s_v, method="bing")
+syuzhet_vector <- get_sentiment(poa_v, method="syuzhet")
 # OR if using the word token vector from above
-# sentiment_vector <- get_sentiment(poa_word_v, method="bing")
+# syuzhet_vector <- get_sentiment(poa_word_v, method="syuzhet")
 ```
 
-If you examine the contents of the new ```sentiment_vector``` object, you will see that it now contains a set of 12 values corresponding to the original 12 sentences.  The values are the model's assessment of the sentiment in each sentence.  Here are the "bing" values for the example:
+If you examine the contents of the new ```syuzhet_vector``` object, you will see that it now contains a set of 5147 values corresponding to the 5147 sentences in *Portrait of the Artist as a Young Man*.  The values are the model's assessment of the sentiment in each sentence.  Here are the the first few values based on the default method:
 
 ```{r} 
-sentiment_vector
+head(syuzhet_vector)
 ```
 
-Notice, however, that the different methods will return slightly different results.  
+Notice, however, that the different methods will return slightly different results. Part of the reason for this is that each method uses a slightly different scale. 
 
 ```{r}
-afinn_vector <- get_sentiment(s_v, method="afinn")
-afinn_vector
+bing_vector <- get_sentiment(poa_v, method="bing")
+head(bing_vector)
 
-nrc_vector <- get_sentiment(s_v, method="nrc")
-nrc_vector
+afinn_vector <- get_sentiment(poa_v, method="afinn")
+head(afinn_vector)
+
+nrc_vector <- get_sentiment(poa_v, method="nrc")
+head(nrc_vector)
 
 # Stanford Example: Requires installation of coreNLP and path to directory
 # tagger_path <- "/Applications/stanford-corenlp-full-2014-01-04"
-# stanford_vector <- get_sentiment(s_v, method="stanford", tagger_path)
-# stanford_vector
+# stanford_vector <- get_sentiment(poa_v, method="stanford", tagger_path)
+# head(stanford_vector)
 ```
 
-Discussion of these differences is beyond the scope of this vignette (please see Jockers, 2015 for details). 
-
-We have a number of options in terms of what we can do with these values.  We might, for example, wish to sum the values in order to get a measure of the overall emotional valence in the passage:
+Because the different methods use different scales, it may be more useful to compare them using R's built in ```sign``` function.  The ```sign``` function converts all positive number to ```1```, all negative numbers to ```-1``` and all zeros remain ```0```.
 
 ```{r}
-sum(sentiment_vector)
+
+rbind(
+  sign(head(syuzhet_vector)),
+  sign(head(bing_vector)),
+  sign(head(afinn_vector)),
+  sign(head(nrc_vector))
+)
+
 ```
 
-The result, `r sum(sentiment_vector)` is fairly negative, a fact that may indicate that overall, the passage is kind of a bummer.  As an alternative, we may wish to understand the central tendency, the mean emotional valence.
+Once the sentiment values are determined, we might, for example, wish to sum the values in order to get a measure of the overall emotional valence in the text:
 
 ```{r}
-mean(sentiment_vector)
+sum(syuzhet_vector)
 ```
 
-This mean, as well as similar summary statistics can offer us a better sense of how the emotions in the passage are distributed. You might use the summary function for this.
+The result, `r sum(syuzhet_vector)` is negative, a fact that may indicate that overall, the text is kind of a bummer.  As an alternative, we may wish to understand the central tendency, the mean emotional valence.
 
 ```{r}
-summary(sentiment_vector)
+mean(syuzhet_vector)
 ```
 
-While these global measures of sentiment in the text can be informative, they tell us very little in terms of how the narrative is structured and how these positive and negative sentiments are activated across the text.  You may, therefore, find it useful to plot the values in a graph where the x-axis represents the passage of time from the beginning to the end of the text, and the y-axis measures the degrees of positive and negative sentiment.  Here is an example:
+This mean of `r mean(syuzhet_vector)` is slightly below zero.  This and similar summary statistics may offer a better sense of how the emotions in the passage are distributed. You might use the summary function to get a broad sense of the distribution of sentiment in the text.
+
+```{r}
+summary(syuzhet_vector)
+```
+
+While these global measures of sentiment can be informative, they tell us very little in terms of how the narrative is structured and how these positive and negative sentiments are activated across the text.  You may, therefore, find it useful to plot the values in a graph where the x-axis represents the passage of time from the beginning to the end of the text, and the y-axis measures the degrees of positive and negative sentiment.  Here is an example using the very simple example text from above:
 
 ```{r, fig.width = 6} 
+my_example_text <- "I begin this story with a neutral statement.  
+  Basically this is a very silly test.  
+  You are testing the Syuzhet package using short, inane sentences.  
+  I am actually very happy today. 
+  I have finally finished writing this package.  
+  Tomorrow I will be very sad. 
+  I won't have anything left to do. 
+  I might get angry and decide to do something horrible.  
+  I might destroy the entire package and start from scratch.  
+  Then again, I might find it satisfying to have completed my first R package. 
+  Honestly this use of the Fourier transformation is really quite elegant.  
+  You might even say it's beautiful!"
+s_v <- get_sentences(my_example_text)
+s_v_sentiment <- get_sentiment(s_v)
 plot(
-  sentiment_vector, 
+  s_v_sentiment, 
   type="l", 
   main="Example Plot Trajectory", 
   xlab = "Narrative Time", 
@@ -127,14 +156,13 @@ plot(
   )
 ```
 
-With a small piece of prose, such as the one we are using in this example, the resulting plot is not very difficult to interpret.  The story here begins in neutral territory, moves slightly negative and then enters a period of neutral-to-lightly-positive language.  At the seventh sentence (visible between the sixth and eighth tic marks on the x-axis), however, the sentiment takes a rather negative turn downward, and reaches the low point of the passage. But after two largely negative sentences (eight and nine), the sentiment recovers with very positive tenth and eleventh and twelfth sentences, a "happy ending" if you will.  
+With a short piece of prose, such as the one we are using in this example, the resulting plot is not very difficult to interpret.  The story here begins in neutral territory, moves slightly negative and then enters a period of neutral-to-lightly-positive language.  At the seventh sentence (visible between the sixth and eighth tic marks on the x-axis), however, the sentiment takes a rather negative turn downward, and reaches the low point of the passage. But after two largely negative sentences (eight and nine), the sentiment recovers with very positive tenth, eleventh, and twelfth sentences, a "happy ending" if you will.  
 
-What is observed here is useful for demonstration purposes but is hardly typical of what is seen in a 200,000 page novel. Over the course of three- or four-hundred pages, one will encounter quite a lot of affectual noise.  Here, for example, is a plot of Joyce's *Portrait of the Artist as a Young man*.
+What is observed here is useful for demonstration purposes but is hardly typical of what is seen in a 300 page novel. Over the course of three- or four-hundred pages, one will encounter quite a lot of affectual noise.  Here, for example, is a plot of Joyce's *Portrait of the Artist as a Young man*.
 
 ```{r, fig.width = 6}
-poa_sent <- get_sentiment(poa_v, method="bing")
 plot(
-  poa_sent, 
+  syuzhet_vector, 
   type="h", 
   main="Example Plot Trajectory", 
   xlab = "Narrative Time", 
@@ -142,39 +170,27 @@ plot(
   )
 ```
 
-While this raw data may be useful for certain applications, for visualization it is generally preferable to remove the noise and reveal the core shape of the trajectory.  One way to do that would be to apply a simple trend line.  The next plot applies a trend line to the simple example text containing twelve sentences. 
+While this raw data may be useful for certain applications, for visualization it is generally preferable to remove the noise and reveal the simple shape of the trajectory.  One way to do that would be to apply a trend line.  The next plot applies a moving average trend line to the simple example text containing twelve sentences. 
 
 ```{r, echo=FALSE, fig.width = 6}
 plot(
-  sentiment_vector, 
+  s_v_sentiment, 
   type = "l", 
   main = "Example Plot Trajectory", 
   xlab = "Narrative Time", 
   ylab = "Emotional Valence"
   )
-
-lines(
-    get_transformed_values(
-      sentiment_vector, 
-      low_pass_size = 3, 
-      x_reverse_len = 12, 
-      scale_range = TRUE
-      ), 
-  col = "red", 
-  lwd = 2
-  )
+lines(zoo::rollmean(s_v_sentiment, k=3, fill=NA), col = "red", lwd = 2)
 ```
 
-While such smoothing can be useful for visualizing the emotional trajectory of a single text, it is much less useful if the goal is to compare the trajectories in one or more books. The ```get_percentage_values``` and ```get_transformed_values``` function offer two approaches to x-axis normalization. 
+While a moving average can be useful, we must remember that data on the edges is lost.  Nevertheless, such smoothing can be useful for getting a sense of the emotional trajectory of a single text.  
 
 ## get_percentage_values
 
-In addition to being able to remove the noise in the graph, we'd also like a way of reducing arcs into some finite set of universal forms or archetypes.  The problem with the type of smoothing used above is that it does not allows us to extract and compare the plot arcs from books of differing lengths. In the plots above, the size of the x-axis is always a function of the length of the book being plotted.   
-
-A simple, and perhaps naive, way of dealing with this problem is to divide each text into an equal number of percentage based chunks.  The mean sentiment valence of each chunk can then be calculated and used for comparison. This approach is implemented with the ```get_percentage_values``` function and is demonstrated here using Joyce's Portrait (since it does not make much sense to divide a 12 sentence text into 100 chunks!)
+When it comes to comparing the shape of one trajectory to another, the ```get_percentage_values``` function can be useful. The ```get_percentage_values``` function divides a text into an equal number of "chunks" and then calculates the mean sentiment valence for each.  In the example below, the sentiments from *Portrait* are binned into 10 chunks and then plotted.
 
 ```{r, fig.width = 6}
-percent_vals <- get_percentage_values(poa_sent)
+percent_vals <- get_percentage_values(syuzhet_vector, bins = 10)
 plot(
   percent_vals, 
   type="l", 
@@ -188,7 +204,7 @@ plot(
 Using the optional ```bins``` argument, you can control how many sentences are included inside each percentage based chunk:
 
 ```{r, fig.width = 6}
-percent_vals <- get_percentage_values(poa_sent, bins = 20)
+percent_vals <- get_percentage_values(syuzhet_vector, bins = 20)
 plot(
   percent_vals, 
   type="l", 
@@ -199,23 +215,26 @@ plot(
   )
 ```
 
-## get_transformed_values
-
 Unfortunately, when a series of sentence values are combined into a larger chunk using a percentage based measure, extremes of emotional valence tend to get watered down.  This is especially true when the segments of text that percentage based chunking returns are especially large.  When averaged, a passage of 1000 sentences is far more likely to contain a wide range of values than a 100 sentence passage.  Indeed, the means of longer passages tend to converge toward 0.  But this is not the only problem with percentage-based normalization.  In addition to dulling the emotional variance, percentage-based normalization makes book to book comparison somewhat futile.  A comparison of the first tenth of a very long book, such as Melville's *Moby Dick* with the first tenth of a short novella such as Oscar Wilde's *Picture of Dorian Grey* is simply not all that fruitful because in one case the first tenth is composed of 1000 sentences and in the other just 100.  
 
-The ```Syuzhet``` package provides an alternative to  percentage-based comparison using an implementation of the Fourier Transformation and a low pass filter.  The transformation and filtering is achieved using the ```get_transformed_values``` function as shown below. The ```scale_vals``` and ```scale_range``` arguments are described in the help documentation.
+The ```Syuzhet``` package provides two alternatives to percentage-based comparison using either the Fourier or Discrete Cosine Transformations in combination with a low pass filter.  
+
+## get_transformed_values
+
+Shape smoothing and normalization using a Fourier based transformation and low pass filtering is achieved using the ```get_transformed_values``` function as shown below. The various arguments are described in the help documentation.
 
 ```{r, fig.width = 6} 
 ft_values <- get_transformed_values(
-      poa_sent, 
+      syuzhet_vector, 
       low_pass_size = 3, 
       x_reverse_len = 100,
+      padding_factor = 2,
       scale_vals = TRUE,
       scale_range = FALSE
       )
 plot(
   ft_values, 
-  type ="h", 
+  type ="l", 
   main ="Joyce's Portrait using Transformed Values", 
   xlab = "Narrative Time", 
   ylab = "Emotional Valence", 
@@ -223,10 +242,40 @@ plot(
   )
 ```
 
+## get_dct_transform
+The ```get_dct_transform``` is similar to ```get_transformed_values``` function, but it applies the simpler discrete cosine transformation (DCT) in place of the fast Fourier transform.  It's main advantage is in its better representation of edge values in the smoothed version of the sentiment vector.
+
+```{r, fig.width = 6} 
+dct_values <- get_dct_transform(
+      syuzhet_vector, 
+      low_pass_size = 5, 
+      x_reverse_len = 100,
+      scale_vals = F,
+      scale_range = T
+      )
+plot(
+  dct_values, 
+  type ="l", 
+  main ="Joyce's Portrait using Transformed Values", 
+  xlab = "Narrative Time", 
+  ylab = "Emotional Valence", 
+  col = "red"
+  )
+```
+
+##simple_plot
+The ```simple_plot``` function takes a sentiment vector and applies three smoothing methods.  The smoothers include a moving average, loess, and discrete cosine transformation.  This function produces two plots stacked.  The first shows all three smoothing methods on the same graph.  The second graph shows only the DCT smoothed line, but does so on a normalized time axis.  The shape of the DCT line in both the top and bottom graphs are identical.  In the following code Flaubert's *Madame Bovary* has been used in place of Joyce's *Portrait*.
+
+```{r, fig.height=8, fig.width = 6} 
+path_to_a_text_file <- system.file("extdata", "bovary.txt", package = "syuzhet")
+bovary <- get_text_as_string(path_to_a_text_file)
+bovary_v <- get_sentences(bovary)
+bovary_sentiment <- get_sentiment(bovary_v)
+simple_plot(bovary_sentiment)
+```
+
 ## get_nrc_sentiment
-The ```get_nrc_sentiment``` implements Saif Mohammad's NRC Emotion lexicon.  According to Mohammad, "the NRC emotion lexicon is a list of words and their associations with
-eight emotions (anger, fear, anticipation, trust, surprise, sadness,
-joy, and disgust) and two sentiments (negative and positive)" (See http://www.purl.org/net/NRCemotionlexicon).  The ```get_nrc_sentiment``` function returns a data frame in which each row represents a sentence from the original file.  The columns include one for each emotion type was well as the positive or negative sentiment valence. The example below calls the function using the simple twelve sentence example passage stored in the ```s_v``` object from above.
+The ```get_nrc_sentiment``` implements Saif Mohammad's NRC Emotion lexicon.  According to Mohammad, "the NRC emotion lexicon is a list of words and their associations with eight emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive)" (See http://www.purl.org/net/NRCemotionlexicon).  The ```get_nrc_sentiment``` function returns a data frame in which each row represents a sentence from the original file.  The columns include one for each emotion type was well as the positive or negative sentiment valence. The example below calls the function using the simple twelve sentence example passage stored in the ```s_v``` object from above.
 
 ```{r}
 nrc_data <- get_nrc_sentiment(s_v)
@@ -249,7 +298,7 @@ s_v[joy_items]
 It is simple to view all of the emotions and their values:
 
 ```{r, results='asis'}
-pander::pandoc.table(nrc_data[, 1:8])
+pander::pandoc.table(nrc_data[, 1:8], split.table = Inf)
 ```
 
 Or you can examine only the positive and negative valence:
@@ -278,5 +327,98 @@ barplot(
 
 ```
 
+## rescale_x_2
+The ```rescale_x_2``` function is handy for re-scaling values to a normalized x and y axis.  This is useful for comparing two sentiment arcs.  Assume that we want to compare the shapes produced by applying a moving average to two different sentiment arcs.  First we'll compute the raw sentiment values in *Portrait of the Artist* and *Madame Bovary*.
+
+```{r}
+path_to_a_text_file <- system.file("extdata", "portrait.txt",package = "syuzhet")
+joyces_portrait <- get_text_as_string(path_to_a_text_file)
+poa_v <- get_sentences(joyces_portrait)
+poa_values <- get_sentiment(poa_v, method="syuzhet")
+
+path_to_a_text_file <- system.file("extdata", "bovary.txt", package = "syuzhet")
+bovary <- get_text_as_string(path_to_a_text_file)
+bovary_v <- get_sentences(bovary)
+bovary_values <- get_sentiment(bovary_v)
+```
+
+Now we'll calculate a moving average for each vector of raw values.  We'll use a window size equal to 1/10 of the overall length of the vector.
+
+```{r}
+pwdw <- round(length(poa_values)*.1)
+poa_rolled <- zoo::rollmean(poa_values, k=pwdw)
+bwdw <- round(length(bovary_values)*.1)
+bov_rolled <- zoo::rollmean(bovary_values, k=bwdw)
+```
+
+The resulting vectors are of different lengths: `r length(poa_rolled)` and `r length(bov_rolled)`, so we can use ```rescale_x_2``` to put them on the same scale.
+
+```{r}
+poa_list <- rescale_x_2(poa_rolled)
+bov_list <- rescale_x_2(bov_rolled)
+```
+
+We can then plot the two lines on the same graph even though they are of different lengths:
+
+```{r, fig.width=6}
+plot(poa_list$x, 
+     poa_list$z, 
+     type="l", 
+     col="blue", 
+     xlab="Narrative Time", 
+     ylab="Emotional Valence")
+lines(bov_list$x, bov_list$z, col="red")
+```
+
+Though we have now managed to scale both the x axis and y axis so as to be able to plot them on the same graph, we still don't have vectors of the same length, which means that they cannot be easily compared mathematically. The time axis for *Portrait of the Artist* is `r length(poa_list$x)` units long and the time axis for *Madame Bovary* is `r length(bov_list$x)` units.  
+
+It is possible to sample from these vectors.  In the code that follows here, we divide each vector into 100 samples and then plot those sampled points.  The result is that each line is constructed out of 100 points on the x-axis.  
+
+```{r, fig.width=6}
+poa_sample <- seq(1, length(poa_list$x), by=round(length(poa_list$x)/100))
+bov_sample <- seq(1, length(bov_list$x), by=round(length(bov_list$x)/100))
+
+plot(poa_list$x[poa_sample], 
+     poa_list$z[poa_sample], 
+     type="l", 
+     col="blue",
+     xlab="Narrative Time (sampled)", 
+     ylab="Emotional Valence"
+     )
+lines(bov_list$x[bov_sample], bov_list$z[bov_sample], col="red")
+```
+
+With a equal number of values, in each vector, we can then apply a measure of distance or similarity, such as Euclidean distance of Pearson's Correlation.
+
+```{r}
+# Euclidean
+dist(rbind(poa_list$z[poa_sample], bov_list$z[bov_sample]))
+# Correlation
+cor(cbind(poa_list$z[poa_sample], bov_list$z[bov_sample]))
+```
+
+Some users may find this sort of normalization and sampling preferable to the alternative method provided by the ```get_dct_transform```, which assumes that the main flow of the sentiment trajectory is found within the low frequency components of the transformed signal.  In this example, we have sampled from a set of values that have been smoothed using a moving average (which is a type of low pass filter).  Once could easily apply this same routine to values that have been smoothed using some other method, such as the loess smoother that is implemented in the ```simple_plot``` function.   
+
+Here is how one might use a similar approach to sample from a loess smoothed line.
+
+```{r, fig.width=6}
+poa_x <- 1:length(poa_values)
+poa_y <- poa_values
+raw_poa <- loess(poa_y ~ poa_x, span=.5)
+poa_line <- rescale(predict(raw_poa))
+bov_x <- 1:length(bovary_values)
+bov_y <- bovary_values
+raw_bov <- loess(bov_y ~ bov_x, span=.5)
+bov_line <- rescale(predict(raw_bov))
+poa_sample <- seq(1, length(poa_line), by=round(length(poa_line)/100))
+bov_sample <- seq(1, length(bov_line), by=round(length(bov_line)/100))
+plot(poa_line[poa_sample], 
+     type="l", 
+     col="blue",
+     xlab="Narrative Time (sampled)", 
+     ylab="Emotional Valence"
+     )
+lines(bov_line[bov_sample], col="red")
+```
 
 

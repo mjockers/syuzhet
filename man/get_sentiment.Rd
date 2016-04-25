@@ -4,13 +4,12 @@
 \alias{get_sentiment}
 \title{Get Sentiment Values for a String}
 \usage{
-get_sentiment(char_v, method = c("afinn", "bing", "nrc", "stanford"),
-  path_to_tagger = NULL)
+get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL)
 }
 \arguments{
 \item{char_v}{A vector of strings for evaluation.}
 
-\item{method}{A string indicating which sentiment method to use. Options include "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.}
+\item{method}{A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.}
 
 \item{path_to_tagger}{local path to location of Stanford CoreNLP package}
 }
@@ -18,7 +17,7 @@ get_sentiment(char_v, method = c("afinn", "bing", "nrc", "stanford"),
 Return value is a numeric vector of sentiment values, one value for each input sentence.
 }
 \description{
-Iterates over a vector of strings and returns sentiment values based on user supplied method.
+Iterates over a vector of strings and returns sentiment values based on user supplied method. The default method, "syuzhet" is a custom sentiment dictionary developed in the Nebraska Literary Lab.  The default dictionary should be better tuned to fiction as the terms were extracted from a collection of 165,000 human coded sentences taken from a small corpus of contemporary novels.
 }
 \references{
 Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.

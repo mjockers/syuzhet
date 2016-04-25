@@ -4,7 +4,7 @@
 \alias{get_sent_values}
 \title{Assigns Sentiment Values}
 \usage{
-get_sent_values(char_v, method = "bing")
+get_sent_values(char_v, method = "syuzhet")
 }
 \arguments{
 \item{char_v}{A string}
@@ -16,6 +16,6 @@ A single numerical value (positive or negative)
 based on the assessed sentiment in the string
 }
 \description{
-Assigns sentiment values to words based on preloaded dictionary
+Assigns sentiment values to words based on preloaded dictionary. The default is the syuzhet dictionary.
 }
 

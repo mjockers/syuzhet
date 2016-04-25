@@ -2,34 +2,34 @@
 # Syuzhet
 An R package for the extraction of sentiment and sentiment-based plot arcs from text.
 
-The name "Syuzhet" comes from the Russian Formalist Vladimir Propp who divided narrative construction into two components, the "fabula" and the "syuzhet."  Syuzhet refers to the "device" or technique of a narrative whereas fabula is the chronological order of events.  Syuzhet, therefore, is concerned with the manner in which the elements of the story (fabula) are organized.
+The name "Syuzhet" comes from the Russian Formalists Victor Shklovsky and Vladimir Propp who divided narrative into two components, the "fabula" and the "syuzhet."  Syuzhet refers to the "device" or technique of a narrative whereas fabula is the chronological order of events.  Syuzhet, therefore, is concerned with the manner in which the elements of the story (fabula) are organized (syuzhet).
 
-The Syuzhet package attempts to reveal the latent structure of narrative by means of sentiment analysis.  Instead of detecting shifts in the topic or subject matter of the narrative ([as Ben Schmidt has done](http://sappingattention.blogspot.com/2014/12/fundamental-plot-arcs-seen-through.html)), the Syuzhet package reveals the emotional and affectual shifts that serve as proxies for the narrative movement between conflict and conflict resolution.  This was an idea explored by the late Kurt Vonnegut in an essay titled "Here's a Lesson in Creative Writing" in his collection *A Man Without A Country* ( Random House, 2007).  [A lecture Vonnegut gave on this subject is available via youTube](https://www.youtube.com/watch?v=oP3c1h8v2ZQ)
-
-A deeper discussion and theoretical justification for the approach implemented in this package will be found in Jockers, Matthew L. "Syuzhet: Revealing Plot and Sentiment Arcs." [forthcoming 2015].  Interested readers may also wish to consult [A Novel Method for Detecting Plot](http://www.matthewjockers.net/2014/06/05/a-novel-method-for-detecting-plot/) and [So What?](http://www.matthewjockers.net/2014/05/07/so-what/).
+The Syuzhet package attempts to reveal the latent structure of narrative by means of sentiment analysis.  Instead of detecting shifts in the topic or subject matter of the narrative ([as Ben Schmidt has done](http://sappingattention.blogspot.com/2014/12/fundamental-plot-arcs-seen-through.html)), the Syuzhet package reveals the emotional shifts that serve as proxies for the narrative movement between conflict and conflict resolution.  This was an idea inspired by the late Kurt Vonnegut in an essay titled "Here's a Lesson in Creative Writing" in his collection *A Man Without A Country* ( Random House, 2007).  [A lecture Vonnegut gave on this subject is available via youTube](https://www.youtube.com/watch?v=oP3c1h8v2ZQ)
 
 *Thanks to Lincoln Mullen for early feedback on this package (see http://rpubs.com/lmullen/58030)*.
 
 ## Installation
 
-This package is now available on CRAN (http://cran.r-project.org/web/packages/syuzhet/), but you can easily install the most current development version from gitHub using the devtools package:
+This package is now available on CRAN (http://cran.r-project.org/web/packages/syuzhet/).  You can install the most current development version from gitHub using the devtools package:
 
 ```R
 # install.packages("devtools")
 devtools::install_github("mjockers/syuzhet")
 ```
 ## References
-Syuchet incorporates the work of other scholars as follows:
+Syuzhet incorporates four sentiment lexicons:
 
-Finn {\AA}rup Nielsen - AFINN WORD DATABASE
+The default "Syuzhet" lexicon was developed in the Nebraska Literary Lab under the direction of Matthew L. Jockers 
+
+The "afinn" lexicon was develoepd by Finn Arup Nielsen as the AFINN WORD DATABASE
 See: See http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010
 The AFINN database of words is copyright protected and distributed under
 "Open Database License (ODbL) v1.0" http://www.opendatacommons.org/licenses/odbl/1.0/ or a similar copyleft license.
 
-Minqing Hu and Bing Liu - OPINION LEXICON
+The "bing" lexicon was develoepd by Minqing Hu and Bing Liu as the OPINION LEXICON
 See: http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
 
-Mohammad, Saif M. and Turney, Peter D. - NRC EMOTION LEXICON.  
+The "nrc" lexicon was develoepd by Mohammad, Saif M. and Turney, Peter D. as the NRC EMOTION LEXICON.  
 See: http://saifmohammad.com/WebPages/lexicons.html
 The NRC EMOTION LEXICON is released under the following terms of use:
 Terms of use:

@@ -46,10 +46,10 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 
 #' Get Sentiment Values for a String
 #' @description
-#' Iterates over a vector of strings and returns sentiment values based on user supplied method.
+#' Iterates over a vector of strings and returns sentiment values based on user supplied method. The default method, "syuzhet" is a custom sentiment dictionary developed in the Nebraska Literary Lab.  The default dictionary should be better tuned to fiction as the terms were extracted from a collection of 165,000 human coded sentences taken from a small corpus of contemporary novels.
 #' 
 #' @param char_v A vector of strings for evaluation.
-#' @param method A string indicating which sentiment method to use. Options include "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
+#' @param method A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
 #' 
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
@@ -67,10 +67,10 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = c("afinn", "bing", "nrc", "stanford"), path_to_tagger = NULL){
-  if (!is.character(char_v)) stop("Data must be a character vector.")
-  method <- match.arg(method)
-  if(method == "afinn" || method == "bing"){
+get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL){
+  if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford")))) stop("Invalid Method")
+  if(!is.character(char_v)) stop("Data must be a character vector.")
+  if(method == "afinn" || method == "bing" || method == "syuzhet"){
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
     result <- unlist(lapply(word_l, get_sent_values, method))
   }
@@ -91,19 +91,23 @@ get_sentiment <- function(char_v, method = c("afinn", "bing", "nrc", "stanford")
 
 #' Assigns Sentiment Values
 #' @description
-#' Assigns sentiment values to words based on preloaded dictionary
+#' Assigns sentiment values to words based on preloaded dictionary. The default is the syuzhet dictionary.
 #'
 #' @param char_v A string
 #' @param method A string indicating which sentiment dictionary to use
 #' @return A single numerical value (positive or negative)
 #' based on the assessed sentiment in the string
 #'
-get_sent_values<-function(char_v, method = "bing"){
+get_sent_values<-function(char_v, method = "syuzhet"){
   if(method == "bing") {
     result <- sum(bing[which(bing$word %in% char_v), "value"])
   }
   else if(method == "afinn"){
     result <- sum(afinn[which(afinn$word %in% char_v), "value"])
+  }
+  else if(method == "syuzhet"){
+    char_v <- gsub("-", "", char_v)
+    result <- sum(syuzhet_dict[which(syuzhet_dict$word %in% char_v), "value"])
   }
   else if(method == "nrc") {
     result <- get_nrc_sentiment(char_v)
@@ -264,10 +268,11 @@ rescale <- function(x){
 
 #'  Bi-Directional x and y axis Rescaling
 #'  @description
-#'  Rescale Transformed values from -1 to 1 on the y-axis and scale from zero to 1 on the x-axis
+#'  Rescales input values to two scales (0 to 1 and  -1 to 1) on the y-axis and also creates a scaled vector of x axis values from 0 to 1.  This function is useful for plotting and plot comparison.
 #'  @param v A vector of values
+#'  @return A list of three vectors (x, y, z).  x is a vector of values from 0 to 1 equal in length to the input vector v. y is a scaled (from 0 to 1) vector of the input values equal in lenght to the input vector v. z is a scaled (from -1 to +1) vector of the input values equal in length to the input vector v.
 #'  @export
-rescale2 <- function(v){
+rescale_x_2 <- function(v){
   x <- 1:length(v)/length(v)
   y <- v/max(v)
   z <- 2 * (v - min(v))/(max(v) - min(v)) - 1
@@ -283,16 +288,24 @@ rescale2 <- function(v){
 #'  @export
 simple_plot <- function(raw_values, title="Syuzhet Plot", legend_pos="top"){
   wdw <- round(length(raw_values)*.1) # wdw = 10% of length
-  rolled <- zoo::rollmean(raw_values, k = wdw, fill = 0)
-  trans <- get_transformed_values(raw_values, x_reverse_len = length(raw_values), scale_range = T)
+  rolled <- rescale(zoo::rollmean(raw_values, k = wdw, fill = 0))
+  half <- round(wdw/2)
+  rolled[1:half] <- NA
+  end <- length(rolled) - half
+  rolled[end:length(rolled)] <- NA
+  trans <- get_dct_transform(raw_values, x_reverse_len = length(raw_values), scale_range = T)
   x <- 1:length(raw_values)
   y <- raw_values
   raw_lo <- loess(y ~ x, span=.5)
   low_line <- rescale(predict(raw_lo))
-  plot(low_line, type = "l", ylim = c(-1,1), main = title, xlab = "Narrative Time", ylab = "Scaled Sentiment")
-  lines(rescale(rolled), col="blue")
+  par(mfrow=c(2, 1))
+  plot(low_line, type = "l", ylim = c(-1,1), main = title, xlab = "Full Narrative Time", ylab = "Scaled Sentiment")
+  lines(rolled, col="blue")
   lines(trans, col="red")
-  legend(legend_pos, c("Loess Smooth", "Rolling Mean", "Simple Syuzhet"), lty=1, lwd=1,col=c('black', 'blue', 'red'), bty='n', cex=.75)
+  legend(legend_pos, c("Loess Smooth", "Rolling Mean", "Syuzhet DCT"), lty=1, lwd=1,col=c('black', 'blue', 'red'), bty='n', cex=.75)
+  normed_trans <- get_dct_transform(raw_values, scale_range = T)
+  plot(normed_trans,type = "l", ylim = c(-1,1), main = "Normalized Simple Shape", xlab = "Normalized Narrative Time", ylab = "Scaled Sentiment", col="red")
+  par(mfrow=c(1, 1))
 }
 
 #'  Discrete Cosine Transformation with Reverse Transform to Time Domain
@@ -303,14 +316,20 @@ simple_plot <- function(raw_values, title="Syuzhet Plot", legend_pos="top"){
 #'  @param raw_values the raw sentiment values
 #'  calculated for each sentence
 #'  @param low_pass_size The number of components
-#'  to retain in the low pass filtering. Default = 10
+#'  to retain in the low pass filtering. Default = 5
 #'  @param x_reverse_len the number of values to return via decimation. Default = 100
 #'  @param scale_range Logical determines whether or not to scale the values from -1 to +1.  Default = FALSE.  If set to TRUE, the lowest value in the vector will be set to -1 and the highest values set to +1 and all the values scaled accordingly in between.
 #'  @param scale_vals Logical determines whether or not to normalize the values using the scale function  Default = FALSE.  If TRUE, values will be scaled by subtracting the means and scaled by dividing by their standard deviations.  See ?scale 
 #'  @return The transformed values
 #'  @export
-#'  
-get_dct_transform <- function(raw_values, low_pass_size = 10, x_reverse_len = 100, scale_vals = FALSE, scale_range = FALSE){
+#'  @examples
+#'  s_v <- get_sentences("I begin this story with a neutral statement.
+#'  Now I add a statement about how much I despise cats.  
+#'  I am allergic to them. I hate them. Basically this is a very silly test. But I do love dogs!")
+#'  raw_values <- get_sentiment(s_v, method = "syuzhet")
+#'  dct_vals <- get_dct_transform(raw_values)
+#'  plot(dct_vals, type="l", ylim=c(-0.1,.1))
+get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100, scale_vals = FALSE, scale_range = FALSE){
   if (!is.numeric(raw_values)) 
     stop("Input must be an numeric vector")
   if (low_pass_size > length(raw_values)) 
@@ -331,8 +350,6 @@ get_dct_transform <- function(raw_values, low_pass_size = 10, x_reverse_len = 10
     return(dct_out)
   }
 }
-
-
 
 
 

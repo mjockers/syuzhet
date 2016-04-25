@@ -4,7 +4,7 @@
 \alias{get_dct_transform}
 \title{Discrete Cosine Transformation with Reverse Transform to Time Domain}
 \usage{
-get_dct_transform(raw_values, low_pass_size = 10, x_reverse_len = 100,
+get_dct_transform(raw_values, low_pass_size = 5, x_reverse_len = 100,
   scale_vals = FALSE, scale_range = FALSE)
 }
 \arguments{
@@ -12,7 +12,7 @@ get_dct_transform(raw_values, low_pass_size = 10, x_reverse_len = 100,
 calculated for each sentence}
 
 \item{low_pass_size}{The number of components
-to retain in the low pass filtering. Default = 10}
+to retain in the low pass filtering. Default = 5}
 
 \item{x_reverse_len}{the number of values to return via decimation. Default = 100}
 
@@ -27,5 +27,13 @@ The transformed values
 Converts input values into a standardized
  set of filtered and reverse transformed values for
  easy plotting and/or comparison.
+}
+\examples{
+s_v <- get_sentences("I begin this story with a neutral statement.
+ Now I add a statement about how much I despise cats.
+ I am allergic to them. I hate them. Basically this is a very silly test. But I do love dogs!")
+ raw_values <- get_sentiment(s_v, method = "syuzhet")
+ dct_vals <- get_dct_transform(raw_values)
+ plot(dct_vals, type="l", ylim=c(-0.1,.1))
 }
 

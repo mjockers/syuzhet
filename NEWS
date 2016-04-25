@@ -1,10 +1,19 @@
+syuzhet 1.0.0
+==========
+* Added get_dct_transform(), rescale_x_2(), and simple_plot() functions.  
+
+* Added new "syuzhet" (default) sentiment dictionary. 
+
+* Updated documentation and vignettes.
+
 syuzhet 0.3.0
 ==========
-Added get_tokens for word level tokenization in addition to sentence level.  Updated get_transformed_values with changes from Tommy MacGuire that resolve the periodicity artifacts at the beginnings and ends of a transfomred signal. Updated documentation.
+* Added get_tokens() for word level tokenization in addition to sentence level. 
+* Updated get_transformed_values() with changes from Tommy MacGuire that resolve the periodicity artifacts at the beginnings and ends of a transfomred signal. Updated documentation.
 
 syuzhet 0.2.2
 ==========
-Added quote stripping option to get_sentences() function (Thanks to Annie Swafford)
+* Added quote stripping option to get_sentences() function (Thanks to Annie Swafford)
 
 syuzhet 0.2.1
 ==========

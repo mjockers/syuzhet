@@ -20,14 +20,17 @@ test_that("Sentences are correctly parsed.", {
 
 context("Getting sentiment")
 
+syu   <- get_sentiment(sents, method = "syuzhet")
 bing  <- get_sentiment(sents, method = "bing")
 afinn <- get_sentiment(sents, method = "afinn")
 nrc   <- get_sentiment(sents, method = "nrc")
 
 test_that("Sentiments are returned correctly", {
+  expect_that(syu, is_a("numeric"))
   expect_that(bing, is_a("integer"))
   expect_that(afinn, is_a("integer"))
   expect_that(nrc, is_a("numeric")) # because it is averages
+  expect_equal(length(sents), length(syu))
   expect_equal(length(sents), length(bing))
   expect_equal(length(sents), length(afinn))
   expect_equal(length(sents), length(nrc))
