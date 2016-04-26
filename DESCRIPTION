@@ -22,7 +22,9 @@ Imports:
     openNLP,
     NLP,
     zoo,
-    dtt
+    dtt,
+    stats,
+    graphics
 LazyData: true
 Suggests: 
     knitr,
