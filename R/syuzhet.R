@@ -70,6 +70,9 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL){
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
+  if(method == "syuzhet"){
+    char_v <- gsub("-", "", char_v) #syuzhet lexicon removes hyphens from compound words.
+  }
   if(method == "afinn" || method == "bing" || method == "syuzhet"){
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
     result <- unlist(lapply(word_l, get_sent_values, method))
