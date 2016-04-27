@@ -5,3 +5,4 @@
 ^\.gitignore$
 ^NEWS$
 ^cran-comments\.md$
+^revdep$
