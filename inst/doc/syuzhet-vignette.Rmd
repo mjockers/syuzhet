@@ -102,7 +102,6 @@ head(nrc_vector)
 Because the different methods use different scales, it may be more useful to compare them using R's built in ```sign``` function.  The ```sign``` function converts all positive number to ```1```, all negative numbers to ```-1``` and all zeros remain ```0```.
 
 ```{r}
-
 rbind(
   sign(head(syuzhet_vector)),
   sign(head(bing_vector)),
@@ -224,6 +223,7 @@ The ```Syuzhet``` package provides two alternatives to percentage-based comparis
 Shape smoothing and normalization using a Fourier based transformation and low pass filtering is achieved using the ```get_transformed_values``` function as shown below. The various arguments are described in the help documentation.
 
 ```{r, fig.width = 6} 
+library(syuzhet)
 ft_values <- get_transformed_values(
       syuzhet_vector, 
       low_pass_size = 3, 
@@ -245,7 +245,8 @@ plot(
 ## get_dct_transform
 The ```get_dct_transform``` is similar to ```get_transformed_values``` function, but it applies the simpler discrete cosine transformation (DCT) in place of the fast Fourier transform.  It's main advantage is in its better representation of edge values in the smoothed version of the sentiment vector.
 
-```{r, fig.width = 6} 
+```{r, fig.width = 6}
+library(syuzhet)
 dct_values <- get_dct_transform(
       syuzhet_vector, 
       low_pass_size = 5, 

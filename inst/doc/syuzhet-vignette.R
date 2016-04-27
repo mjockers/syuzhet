@@ -53,7 +53,6 @@ head(nrc_vector)
 # head(stanford_vector)
 
 ## ------------------------------------------------------------------------
-
 rbind(
   sign(head(syuzhet_vector)),
   sign(head(bing_vector)),
@@ -136,6 +135,7 @@ plot(
   )
 
 ## ---- fig.width = 6------------------------------------------------------
+library(syuzhet)
 ft_values <- get_transformed_values(
       syuzhet_vector, 
       low_pass_size = 3, 
@@ -154,6 +154,7 @@ plot(
   )
 
 ## ---- fig.width = 6------------------------------------------------------
+library(syuzhet)
 dct_values <- get_dct_transform(
       syuzhet_vector, 
       low_pass_size = 5, 

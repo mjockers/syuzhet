@@ -1,6 +1,6 @@
 bibentry("Manual",
   title = "Syuzhet: Extract Sentiment and Plot Arcs from Text",
-  author = "Matthew Jockers",
+  author = "Matthew L. Jockers",
   year = "2015",
   url = "https://github.com/mjockers/syuzhet"
   )

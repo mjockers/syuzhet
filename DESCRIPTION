@@ -6,19 +6,19 @@ Date: 2016-04-22
 Authors@R: person("Matthew", "Jockers", email = "mjockers@gmail.com",
   role = c("aut", "cre"))
 Maintainer: Matthew Jockers <mjockers@gmail.com>
-Description: Extracts sentiment and sentiment-derived plot arcs 
-  from text using three sentiment dictionaries conveniently 
-  packaged for consumption by R users.  Implemented dictionaries include 
-  "syuzhet" (default) developed in the Nebraska Literary Lab
-  "afinn" developed by Finn {\AA}rup Nielsen, "bing" developed by Minqing Hu 
-  and Bing Liu, and "nrc" developed by Mohammad, Saif M. and Turney, Peter D. 
-  Applicable references are available in README.md and in the documentation 
-  for the "get_sentiment" function.  The package also provides a hack for 
-  implementing Stanford's coreNLP sentiment parser. The package provides 
-  several methods for plot arc normalization. 
+Description: Extracts sentiment and sentiment-derived plot arcs
+    from text using three sentiment dictionaries conveniently
+    packaged for consumption by R users.  Implemented dictionaries include
+    "syuzhet" (default) developed in the Nebraska Literary Lab
+    "afinn" developed by Finn {\AA}rup Nielsen, "bing" developed by Minqing Hu
+    and Bing Liu, and "nrc" developed by Mohammad, Saif M. and Turney, Peter D.
+    Applicable references are available in README.md and in the documentation
+    for the "get_sentiment" function.  The package also provides a hack for
+    implementing Stanford's coreNLP sentiment parser. The package provides
+    several methods for plot arc normalization.
 URL: https://github.com/mjockers/syuzhet
 License: GPL-3
-Imports: 
+Imports:
     openNLP,
     NLP,
     zoo,
@@ -26,10 +26,10 @@ Imports:
     stats,
     graphics
 LazyData: true
-Suggests: 
+Suggests:
     knitr,
     pander,
     testthat (>= 0.9.1)
 NeedsCompilation: no
 VignetteBuilder: knitr
-
+RoxygenNote: 5.0.1
