@@ -198,11 +198,11 @@ get_transformed_values <- function(raw_values, low_pass_size = 2, x_reverse_len 
   if(scale_vals & scale_range) stop("ERROR: scale_vals and scale_range cannot both be true.")
   if(scale_vals){
     return(scale(transformed_values))
-  } else if(scale_range & !scale_vals) {
-    return(rescale(transformed_values))
-  } else {
-    return(transformed_values)
   }
+  if(scale_range){
+    return(rescale(transformed_values))
+  }
+  return(transformed_values)
 }
 
 #' Chunk a Text and Get Means
@@ -215,13 +215,13 @@ get_transformed_values <- function(raw_values, low_pass_size = 2, x_reverse_len 
 #' @return A vector of mean values from each chunk
 #'
 get_percentage_values <- function(raw_values, bins = 100){
-  if(!is.numeric(raw_values)) stop("Input must be a numeric vector")
+  if(!is.numeric(raw_values) | !is.numeric(bins)) stop("Input must be a numeric vector")
   if(length(raw_values)/bins < 2){
     stop("Input vector needs to be twice as long as value number to make percentage based segmentation viable")
   }
   chunks <- split(raw_values, cut(1:length(raw_values),bins))
-  means = sapply(chunks, mean)
-  names(means) = 1:bins
+  means <- sapply(chunks, mean)
+  names(means) <- 1:bins
   return(means)
 }
 
@@ -291,9 +291,7 @@ simple_plot <- function(raw_values, title="Syuzhet Plot", legend_pos="top"){
   end <- length(rolled) - half
   rolled[end:length(rolled)] <- NA
   trans <- get_dct_transform(raw_values, x_reverse_len = length(raw_values), scale_range = T)
-  x <- 1:length(raw_values)
-  y <- raw_values
-  raw_lo <- stats::loess(y ~ x, span=.5)
+  raw_lo <- stats::loess(raw_values ~ seq_along(raw_values), span=.5)
   low_line <- rescale(stats::predict(raw_lo))
   graphics::par(mfrow=c(2, 1))
   graphics::plot(low_line, type = "l", ylim = c(-1,1), main = title, xlab = "Full Narrative Time", ylab = "Scaled Sentiment")
@@ -340,11 +338,9 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
   if (scale_vals) {
     return(scale(dct_out))
   }
-  else if (scale_range & !scale_vals) {
+  if(scale_range) {
     return(rescale(dct_out))
   }
-  else {
-    return(dct_out)
-  }
+  return(dct_out)
 }
 
