@@ -4,7 +4,8 @@
 \alias{simple_plot}
 \title{Plots simple and rolling shapes overlayed}
 \usage{
-simple_plot(raw_values, title = "Syuzhet Plot", legend_pos = "top")
+simple_plot(raw_values, title = "Syuzhet Plot", legend_pos = "top",
+  lps = 10, window = 0.1)
 }
 \arguments{
 \item{raw_values}{the raw sentiment values
@@ -13,6 +14,8 @@ calculated for each sentence}
 \item{title}{for image}
 
 \item{legend_pos}{positon for legend}
+
+\item{number}{of components for the filter}
 }
 \description{
 A Simple function for comparing three smoothers
