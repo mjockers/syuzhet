@@ -280,7 +280,7 @@ rescale_x_2 <- function(v){
 #' @description A Simple function for comparing three smoothers
 #' @param raw_values the raw sentiment values
 #' calculated for each sentence
-#' @param title for image
+#' @param title for resulting image
 #' @param legend_pos positon for legend
 #' @param number of components for the filter
 #' @export
