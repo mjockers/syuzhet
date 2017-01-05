@@ -4,12 +4,14 @@
 \alias{get_sent_values}
 \title{Assigns Sentiment Values}
 \usage{
-get_sent_values(char_v, method = "syuzhet")
+get_sent_values(char_v, method = "syuzhet", lang = "english")
 }
 \arguments{
 \item{char_v}{A string}
 
 \item{method}{A string indicating which sentiment dictionary to use}
+
+\item{lang}{A string. Only works with "nrc" method}
 }
 \value{
 A single numerical value (positive or negative)

@@ -50,6 +50,7 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 #' 
 #' @param char_v A vector of strings for evaluation.
 #' @param method A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
+#' @param lang A string. Only works for "nrc" method
 #' 
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
@@ -67,7 +68,7 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL){
+get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, lang = "english"){
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
   if(method == "syuzhet"){
@@ -93,11 +94,12 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL){
 #' Assigns sentiment values to words based on preloaded dictionary. The default is the syuzhet dictionary.
 #' @param char_v A string
 #' @param method A string indicating which sentiment dictionary to use
+#' @param lang A string. Only works with "nrc" method
 #' @return A single numerical value (positive or negative)
 #' based on the assessed sentiment in the string
 #' @export
 #'
-get_sent_values <- function(char_v, method = "syuzhet"){
+get_sent_values <- function(char_v, method = "syuzhet", lang = "english"){
   if(method == "bing") {
     result <- sum(bing[which(bing$word %in% char_v), "value"])
   }
@@ -109,7 +111,7 @@ get_sent_values <- function(char_v, method = "syuzhet"){
     result <- sum(syuzhet_dict[which(syuzhet_dict$word %in% char_v), "value"])
   }
   else if(method == "nrc") {
-    result <- get_nrc_sentiment(char_v)
+    result <- get_nrc_sentiment(char_v, lang)
   }
   return(result)
 }
@@ -121,6 +123,7 @@ get_sent_values <- function(char_v, method = "syuzhet"){
 #' corresponding valence in a text file.
 #' 
 #' @param char_v A character vector
+#' @param lang A string
 #' @return A data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
 #' emotion type as well as a positive or negative valence.  
@@ -128,10 +131,11 @@ get_sent_values <- function(char_v, method = "syuzhet"){
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 #' @export
-get_nrc_sentiment <- function(char_v){
+get_nrc_sentiment <- function(char_v, lang = "english"){
   if (!is.character(char_v)) stop("Data must be a character vector.")
   word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
-  nrc_data <- lapply(word_l, get_nrc_values)
+  lexicon <- filter_(nrc, paste0("lang == '", lang, "'"))
+  nrc_data <- lapply(word_l, get_nrc_values, lexicon = lexicon)
   result_df <- as.data.frame(do.call(rbind, nrc_data), stringsAsFactors=F)
   # reorder the columns
   my_col_order <- c(
@@ -154,11 +158,36 @@ get_nrc_sentiment <- function(char_v){
 #' Access the NRC dictionary to compute emotion types and
 #' valence for a set of words in the input vector.
 #' @param word_vector A character vector.
+#' @param lang A string
+#' @param lexicon A data frame with at least the columns "word", "sentiment" and "value". If NULL, internal data will be taken.
 #' @return A vector of values for the emotions and valence
 #' detected in the input vector.
+#' @importFrom dplyr data_frame filter_ group_by_ mutate_ summarise_at
+#' @importFrom tidyr spread_
 #' @export
-get_nrc_values <- function(word_vector){
-  colSums(nrc[which(rownames(nrc) %in% word_vector), ])
+get_nrc_values <- function(word_vector, lang = "english", lexicon = NULL){
+  if (is.null(lexicon)) {
+    data <- filter_(nrc, paste0("lang == '", lang, "'"))
+  }
+  else {
+    data <- lexicon
+  }
+  if (! all(c("word", "sentiment", "value") %in% names(data)))
+    stop("lexicon must have a 'word', a 'sentiment' and a 'value' field")
+  
+  data <- data %>% 
+    filter_(~ word %in% word_vector) %>% 
+    group_by_("sentiment") %>% 
+    summarise_at("value", sum)
+  
+  all_sent     <- unique(nrc$sentiment)
+  sent_present <- unique(data$sentiment)
+  sent_absent  <- setdiff(all_sent, sent_present)
+  if (length(sent_absent) > 0) {
+    missing_data <- data_frame(sentiment = sent_absent, value = 0)
+    data <- rbind(data, missing_data)
+  }
+  spread_(data, "sentiment", "value")
 }
 
 #' Fourier Transform and Reverse Transform Values

@@ -4,10 +4,14 @@
 \alias{get_nrc_values}
 \title{Summarize NRC Values}
 \usage{
-get_nrc_values(word_vector)
+get_nrc_values(word_vector, lang = "english", lexicon = NULL)
 }
 \arguments{
 \item{word_vector}{A character vector.}
+
+\item{lang}{A string}
+
+\item{lexicon}{A data frame with at least the columns "word", "sentiment" and "value". If NULL, internal data will be taken.}
 }
 \value{
 A vector of values for the emotions and valence
