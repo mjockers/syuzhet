@@ -15,11 +15,11 @@ calculated for each sentence}
 
 \item{legend_pos}{positon for legend}
 
-\item{lps}{}
+\item{lps}{size of the low pass filter. I.e. the number of low frequency components to retain}
 
-\item{window}{}
+\item{window}{size of the rolling window for the rolling mean expressed as a percentage.}
 }
 \description{
-A Simple function for comparing three smoothers
+A simple function for comparing three smoothers
 }
 

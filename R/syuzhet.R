@@ -277,13 +277,13 @@ rescale_x_2 <- function(v){
 }
 
 #' Plots simple and rolling shapes overlayed
-#' @description A Simple function for comparing three smoothers
+#' @description A simple function for comparing three smoothers
 #' @param raw_values the raw sentiment values
 #' calculated for each sentence
 #' @param title for resulting image
 #' @param legend_pos positon for legend
-#' @param lps 
-#' @param window 
+#' @param lps size of the low pass filter. I.e. the number of low frequency components to retain
+#' @param window size of the rolling window for the rolling mean expressed as a percentage.
 #' @export
 simple_plot <- function (raw_values, title = "Syuzhet Plot", legend_pos = "top", lps=10, window = 0.1){
   wdw <- round(length(raw_values) * window)
@@ -368,7 +368,6 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
 #' @export
 #'
 get_sentiment_dictionary <- function(dictionary = 'syuzhet'){
-
     switch(dictionary,
         syuzhet = syuzhet_dict,
         bing = bing,
@@ -376,5 +375,4 @@ get_sentiment_dictionary <- function(dictionary = 'syuzhet'){
         afinn = afinn,
         stop("Must be one of: 'syuzhet', 'bing', 'nrc', or 'afinn'")
     )
-
 }
