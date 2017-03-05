@@ -282,7 +282,8 @@ rescale_x_2 <- function(v){
 #' calculated for each sentence
 #' @param title for resulting image
 #' @param legend_pos positon for legend
-#' @param number of components for the filter
+#' @param lps 
+#' @param window 
 #' @export
 simple_plot <- function (raw_values, title = "Syuzhet Plot", legend_pos = "top", lps=10, window = 0.1){
   wdw <- round(length(raw_values) * window)
@@ -302,7 +303,7 @@ simple_plot <- function (raw_values, title = "Syuzhet Plot", legend_pos = "top",
                  xlab = "Full Narrative Time", ylab = "Scaled Sentiment", col="blue", lty = 2)
   graphics::lines(rolled, col = "grey", lty = 2)
   graphics::lines(trans, col = "red")
-  abline(h=0, lty=3)
+  graphics::abline(h=0, lty=3)
   graphics::legend(legend_pos, c("Loess Smooth", "Rolling Mean", 
                                  "Syuzhet DCT"), lty = 1, lwd = 1, col = c("blue", "grey", 
                                                                            "red"), bty = "n", cex = 0.75)
@@ -354,3 +355,26 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
   return(dct_out)
 }
 
+#' Sentiment Dictionaries
+#' @description
+#' Get the sentiment dictionaries used in \pkg{syuzhet}.
+#' @param dictionary A string indicating which sentiment dictionary to return.  Options include "syuzhet", "bing", "afinn", and "nrc".
+#' @return A \code{\link[base]{data.frame}} 
+#' @examples
+#' get_sentiment_dictionary()
+#' get_sentiment_dictionary('bing')
+#' get_sentiment_dictionary('afinn')
+#' get_sentiment_dictionary('nrc')
+#' @export
+#'
+get_sentiment_dictionary <- function(dictionary = 'syuzhet'){
+
+    switch(dictionary,
+        syuzhet = syuzhet_dict,
+        bing = bing,
+        nrc = nrc,
+        afinn = afinn,
+        stop("Must be one of: 'syuzhet', 'bing', 'nrc', or 'afinn'")
+    )
+
+}
