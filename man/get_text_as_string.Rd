@@ -15,4 +15,3 @@ A character vector of length 1 containing the text of the file in the path_to_fi
 \description{
 Loads a file as a single text sting.
 }
-

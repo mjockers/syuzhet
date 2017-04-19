@@ -17,4 +17,3 @@ A Character Vector of Words
 \description{
 Parses a string into a vector of word tokens.
 }
-
