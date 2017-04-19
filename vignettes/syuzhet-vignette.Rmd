@@ -422,4 +422,17 @@ plot(poa_line[poa_sample],
 lines(bov_line[bov_sample], col="red")
 ```
 
+## Parallelization
+Collecting sentiment results on large volumes of data can be time consuming. One could call ```get_sentiment``` and provide cluster information from ```parallel::makeCluster()``` to achieve results quicker on systems with multiple cores. For example, on *Madame Bovary* as above:
+
+```{r parallel_get_sentiment}
+require(parallel)
+cl <- makeCluster(detectCores()-1)
+clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment", "get_nrc_values", "parLapply"))
+
+bovary_sentiment_par <- get_sentiment(bovary_v, cl=cl)
+bovary_nrc_par <- get_sentiment(bovary_v, method='nrc', cl=cl)
+
+stopCluster(cl)
+```
 
