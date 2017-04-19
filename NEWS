@@ -1,3 +1,7 @@
+dev
+==========
+* Added paralellization of get_sentiment using parallel package.
+
 syuzhet 1.0.1
 ==========
 * Added get_sentiment_dictionary() function.  
