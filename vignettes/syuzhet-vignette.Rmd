@@ -427,7 +427,7 @@ Collecting sentiment results on large volumes of data can be time consuming. One
 
 ```{r parallel_get_sentiment}
 require(parallel)
-cl <- makeCluster(detectCores()-1)
+cl <- makeCluster(2) # or detect_cores() - 1
 clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment", "get_nrc_values", "parLapply"))
 
 bovary_sentiment_par <- get_sentiment(bovary_v, cl=cl)
