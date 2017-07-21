@@ -1,6 +1,6 @@
 #' Load Text from a File
 #' @description
-#' Loads a file as a single text sting. 
+#' Loads a file as a single text string. 
 #' @param path_to_file file path
 #' @export
 #' @return A character vector of length 1 containing the text of the file in the path_to_file argument.
