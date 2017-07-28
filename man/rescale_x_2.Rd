@@ -15,4 +15,3 @@ A list of three vectors (x, y, z).  x is a vector of values from 0 to 1 equal in
 \description{
 Rescales input values to two scales (0 to 1 and  -1 to 1) on the y-axis and also creates a scaled vector of x axis values from 0 to 1.  This function is useful for plotting and plot comparison.
 }
-

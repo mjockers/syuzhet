@@ -50,6 +50,7 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 #' 
 #' @param char_v A vector of strings for evaluation.
 #' @param method A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
+#' @param cl Optional, for parallel sentiment analysis.
 #' 
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
@@ -67,18 +68,25 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL){
+get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL){
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
+  if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
   if(method == "syuzhet"){
     char_v <- gsub("-", "", char_v) #syuzhet lexicon removes hyphens from compound words.
   }
   if(method == "afinn" || method == "bing" || method == "syuzhet"){
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
-    result <- unlist(lapply(word_l, get_sent_values, method))
+    if(is.null(cl)){
+      result <- unlist(lapply(word_l, get_sent_values, method))
+    }
+    else {
+      result <- unlist(parallel::parLapply(cl=cl, word_l, get_sent_values, method))
+    }
   }
   else if(method == "nrc"){
-    result <- get_nrc_sentiment(char_v)
+    #TODO Try parallelize nrc sentiment
+    result <- get_nrc_sentiment(char_v, cl=cl)
     result <- (result$negative*-1) + result$positive
   } 
   else if(method == "stanford") {
@@ -121,6 +129,7 @@ get_sent_values <- function(char_v, method = "syuzhet"){
 #' corresponding valence in a text file.
 #' 
 #' @param char_v A character vector
+#' @param cl Optional, for parallel analysis
 #' @return A data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
 #' emotion type as well as a positive or negative valence.  
@@ -128,10 +137,16 @@ get_sent_values <- function(char_v, method = "syuzhet"){
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 #' @export
-get_nrc_sentiment <- function(char_v){
+get_nrc_sentiment <- function(char_v, cl=NULL){
   if (!is.character(char_v)) stop("Data must be a character vector.")
+  if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
   word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
-  nrc_data <- lapply(word_l, get_nrc_values)
+  if(is.null(cl)){
+    nrc_data <- lapply(word_l, get_nrc_values)
+  }
+  else{
+    nrc_data <- parallel::parLapply(cl=cl, word_l, get_nrc_values)
+  }
   result_df <- as.data.frame(do.call(rbind, nrc_data), stringsAsFactors=F)
   # reorder the columns
   my_col_order <- c(

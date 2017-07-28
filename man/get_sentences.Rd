@@ -19,4 +19,3 @@ A Character Vector of Sentences
 \description{
 Parses a string into a vector of sentences.
 }
-

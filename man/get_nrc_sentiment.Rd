@@ -4,10 +4,12 @@
 \alias{get_nrc_sentiment}
 \title{Get Emotions and Valence from NRC Dictionary}
 \usage{
-get_nrc_sentiment(char_v)
+get_nrc_sentiment(char_v, cl = NULL)
 }
 \arguments{
 \item{char_v}{A character vector}
+
+\item{cl}{Optional, for parallel analysis}
 }
 \value{
 A data frame where each row represents a sentence
@@ -23,4 +25,3 @@ corresponding valence in a text file.
 \references{
 Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 }
-

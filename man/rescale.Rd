@@ -12,4 +12,3 @@ rescale(x)
 \description{
 Rescale Transformed values from -1 to 1
 }
-

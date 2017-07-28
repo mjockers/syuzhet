@@ -22,4 +22,3 @@ calculated for each sentence}
 \description{
 A simple function for comparing three smoothers
 }
-
