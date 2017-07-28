@@ -4,7 +4,8 @@
 \alias{get_sentiment}
 \title{Get Sentiment Values for a String}
 \usage{
-get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL)
+get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL,
+  cl = NULL)
 }
 \arguments{
 \item{char_v}{A vector of strings for evaluation.}
@@ -12,6 +13,8 @@ get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL)
 \item{method}{A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.}
 
 \item{path_to_tagger}{local path to location of Stanford CoreNLP package}
+
+\item{cl}{Optional, for parallel sentiment analysis.}
 }
 \value{
 Return value is a numeric vector of sentiment values, one value for each input sentence.

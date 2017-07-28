@@ -22,6 +22,7 @@ A Character Vector of Sentences
 \description{
 Parses a string into a vector of sentences.
 }
+
 \examples{
 (x <- c(paste0(
     "Mr. Brown comes! He says hello. i give him coffee.  i will ",
@@ -38,3 +39,4 @@ get_sentences(x, as_vector = FALSE)
 
 
 }
+
