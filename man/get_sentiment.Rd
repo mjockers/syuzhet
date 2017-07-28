@@ -32,4 +32,3 @@ Manning, Christopher D., Surdeanu, Mihai, Bauer, John, Finkel, Jenny, Bethard, S
 
 Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher Manning, Andrew Ng and Christopher Potts.  "Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank Conference on Empirical Methods in Natural Language Processing" (EMNLP 2013).  See: http://nlp.stanford.edu/sentiment/
 }
-

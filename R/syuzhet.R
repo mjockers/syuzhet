@@ -23,26 +23,54 @@ get_tokens <- function(text_of_file, pattern = "\\W"){
   tolower(tokens[which(tokens != "")])
 }
 
+
+
 #' Sentence Tokenization
 #' @description
 #' Parses a string into a vector of sentences.
 #' @param text_of_file A Text String
-#' @param strip_quotes Logical. Default of TRUE results in 
-#' removal of quote marks from text input prior to sentence 
-#' parsing.
+#' @param fix_curly_quotes logical.  If \code{TRUE} curly quotes will be 
+#' converted to ASCII representation before splitting.
+#' @param as_vector If \code{TRUE} the result is unlisted.  If \code{FALSE}
+#' the result stays as a list of the original text string elements split into 
+#' sentences.
 #' @return A Character Vector of Sentences
 #' @export
+#' @examples
+#' (x <- c(paste0(
+#'     "Mr. Brown comes! He says hello. i give him coffee.  i will ",
+#'     "go at 5 p. m. eastern time.  Or somewhere in between!go there"
+#' ),
+#' paste0(
+#'     "Marvin K. Mooney Will You Please Go Now!", "The time has come.",
+#'     "The time has come. The time is now. Just go. Go. GO!",
+#'     "I don't care how."
+#' )))
 #' 
-get_sentences <- function(text_of_file, strip_quotes = TRUE){
+#' get_sentences(x)
+#' get_sentences(x, as_vector = FALSE)
+#' 
+#' 
+get_sentences <- function(text_of_file, fix_curly_quotes = TRUE, as_vector = TRUE){
+
   if (!is.character(text_of_file)) stop("Data must be a character vector.")
-  text_of_file <- NLP::as.String(text_of_file)
-  if(strip_quotes){
-    text_of_file <- gsub("\"", "", text_of_file)
-  }
-  sent_token_annotator <- openNLP::Maxent_Sent_Token_Annotator()
-  sentence_bounds <- NLP::annotate(text_of_file, sent_token_annotator)
-  text_of_file[sentence_bounds]
+  if (isTRUE(fix_curly_quotes)) text_of_file <- replace_curly(text_of_file)
+
+  splits <- textshape::split_sentence(text_of_file)
+  if (isTRUE(as_vector)) splits <- unlist(splits)
+  splits
 }
+
+## helper curly quote replacement function
+replace_curly <- function(x, ...){
+    replaces <- c('\x91', '\x92', '\x93', '\x94')
+    Encoding(replaces) <- "latin1"
+    for (i in 1:4) {
+        x <- gsub(replaces[i], c("'", "'", "\"", "\"")[i], x, fixed = TRUE)
+    }
+    x
+}
+
 
 #' Get Sentiment Values for a String
 #' @description

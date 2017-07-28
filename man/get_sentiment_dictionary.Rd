@@ -21,4 +21,3 @@ get_sentiment_dictionary('bing')
 get_sentiment_dictionary('afinn')
 get_sentiment_dictionary('nrc')
 }
-

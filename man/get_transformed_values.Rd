@@ -34,4 +34,3 @@ Basically this is a very silly test.")
 raw_values <- get_sentiment(s_v, method = "bing")
 get_transformed_values(raw_values)
 }
-
