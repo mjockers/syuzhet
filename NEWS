@@ -1,6 +1,7 @@
-dev
+syuzhet 1.0.2
 ==========
-* Added paralellization of get_sentiment using parallel package.
+* Added paralellization of get_sentiment using parallel package. (Via Philip Bulsink)
+* Removed the Java dependency by utilizing the textshape package for sentence splitting (Via Tyler Rinker)
 
 syuzhet 1.0.1
 ==========
