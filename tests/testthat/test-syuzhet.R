@@ -36,7 +36,8 @@ test_that("Sentiments are returned correctly", {
   expect_equal(length(sents), length(nrc))
 })
 
-cl <- parallel::makeCluster(2) #No more than 2 cores on CRAN
+context("Getting Sentiment in Parallel")
+cl <- parallel::makeCluster(2) # No more than 2 cores on CRAN
 parallel::clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment", "get_nrc_values"))
 
 syu_par   <- get_sentiment(sents, method = "syuzhet", cl=cl)
