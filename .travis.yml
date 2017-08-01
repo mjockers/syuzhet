@@ -1,28 +1,5 @@
-# Sample .travis.yml for R projects from https://github.com/craigcitro/r-travis
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
 
-language: c
-language: java
-
-before_install:
-  - curl -OL http://raw.github.com/craigcitro/r-travis/master/scripts/travis-tool.sh
-  - chmod 755 ./travis-tool.sh
-  - ./travis-tool.sh bootstrap
-
-install:
-  - sudo R CMD javareconf
-  - ./travis-tool.sh aptget_install r-cran-xml
-  - ./travis-tool.sh install_deps
-
-script: ./travis-tool.sh run_tests
-
-after_failure:
-  - ./travis-tool.sh dump_logs
-
-notifications:
-  email:
-    on_success: change
-    on_failure: always
-
-github_packages:
-- devtools
-- testthat
+language: R
+sudo: false
+cache: packages

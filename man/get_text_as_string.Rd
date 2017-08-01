@@ -13,6 +13,5 @@ get_text_as_string(path_to_file)
 A character vector of length 1 containing the text of the file in the path_to_file argument.
 }
 \description{
-Loads a file as a single text sting.
+Loads a file as a single text string.
 }
-

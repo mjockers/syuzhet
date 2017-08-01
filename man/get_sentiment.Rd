@@ -4,8 +4,7 @@
 \alias{get_sentiment}
 \title{Get Sentiment Values for a String}
 \usage{
-get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL,
-  lang = "english")
+get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL, cl = NULL, lang = "english")
 }
 \arguments{
 \item{char_v}{A vector of strings for evaluation.}
@@ -14,7 +13,11 @@ get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL,
 
 \item{path_to_tagger}{local path to location of Stanford CoreNLP package}
 
+
 \item{lang}{A string. Only works for "nrc" method}
+
+\item{cl}{Optional, for parallel sentiment analysis.}
+
 }
 \value{
 Return value is a numeric vector of sentiment values, one value for each input sentence.
@@ -35,4 +38,3 @@ Manning, Christopher D., Surdeanu, Mihai, Bauer, John, Finkel, Jenny, Bethard, S
 
 Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher Manning, Andrew Ng and Christopher Potts.  "Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank Conference on Empirical Methods in Natural Language Processing" (EMNLP 2013).  See: http://nlp.stanford.edu/sentiment/
 }
-

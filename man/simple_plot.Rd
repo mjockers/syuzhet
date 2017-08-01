@@ -4,17 +4,21 @@
 \alias{simple_plot}
 \title{Plots simple and rolling shapes overlayed}
 \usage{
-simple_plot(raw_values, title = "Syuzhet Plot", legend_pos = "top")
+simple_plot(raw_values, title = "Syuzhet Plot", legend_pos = "top",
+  lps = 10, window = 0.1)
 }
 \arguments{
 \item{raw_values}{the raw sentiment values
 calculated for each sentence}
 
-\item{title}{for image}
+\item{title}{for resulting image}
 
 \item{legend_pos}{positon for legend}
+
+\item{lps}{size of the low pass filter. I.e. the number of low frequency components to retain}
+
+\item{window}{size of the rolling window for the rolling mean expressed as a percentage.}
 }
 \description{
-A Simple function for comparing three smoothers
+A simple function for comparing three smoothers
 }
-

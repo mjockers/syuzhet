@@ -1,3 +1,16 @@
+syuzhet 1.0.2
+==========
+* Added paralellization of get_sentiment using parallel package. (Via Philip Bulsink)
+* Removed the Java dependency by utilizing the textshape package for sentence splitting (Via Tyler Rinker)
+
+syuzhet 1.0.1
+==========
+* Added get_sentiment_dictionary() function.  
+
+* Updated simple_plot(). 
+
+* Updated documentation.
+
 syuzhet 1.0.0
 ==========
 * Added get_dct_transform(), rescale_x_2(), and simple_plot() functions.  

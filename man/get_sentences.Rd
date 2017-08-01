@@ -4,14 +4,17 @@
 \alias{get_sentences}
 \title{Sentence Tokenization}
 \usage{
-get_sentences(text_of_file, strip_quotes = TRUE)
+get_sentences(text_of_file, fix_curly_quotes = TRUE, as_vector = TRUE)
 }
 \arguments{
 \item{text_of_file}{A Text String}
 
-\item{strip_quotes}{Logical. Default of TRUE results in 
-removal of quote marks from text input prior to sentence 
-parsing.}
+\item{fix_curly_quotes}{logical.  If \code{TRUE} curly quotes will be 
+converted to ASCII representation before splitting.}
+
+\item{as_vector}{If \code{TRUE} the result is unlisted.  If \code{FALSE}
+the result stays as a list of the original text string elements split into 
+sentences.}
 }
 \value{
 A Character Vector of Sentences
@@ -19,4 +22,19 @@ A Character Vector of Sentences
 \description{
 Parses a string into a vector of sentences.
 }
+\examples{
+(x <- c(paste0(
+    "Mr. Brown comes! He says hello. i give him coffee.  i will ",
+    "go at 5 p. m. eastern time.  Or somewhere in between!go there"
+),
+paste0(
+    "Marvin K. Mooney Will You Please Go Now!", "The time has come.",
+    "The time has come. The time is now. Just go. Go. GO!",
+    "I don't care how."
+)))
 
+get_sentences(x)
+get_sentences(x, as_vector = FALSE)
+
+
+}

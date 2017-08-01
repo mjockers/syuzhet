@@ -21,4 +21,3 @@ detected in the input vector.
 Access the NRC dictionary to compute emotion types and
 valence for a set of words in the input vector.
 }
-

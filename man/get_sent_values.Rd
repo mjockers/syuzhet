@@ -20,4 +20,3 @@ based on the assessed sentiment in the string
 \description{
 Assigns sentiment values to words based on preloaded dictionary. The default is the syuzhet dictionary.
 }
-

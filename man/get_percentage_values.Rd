@@ -18,4 +18,3 @@ A vector of mean values from each chunk
 \description{
 Chunks text into 100 Percentage based segments and calculates means.
 }
-

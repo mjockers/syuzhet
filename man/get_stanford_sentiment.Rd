@@ -20,4 +20,3 @@ distinct instance to measure. As a result, the vector
 that gets returned will not be the same length as the
 input vector.
 }
-

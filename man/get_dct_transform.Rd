@@ -36,4 +36,3 @@ raw_values <- get_sentiment(s_v, method = "syuzhet")
 dct_vals <- get_dct_transform(raw_values)
 plot(dct_vals, type="l", ylim=c(-0.1,.1))
 }
-

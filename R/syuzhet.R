@@ -1,6 +1,6 @@
 #' Load Text from a File
 #' @description
-#' Loads a file as a single text sting. 
+#' Loads a file as a single text string. 
 #' @param path_to_file file path
 #' @export
 #' @return A character vector of length 1 containing the text of the file in the path_to_file argument.
@@ -23,26 +23,54 @@ get_tokens <- function(text_of_file, pattern = "\\W"){
   tolower(tokens[which(tokens != "")])
 }
 
+
+
 #' Sentence Tokenization
 #' @description
 #' Parses a string into a vector of sentences.
 #' @param text_of_file A Text String
-#' @param strip_quotes Logical. Default of TRUE results in 
-#' removal of quote marks from text input prior to sentence 
-#' parsing.
+#' @param fix_curly_quotes logical.  If \code{TRUE} curly quotes will be 
+#' converted to ASCII representation before splitting.
+#' @param as_vector If \code{TRUE} the result is unlisted.  If \code{FALSE}
+#' the result stays as a list of the original text string elements split into 
+#' sentences.
 #' @return A Character Vector of Sentences
 #' @export
+#' @examples
+#' (x <- c(paste0(
+#'     "Mr. Brown comes! He says hello. i give him coffee.  i will ",
+#'     "go at 5 p. m. eastern time.  Or somewhere in between!go there"
+#' ),
+#' paste0(
+#'     "Marvin K. Mooney Will You Please Go Now!", "The time has come.",
+#'     "The time has come. The time is now. Just go. Go. GO!",
+#'     "I don't care how."
+#' )))
 #' 
-get_sentences <- function(text_of_file, strip_quotes = TRUE){
+#' get_sentences(x)
+#' get_sentences(x, as_vector = FALSE)
+#' 
+#' 
+get_sentences <- function(text_of_file, fix_curly_quotes = TRUE, as_vector = TRUE){
+
   if (!is.character(text_of_file)) stop("Data must be a character vector.")
-  text_of_file <- NLP::as.String(text_of_file)
-  if(strip_quotes){
-    text_of_file <- gsub("\"", "", text_of_file)
-  }
-  sent_token_annotator <- openNLP::Maxent_Sent_Token_Annotator()
-  sentence_bounds <- NLP::annotate(text_of_file, sent_token_annotator)
-  text_of_file[sentence_bounds]
+  if (isTRUE(fix_curly_quotes)) text_of_file <- replace_curly(text_of_file)
+
+  splits <- textshape::split_sentence(text_of_file)
+  if (isTRUE(as_vector)) splits <- unlist(splits)
+  splits
 }
+
+## helper curly quote replacement function
+replace_curly <- function(x, ...){
+    replaces <- c('\x91', '\x92', '\x93', '\x94')
+    Encoding(replaces) <- "latin1"
+    for (i in 1:4) {
+        x <- gsub(replaces[i], c("'", "'", "\"", "\"")[i], x, fixed = TRUE)
+    }
+    x
+}
+
 
 #' Get Sentiment Values for a String
 #' @description
@@ -51,6 +79,7 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 #' @param char_v A vector of strings for evaluation.
 #' @param method A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
 #' @param lang A string. Only works for "nrc" method
+#' @param cl Optional, for parallel sentiment analysis.
 #' 
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
@@ -68,18 +97,25 @@ get_sentences <- function(text_of_file, strip_quotes = TRUE){
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, lang = "english"){
+get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, lang = "english"){
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
+  if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
   if(method == "syuzhet"){
     char_v <- gsub("-", "", char_v) #syuzhet lexicon removes hyphens from compound words.
   }
   if(method == "afinn" || method == "bing" || method == "syuzhet"){
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
-    result <- unlist(lapply(word_l, get_sent_values, method))
+    if(is.null(cl)){
+      result <- unlist(lapply(word_l, get_sent_values, method))
+    }
+    else {
+      result <- unlist(parallel::parLapply(cl=cl, word_l, get_sent_values, method))
+    }
   }
   else if(method == "nrc"){
-    result <- get_nrc_sentiment(char_v)
+    #TODO Try parallelize nrc sentiment
+    result <- get_nrc_sentiment(char_v, cl=cl, lang = "english")
     result <- (result$negative*-1) + result$positive
   } 
   else if(method == "stanford") {
@@ -124,6 +160,7 @@ get_sent_values <- function(char_v, method = "syuzhet", lang = "english"){
 #' 
 #' @param char_v A character vector
 #' @param lang A string
+#' @param cl Optional, for parallel analysis
 #' @return A data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
 #' emotion type as well as a positive or negative valence.  
@@ -131,11 +168,18 @@ get_sent_values <- function(char_v, method = "syuzhet", lang = "english"){
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 #' @export
-get_nrc_sentiment <- function(char_v, lang = "english"){
+get_nrc_sentiment <- function(char_v, cl=NULL, lang = "english"){
   if (!is.character(char_v)) stop("Data must be a character vector.")
+  if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
   word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
-  lexicon <- filter_(nrc, paste0("lang == '", lang, "'"))
-  nrc_data <- lapply(word_l, get_nrc_values, lexicon = lexicon)
+  if(is.null(cl)){
+    lexicon <- filter_(nrc, paste0("lang == '", lang, "'"))
+    nrc_data <- lapply(word_l, get_nrc_values, lexicon = lexicon)
+  }
+  else{
+    lexicon <- filter_(nrc, paste0("lang == '", lang, "'"))
+    nrc_data <- parallel::parLapply(cl=cl, word_l, lexicon = lexicon, get_nrc_values)
+  }
   result_df <- as.data.frame(do.call(rbind, nrc_data), stringsAsFactors=F)
   # reorder the columns
   my_col_order <- c(
@@ -306,30 +350,41 @@ rescale_x_2 <- function(v){
 }
 
 #' Plots simple and rolling shapes overlayed
-#' @description A Simple function for comparing three smoothers
+#' @description A simple function for comparing three smoothers
 #' @param raw_values the raw sentiment values
 #' calculated for each sentence
-#' @param title for image
+#' @param title for resulting image
 #' @param legend_pos positon for legend
+#' @param lps size of the low pass filter. I.e. the number of low frequency components to retain
+#' @param window size of the rolling window for the rolling mean expressed as a percentage.
 #' @export
-simple_plot <- function(raw_values, title="Syuzhet Plot", legend_pos="top"){
-  wdw <- round(length(raw_values)*.1) # wdw = 10% of length
+simple_plot <- function (raw_values, title = "Syuzhet Plot", legend_pos = "top", lps=10, window = 0.1){
+  wdw <- round(length(raw_values) * window)
   rolled <- rescale(zoo::rollmean(raw_values, k = wdw, fill = 0))
   half <- round(wdw/2)
   rolled[1:half] <- NA
   end <- length(rolled) - half
   rolled[end:length(rolled)] <- NA
-  trans <- get_dct_transform(raw_values, x_reverse_len = length(raw_values), scale_range = T)
-  raw_lo <- stats::loess(raw_values ~ seq_along(raw_values), span=.5)
+  trans <- get_dct_transform(raw_values, low_pass_size = lps, x_reverse_len = length(raw_values), 
+                             scale_range = T)
+  x <- 1:length(raw_values)
+  y <- raw_values
+  raw_lo <- stats::loess(y ~ x, span = 0.5)
   low_line <- rescale(stats::predict(raw_lo))
-  graphics::par(mfrow=c(2, 1))
-  graphics::plot(low_line, type = "l", ylim = c(-1,1), main = title, xlab = "Full Narrative Time", ylab = "Scaled Sentiment")
-  graphics::lines(rolled, col="blue")
-  graphics::lines(trans, col="red")
-  graphics::legend(legend_pos, c("Loess Smooth", "Rolling Mean", "Syuzhet DCT"), lty=1, lwd=1,col=c('black', 'blue', 'red'), bty='n', cex=.75)
-  normed_trans <- get_dct_transform(raw_values, scale_range = T)
-  graphics::plot(normed_trans,type = "l", ylim = c(-1,1), main = "Normalized Simple Shape", xlab = "Normalized Narrative Time", ylab = "Scaled Sentiment", col="red")
-  graphics::par(mfrow=c(1, 1))
+  graphics::par(mfrow = c(2, 1))
+  graphics::plot(low_line, type = "l", ylim = c(-1, 1), main = title, 
+                 xlab = "Full Narrative Time", ylab = "Scaled Sentiment", col="blue", lty = 2)
+  graphics::lines(rolled, col = "grey", lty = 2)
+  graphics::lines(trans, col = "red")
+  graphics::abline(h=0, lty=3)
+  graphics::legend(legend_pos, c("Loess Smooth", "Rolling Mean", 
+                                 "Syuzhet DCT"), lty = 1, lwd = 1, col = c("blue", "grey", 
+                                                                           "red"), bty = "n", cex = 0.75)
+  normed_trans <- get_dct_transform(raw_values, scale_range = T, low_pass_size = 5)
+  graphics::plot(normed_trans, type = "l", ylim = c(-1, 1), 
+                 main = "Simplified Macro Shape", xlab = "Normalized Narrative Time", 
+                 ylab = "Scaled Sentiment", col = "red")
+  graphics::par(mfrow = c(1, 1))
 }
 
 #' Discrete Cosine Transformation with Reverse Transform.
@@ -373,3 +428,24 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
   return(dct_out)
 }
 
+#' Sentiment Dictionaries
+#' @description
+#' Get the sentiment dictionaries used in \pkg{syuzhet}.
+#' @param dictionary A string indicating which sentiment dictionary to return.  Options include "syuzhet", "bing", "afinn", and "nrc".
+#' @return A \code{\link[base]{data.frame}} 
+#' @examples
+#' get_sentiment_dictionary()
+#' get_sentiment_dictionary('bing')
+#' get_sentiment_dictionary('afinn')
+#' get_sentiment_dictionary('nrc')
+#' @export
+#'
+get_sentiment_dictionary <- function(dictionary = 'syuzhet'){
+    switch(dictionary,
+        syuzhet = syuzhet_dict,
+        bing = bing,
+        nrc = nrc,
+        afinn = afinn,
+        stop("Must be one of: 'syuzhet', 'bing', 'nrc', or 'afinn'")
+    )
+}
