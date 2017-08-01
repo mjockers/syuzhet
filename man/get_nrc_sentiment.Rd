@@ -4,12 +4,14 @@
 \alias{get_nrc_sentiment}
 \title{Get Emotions and Valence from NRC Dictionary}
 \usage{
-get_nrc_sentiment(char_v, cl = NULL)
+get_nrc_sentiment(char_v, cl = NULL, lang = "english")
 }
 \arguments{
 \item{char_v}{A character vector}
 
 \item{cl}{Optional, for parallel analysis}
+
+\item{lang}{A string}
 }
 \value{
 A data frame where each row represents a sentence

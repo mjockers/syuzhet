@@ -24,9 +24,14 @@ Imports:
     zoo,
     dtt,
     stats,
-    graphics
+    graphics,
+    dplyr,
+    tidyr,
 LazyData: true
 Suggests:
+    devtools,
+    readxl,
+    stringr,
     knitr,
     pander,
     testthat (>= 0.9.1),
