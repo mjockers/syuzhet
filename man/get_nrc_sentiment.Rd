@@ -4,11 +4,11 @@
 \alias{get_nrc_sentiment}
 \title{Get Emotions and Valence from NRC Dictionary}
 \usage{
-get_nrc_sentiment(char_v, cl = NULL)
+get_nrc_sentiment(char_v, cl = NULL, lang = "english")
 }
 \arguments{
 \item{char_v}{A character vector}
-
+\item{lang}{A string}
 \item{cl}{Optional, for parallel analysis}
 }
 \value{
