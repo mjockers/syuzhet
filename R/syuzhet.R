@@ -113,7 +113,8 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
       result <- unlist(parallel::parLapply(cl=cl, word_l, get_sent_values, method))
     }
   }
-  else if(method == "nrc"){ # TODO Try parallelize nrc sentiment
+  else if(method == "nrc"){ 
+    # TODO Try parallelize nrc sentiment
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
     # lexicon <- nrc[which(nrc$lang == language & nrc$sentiment %in% c("positive", "negative")),]
     lexicon <- dplyr::filter_(nrc, ~lang == language, ~sentiment %in% c("positive", "negative"))
@@ -121,6 +122,7 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   } 
   else if(method == "custom"){
+    word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   }
   else if(method == "stanford") {

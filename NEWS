@@ -1,3 +1,7 @@
+syuzhet 1.0.4
+==========
+* Added support and documentation for use of custom lexicons with the get_sentiment() function.  
+
 syuzhet 1.0.3
 ==========
 * Added support for multiple languages using expanded NRC lexicon. (Via Denis Roussel)

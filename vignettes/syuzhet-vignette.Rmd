@@ -422,6 +422,35 @@ plot(poa_line[poa_sample],
 lines(bov_line[bov_sample], col="red")
 ```
 
+## Multilingual Sentiment Lexicons
+In version 2.0, support for sentiment detection in multiple languages was added by using the expanded NRC lexicon from Saif Mohammed.  The lexicon includes sentiment values for 13,901 words in each of the following languages: 
+
+Arabic, Basque, Bengali, Catalan, Chinese_simplified, Chinese_traditional, Danish, Dutch, English, Esperanto, Finnish, French, German, Greek, Gujarati, Hebrew, Hindi, Irish, Italian, Japanese, Latin, Marathi, Persian, Portuguese, Romanian, Russian, Somali, Spanish, Sudanese, Swahili, Swedish, Tamil, Telugu, Thai, Turkish, Ukranian, Urdu, Vietnamese, Welsh, Yiddish, Zulu.  
+
+It is important to point out that the sentence tokenizer inside the get_sentences() function is inherently biased for English syntax. Care should be taken to insure that the language being used is parsed properly by the get_sentences() function.  It may be advisable to skip sentence tokenization in favor of word based tokenization using the get_tokens() function.  Below is an example of how to call the Spanish lexicon to detect sentiment in Don Quixote.
+
+```{r}
+path_to_a_text_file <- system.file("extdata", "quijote.txt",package = "syuzhet")
+my_text <- get_text_as_string(path_to_a_text_file)
+char_v <- get_sentences(my_text)
+method <- "nrc"
+lang <- "spanish"
+my_text_values <- get_sentiment(char_v, method=method, language=lang)
+my_text_values[1:10]
+```
+
+## Custom Sentiment Lexicons
+In Version 2.0, functionality to allow uses to load their own custom sentiment lexicons was added to the get_sentiments() function.  To work, users need to create their custom lexicon as a data frame with at least two columns named "word" and "value."  Here is a simplified example:
+
+```{r}
+my_text <- "I love when I see something beautiful.  I hate it when ugly feelings creep into my head"
+char_v <- get_sentences(my_text)
+method <- "custom"
+custom_lexicon <- data.frame(word=c("love", "hate", "beautiful", "ugly"), value=c(1,-1,1, -1))
+my_custom_values <- get_sentiment(char_v, method = method, lexicon = custom_lexicon)
+my_custom_values
+```
+
 ## Parallelization
 Collecting sentiment results on large volumes of data can be time consuming. One could call ```get_sentiment``` and provide cluster information from ```parallel::makeCluster()``` to achieve results quicker on systems with multiple cores. For example, on *Madame Bovary* as above:
 
