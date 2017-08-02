@@ -78,9 +78,10 @@ replace_curly <- function(x, ...){
 #' 
 #' @param char_v A vector of strings for evaluation.
 #' @param method A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
-#' @param lang A string. Only works for "nrc" method
+#' @param language A string. Only works for "nrc" method
 #' @param cl Optional, for parallel sentiment analysis.
-#' 
+#' @param path_to_tagger local path to location of Stanford CoreNLP package
+#' @param lexicon a data frame with at least two columns labeled "word" and "value."
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
 #' @references Minqing Hu and Bing Liu. "Mining and Summarizing Customer Reviews." Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD-2004), Aug 22-25, 2004, Seattle, Washington, USA.  See: http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon
@@ -93,12 +94,11 @@ replace_curly <- function(x, ...){
 #' 
 #' @references Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher Manning, Andrew Ng and Christopher Potts.  "Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank Conference on Empirical Methods in Natural Language Processing" (EMNLP 2013).  See: http://nlp.stanford.edu/sentiment/
 #' 
-#' @param path_to_tagger local path to location of Stanford CoreNLP package
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, lang = "english"){
-  if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford")))) stop("Invalid Method")
+get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, language = "english", lexicon = NULL){
+  if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford", "custom")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
   if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
   if(method == "syuzhet"){
@@ -113,11 +113,16 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
       result <- unlist(parallel::parLapply(cl=cl, word_l, get_sent_values, method))
     }
   }
-  else if(method == "nrc"){
-    #TODO Try parallelize nrc sentiment
-    result <- get_nrc_sentiment(char_v, cl=cl, lang = "english")
-    result <- (result$negative*-1) + result$positive
+  else if(method == "nrc"){ # TODO Try parallelize nrc sentiment
+    word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
+    # lexicon <- nrc[which(nrc$lang == language & nrc$sentiment %in% c("positive", "negative")),]
+    lexicon <- dplyr::filter_(nrc, ~lang == language, ~sentiment %in% c("positive", "negative"))
+    lexicon[which(lexicon$sentiment == "negative"), "value"] <- -1
+    result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   } 
+  else if(method == "custom"){
+    result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
+  }
   else if(method == "stanford") {
     if(is.null(path_to_tagger)) stop("You must include a path to your installation of the coreNLP package.  See http://nlp.stanford.edu/software/corenlp.shtml")
     result <- get_stanford_sentiment(char_v, path_to_tagger)
@@ -130,12 +135,12 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
 #' Assigns sentiment values to words based on preloaded dictionary. The default is the syuzhet dictionary.
 #' @param char_v A string
 #' @param method A string indicating which sentiment dictionary to use
-#' @param lang A string. Only works with "nrc" method
+#' @param lexicon A data frame with with at least two columns named word and value. Works with "nrc" or "custom" method.  If using custom method, you must load a custom lexicon as a data frame with aforementioend columns.
 #' @return A single numerical value (positive or negative)
 #' based on the assessed sentiment in the string
 #' @export
 #'
-get_sent_values <- function(char_v, method = "syuzhet", lang = "english"){
+get_sent_values <- function(char_v, method = "syuzhet", lexicon = NULL){
   if(method == "bing") {
     result <- sum(bing[which(bing$word %in% char_v), "value"])
   }
@@ -146,8 +151,9 @@ get_sent_values <- function(char_v, method = "syuzhet", lang = "english"){
     char_v <- gsub("-", "", char_v)
     result <- sum(syuzhet_dict[which(syuzhet_dict$word %in% char_v), "value"])
   }
-  else if(method == "nrc") {
-    result <- get_nrc_sentiment(char_v, lang)
+  else if(method == "nrc" || method == "custom") {
+    data <- dplyr::filter_(lexicon, ~word %in% char_v)
+    result <- sum(data$value)
   }
   return(result)
 }
@@ -159,7 +165,7 @@ get_sent_values <- function(char_v, method = "syuzhet", lang = "english"){
 #' corresponding valence in a text file.
 #' 
 #' @param char_v A character vector
-#' @param lang A string
+#' @param language A string
 #' @param cl Optional, for parallel analysis
 #' @return A data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
@@ -168,16 +174,16 @@ get_sent_values <- function(char_v, method = "syuzhet", lang = "english"){
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 #' @export
-get_nrc_sentiment <- function(char_v, cl=NULL, lang = "english"){
+get_nrc_sentiment <- function(char_v, cl=NULL, language = "english"){
   if (!is.character(char_v)) stop("Data must be a character vector.")
   if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
+  lexicon <- dplyr::filter_(nrc, ~lang == language) # filter lexicon to language
   word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
+  
   if(is.null(cl)){
-    lexicon <- filter_(nrc, paste0("lang == '", lang, "'"))
     nrc_data <- lapply(word_l, get_nrc_values, lexicon = lexicon)
   }
   else{
-    lexicon <- filter_(nrc, paste0("lang == '", lang, "'"))
     nrc_data <- parallel::parLapply(cl=cl, word_l, lexicon = lexicon, get_nrc_values)
   }
   result_df <- as.data.frame(do.call(rbind, nrc_data), stringsAsFactors=F)
@@ -202,36 +208,30 @@ get_nrc_sentiment <- function(char_v, cl=NULL, lang = "english"){
 #' Access the NRC dictionary to compute emotion types and
 #' valence for a set of words in the input vector.
 #' @param word_vector A character vector.
-#' @param lang A string
+#' @param language A string
 #' @param lexicon A data frame with at least the columns "word", "sentiment" and "value". If NULL, internal data will be taken.
 #' @return A vector of values for the emotions and valence
 #' detected in the input vector.
-#' @importFrom dplyr data_frame filter_ group_by_ mutate_ summarise_at
-#' @importFrom tidyr spread_
 #' @export
-get_nrc_values <- function(word_vector, lang = "english", lexicon = NULL){
+get_nrc_values <- function(word_vector, language = "english", lexicon = NULL){
   if (is.null(lexicon)) {
-    data <- filter_(nrc, paste0("lang == '", lang, "'"))
+    lexicon <- dplyr::filter_(nrc, ~lang == language)
   }
-  else {
-    data <- lexicon
-  }
-  if (! all(c("word", "sentiment", "value") %in% names(data)))
-    stop("lexicon must have a 'word', a 'sentiment' and a 'value' field")
-  
-  data <- data %>% 
-    filter_(~ word %in% word_vector) %>% 
-    group_by_("sentiment") %>% 
-    summarise_at("value", sum)
-  
-  all_sent     <- unique(nrc$sentiment)
+  # if (! all(c("word", "sentiment", "value") %in% names(lexicon)))
+  #    stop("lexicon must have a 'word', a 'sentiment' and a 'value' field")
+
+  data <- dplyr::filter_(lexicon, ~word %in% word_vector)
+  data <- dplyr::group_by_(data, ~sentiment)
+  data <- dplyr::summarise_at(data, "value", sum)
+
+  all_sent <- unique(lexicon$sentiment)
   sent_present <- unique(data$sentiment)
   sent_absent  <- setdiff(all_sent, sent_present)
   if (length(sent_absent) > 0) {
-    missing_data <- data_frame(sentiment = sent_absent, value = 0)
+    missing_data <- dplyr::data_frame(sentiment = sent_absent, value = 0)
     data <- rbind(data, missing_data)
   }
-  spread_(data, "sentiment", "value")
+  tidyr::spread_(data, "sentiment", "value")
 }
 
 #' Fourier Transform and Reverse Transform Values

@@ -90,7 +90,7 @@ head(bing_vector)
 afinn_vector <- get_sentiment(poa_v, method="afinn")
 head(afinn_vector)
 
-nrc_vector <- get_sentiment(poa_v, method="nrc")
+nrc_vector <- get_sentiment(poa_v, method="nrc", lang = "english")
 head(nrc_vector)
 
 # Stanford Example: Requires installation of coreNLP and path to directory
@@ -429,10 +429,8 @@ Collecting sentiment results on large volumes of data can be time consuming. One
 require(parallel)
 cl <- makeCluster(2) # or detect_cores() - 1
 clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment", "get_nrc_values", "parLapply"))
-
 bovary_sentiment_par <- get_sentiment(bovary_v, cl=cl)
 bovary_nrc_par <- get_sentiment(bovary_v, method='nrc', cl=cl)
-
 stopCluster(cl)
 ```
 

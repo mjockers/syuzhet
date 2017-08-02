@@ -5,7 +5,7 @@
 \title{Get Sentiment Values for a String}
 \usage{
 get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL,
-  cl = NULL, lang = "english")
+  cl = NULL, language = "english", lexicon = NULL)
 }
 \arguments{
 \item{char_v}{A vector of strings for evaluation.}
@@ -16,7 +16,9 @@ get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL,
 
 \item{cl}{Optional, for parallel sentiment analysis.}
 
-\item{lang}{A string. Only works for "nrc" method}
+\item{language}{A string. Only works for "nrc" method}
+
+\item{lexicon}{a data frame with at least two columns labeled "word" and "value."}
 }
 \value{
 Return value is a numeric vector of sentiment values, one value for each input sentence.
