@@ -434,20 +434,25 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
 #' @description
 #' Get the sentiment dictionaries used in \pkg{syuzhet}.
 #' @param dictionary A string indicating which sentiment dictionary to return.  Options include "syuzhet", "bing", "afinn", and "nrc".
-#' @return A \code{\link[base]{data.frame}} 
+#' @param language A string indicating the language to choose if using the NRC dictionary and a language other than English
+#' #' @return A \code{\link[base]{data.frame}} 
 #' @examples
 #' get_sentiment_dictionary()
 #' get_sentiment_dictionary('bing')
 #' get_sentiment_dictionary('afinn')
-#' get_sentiment_dictionary('nrc')
+#' get_sentiment_dictionary('nrc', language = "spanish")
 #' @export
 #'
-get_sentiment_dictionary <- function(dictionary = 'syuzhet'){
-    switch(dictionary,
+get_sentiment_dictionary <- function(dictionary = 'syuzhet', language = 'english'){
+    dict <- switch(dictionary,
         syuzhet = syuzhet_dict,
         bing = bing,
         nrc = nrc,
         afinn = afinn,
         stop("Must be one of: 'syuzhet', 'bing', 'nrc', or 'afinn'")
     )
+    if(dictionary == 'nrc'){
+      dict <- dplyr::filter_(dict, ~lang == language)
+    }
+    return(dict)
 }

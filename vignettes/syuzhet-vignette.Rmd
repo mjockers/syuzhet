@@ -462,4 +462,3 @@ bovary_sentiment_par <- get_sentiment(bovary_v, cl=cl)
 bovary_nrc_par <- get_sentiment(bovary_v, method='nrc', cl=cl)
 stopCluster(cl)
 ```
-
