@@ -74,7 +74,8 @@ replace_curly <- function(x, ...){
 
 #' Get Sentiment Values for a String
 #' @description
-#' Iterates over a vector of strings and returns sentiment values based on user supplied method. The default method, "syuzhet" is a custom sentiment dictionary developed in the Nebraska Literary Lab.  The default dictionary should be better tuned to fiction as the terms were extracted from a collection of 165,000 human coded sentences taken from a small corpus of contemporary novels.
+#' Iterates over a vector of strings and returns sentiment values based on user supplied method. The default method, "syuzhet" is a custom sentiment dictionary developed in the Nebraska Literary Lab.  The default dictionary should be better tuned to fiction as the terms were extracted from a collection of 165,000 human coded sentences taken from a small corpus of contemporary novels.  
+#' At the time of this release, Syuzhet will only work with languages that use Latin character sets.  This effectivley means that "Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish" are not supported even though these languages are part of the extended NRC dictionary.
 #' 
 #' @param char_v A vector of strings for evaluation.
 #' @param method A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
@@ -98,9 +99,11 @@ replace_curly <- function(x, ...){
 #' @export
 #' 
 get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, language = "english", lexicon = NULL){
+  language <- tolower(language)
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford", "custom")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
   if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
+  if(language %in% tolower(c("Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish"))) stop ("Your language choice is not yet fully supported")
   if(method == "syuzhet"){
     char_v <- gsub("-", "", char_v) #syuzhet lexicon removes hyphens from compound words.
   }
@@ -117,7 +120,7 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
     # TODO Try parallelize nrc sentiment
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
     # lexicon <- nrc[which(nrc$lang == language & nrc$sentiment %in% c("positive", "negative")),]
-    lexicon <- dplyr::filter_(nrc, ~lang == language, ~sentiment %in% c("positive", "negative"))
+    lexicon <- dplyr::filter_(nrc, ~lang == tolower(language), ~sentiment %in% c("positive", "negative"))
     lexicon[which(lexicon$sentiment == "negative"), "value"] <- -1
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   } 
@@ -434,20 +437,25 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
 #' @description
 #' Get the sentiment dictionaries used in \pkg{syuzhet}.
 #' @param dictionary A string indicating which sentiment dictionary to return.  Options include "syuzhet", "bing", "afinn", and "nrc".
-#' @return A \code{\link[base]{data.frame}} 
+#' @param language A string indicating the language to choose if using the NRC dictionary and a language other than English
+#' #' @return A \code{\link[base]{data.frame}} 
 #' @examples
 #' get_sentiment_dictionary()
 #' get_sentiment_dictionary('bing')
 #' get_sentiment_dictionary('afinn')
-#' get_sentiment_dictionary('nrc')
+#' get_sentiment_dictionary('nrc', language = "spanish")
 #' @export
 #'
-get_sentiment_dictionary <- function(dictionary = 'syuzhet'){
-    switch(dictionary,
+get_sentiment_dictionary <- function(dictionary = 'syuzhet', language = 'english'){
+    dict <- switch(dictionary,
         syuzhet = syuzhet_dict,
         bing = bing,
         nrc = nrc,
         afinn = afinn,
         stop("Must be one of: 'syuzhet', 'bing', 'nrc', or 'afinn'")
     )
+    if(dictionary == 'nrc'){
+      dict <- dplyr::filter_(dict, ~lang == language)
+    }
+    return(dict)
 }
