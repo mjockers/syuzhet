@@ -429,7 +429,7 @@ Arabic, Basque, Bengali, Catalan, Chinese_simplified, Chinese_traditional, Danis
 
 At the time of this release, Syuzhet will only work with languages that use Latin character sets.  This effectivley means that "Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish" are not supported even though these languages are part of the extended NRC dictionary.
 
-It is important to point out that the sentence tokenizer inside the get_sentences() function is inherently biased for English syntax. Care should be taken to insure that the language being used is parsed properly by the get_sentences() function.  It may be advisable to skip sentence tokenization in favor of word based tokenization using the get_tokens() function.  Below is an example of how to call the Spanish lexicon to detect sentiment in Don Quixote.
+It is also important to point out that the sentence tokenizer inside the get_sentences() function is inherently biased for English syntax. Care should be taken to insure that the language being used is parsed properly by the get_sentences() function.  It may be advisable to skip sentence tokenization in favor of word based tokenization using the get_tokens() function.  Below is an example of how to call the Spanish lexicon to detect sentiment in Don Quixote.
 
 ```{r}
 path_to_a_text_file <- system.file("extdata", "quijote.txt",package = "syuzhet")
