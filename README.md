@@ -10,7 +10,12 @@ The Syuzhet package attempts to reveal the latent structure of narrative by mean
 
 ## Installation
 
-This package is now available on CRAN (http://cran.r-project.org/web/packages/syuzhet/).  You can install the most current development version from gitHub using the devtools package:
+This package is now available on CRAN (http://cran.r-project.org/web/packages/syuzhet/). 
+
+```R
+install.packages("syuzhet")
+```
+You can install the most current development version from gitHub using the ```devtools``` package:
 
 ```R
 # install.packages("devtools")
@@ -29,7 +34,7 @@ The AFINN database of words is copyright protected and distributed under
 The "bing" lexicon was develoepd by Minqing Hu and Bing Liu as the OPINION LEXICON
 See: http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
 
-The "nrc" lexicon was develoepd by Mohammad, Saif M. and Turney, Peter D. as the NRC EMOTION LEXICON.  
+The "nrc" lexicon was developed by Mohammad, Saif M. and Turney, Peter D. as the NRC EMOTION LEXICON.  
 See: http://saifmohammad.com/WebPages/lexicons.html
 The NRC EMOTION LEXICON is released under the following terms of use:
 Terms of use:
@@ -75,7 +80,7 @@ California.
 Links to the papers are available here:
 http://www.purl.org/net/NRCemotionlexicon
 
-CONTACT INFORMATION
+**CONTACT INFORMATION**
 Saif Mohammad
 Research Officer, National Research Council Canada
 email: saif.mohammad@nrc-cnrc.gc.ca
