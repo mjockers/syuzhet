@@ -72,7 +72,7 @@ replace_curly <- function(x, ...){
 #' Get Sentiment Values for a String
 #' @description
 #' Iterates over a vector of strings and returns sentiment values based on user supplied method. The default method, "syuzhet" is a custom sentiment dictionary developed in the Nebraska Literary Lab.  The default dictionary should be better tuned to fiction as the terms were extracted from a collection of 165,000 human coded sentences taken from a small corpus of contemporary novels.   
-#' At the time of this release, Syuzhet will only work with languages that use Latin character sets.  This effectivley means that "Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish" are not supported even though these languages are part of the extended NRC dictionary.
+#' At the time of this release, Syuzhet will only work with languages that use Latin character sets.  This effectively means that "Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish" are not supported even though these languages are part of the extended NRC dictionary.
 #' 
 #' @param char_v A vector of strings for evaluation.
 #' @param method A string indicating which sentiment method to use. Options include "syuzhet", "bing", "afinn", "nrc" and "stanford."  See references for more detail on methods.
@@ -343,7 +343,7 @@ rescale <- function(x){
 #' @description
 #' Rescales input values to two scales (0 to 1 and  -1 to 1) on the y-axis and also creates a scaled vector of x axis values from 0 to 1.  This function is useful for plotting and plot comparison.
 #' @param v A vector of values
-#' @return A list of three vectors (x, y, z).  x is a vector of values from 0 to 1 equal in length to the input vector v. y is a scaled (from 0 to 1) vector of the input values equal in lenght to the input vector v. z is a scaled (from -1 to +1) vector of the input values equal in length to the input vector v.
+#' @return A list of three vectors (x, y, z).  x is a vector of values from 0 to 1 equal in length to the input vector v. y is a scaled (from 0 to 1) vector of the input values equal in length to the input vector v. z is a scaled (from -1 to +1) vector of the input values equal in length to the input vector v.
 #' @export
 rescale_x_2 <- function(v){
   x <- 1:length(v)/length(v)
@@ -357,7 +357,7 @@ rescale_x_2 <- function(v){
 #' @param raw_values the raw sentiment values
 #' calculated for each sentence
 #' @param title for resulting image
-#' @param legend_pos positon for legend
+#' @param legend_pos position for legend
 #' @param lps size of the low pass filter. I.e. the number of low frequency components to retain
 #' @param window size of the rolling window for the rolling mean expressed as a percentage.
 #' @export
