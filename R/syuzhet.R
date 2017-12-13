@@ -23,8 +23,6 @@ get_tokens <- function(text_of_file, pattern = "\\W"){
   tolower(tokens[which(tokens != "")])
 }
 
-
-
 #' Sentence Tokenization
 #' @description
 #' Parses a string into a vector of sentences.
@@ -51,11 +49,10 @@ get_tokens <- function(text_of_file, pattern = "\\W"){
 #' get_sentences(x, as_vector = FALSE)
 #' 
 #' 
-get_sentences <- function(text_of_file, fix_curly_quotes = TRUE, as_vector = TRUE){
 
+get_sentences <- function(text_of_file, fix_curly_quotes = TRUE, as_vector = TRUE){
   if (!is.character(text_of_file)) stop("Data must be a character vector.")
   if (isTRUE(fix_curly_quotes)) text_of_file <- replace_curly(text_of_file)
-
   splits <- textshape::split_sentence(text_of_file)
   if (isTRUE(as_vector)) splits <- unlist(splits)
   splits
@@ -103,9 +100,9 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford", "custom")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
   if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
-  if(language %in% tolower(c("Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish"))) stop ("Your language choice is not yet fully supported")
+  if(language %in% tolower(c("Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish"))) stop ("Sorry, your language choice is not yet supported.")
   if(method == "syuzhet"){
-    char_v <- gsub("-", "", char_v) #syuzhet lexicon removes hyphens from compound words.
+    char_v <- gsub("-", "", char_v) # syuzhet lexicon removes hyphens from compound words.
   }
   if(method == "afinn" || method == "bing" || method == "syuzhet"){
     word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
@@ -241,7 +238,7 @@ get_nrc_values <- function(word_vector, language = "english", lexicon = NULL){
 
 #' Fourier Transform and Reverse Transform Values
 #' @description 
-#' Converts input values into a standardized set of filtered and reverse transformed values for easy plotting and/or comparison.
+#' Please Note: This function is maintained for legacy purposes.  Users should consider using get_dct_transform() instead. Converts input values into a standardized set of filtered and reverse transformed values for easy plotting and/or comparison. 
 #' @param raw_values the raw sentiment values calculated for each sentence
 #' @param low_pass_size The number of components to retain in the low pass filtering. Default = 3
 #' @param x_reverse_len the number of values to return. Default = 100
@@ -259,6 +256,7 @@ get_nrc_values <- function(word_vector, language = "english", lexicon = NULL){
 #' @export 
 #' 
 get_transformed_values <- function(raw_values, low_pass_size = 2, x_reverse_len = 100, padding_factor = 2, scale_vals = FALSE, scale_range = FALSE){
+  warning('This function is maintained for legacy purposes.  Consider using get_dct_transform() instead.')
   if(!is.numeric(raw_values)) stop("Input must be an numeric vector")
   if(low_pass_size > length(raw_values)) stop("low_pass_size must be less than or equal to the length of raw_values input vector")
   raw_values.len <- length(raw_values)

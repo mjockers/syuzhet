@@ -220,6 +220,8 @@ The ```Syuzhet``` package provides two alternatives to percentage-based comparis
 
 ## get_transformed_values
 
+NOTE: ```get_transformed_values```is maintained for legacy purposes.  Users should consider using ```get_dct_transform()``` instead. 
+
 Shape smoothing and normalization using a Fourier based transformation and low pass filtering is achieved using the ```get_transformed_values``` function as shown below. The various arguments are described in the help documentation.
 
 ```{r, fig.width = 6} 
@@ -445,7 +447,7 @@ my_text_values[1:10]
 In Version 2.0, functionality to allow uses to load their own custom sentiment lexicons was added to the get_sentiments() function.  To work, users need to create their custom lexicon as a data frame with at least two columns named "word" and "value."  Here is a simplified example:
 
 ```{r}
-my_text <- "I love when I see something beautiful.  I hate it when ugly feelings creep into my head"
+my_text <- "I love when I see something beautiful.  I hate it when ugly feelings creep into my head."
 char_v <- get_sentences(my_text)
 method <- "custom"
 custom_lexicon <- data.frame(word=c("love", "hate", "beautiful", "ugly"), value=c(1,-1,1, -1))

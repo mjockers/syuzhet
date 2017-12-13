@@ -24,7 +24,7 @@ get_transformed_values(raw_values, low_pass_size = 2, x_reverse_len = 100,
 The transformed values
 }
 \description{
-Converts input values into a standardized set of filtered and reverse transformed values for easy plotting and/or comparison.
+Please Note: This function is maintained for legacy purposes.  Users should consider using get_dct_transform() instead. Converts input values into a standardized set of filtered and reverse transformed values for easy plotting and/or comparison.
 }
 \examples{
 s_v <- get_sentences("I begin this story with a neutral statement. 
