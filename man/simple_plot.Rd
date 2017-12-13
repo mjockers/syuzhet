@@ -13,7 +13,7 @@ calculated for each sentence}
 
 \item{title}{for resulting image}
 
-\item{legend_pos}{positon for legend}
+\item{legend_pos}{position for legend}
 
 \item{lps}{size of the low pass filter. I.e. the number of low frequency components to retain}
 
