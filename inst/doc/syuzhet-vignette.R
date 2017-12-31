@@ -44,7 +44,7 @@ head(bing_vector)
 afinn_vector <- get_sentiment(poa_v, method="afinn")
 head(afinn_vector)
 
-nrc_vector <- get_sentiment(poa_v, method="nrc")
+nrc_vector <- get_sentiment(poa_v, method="nrc", lang = "english")
 head(nrc_vector)
 
 # Stanford Example: Requires installation of coreNLP and path to directory
@@ -276,4 +276,29 @@ plot(poa_line[poa_sample],
      ylab="Emotional Valence"
      )
 lines(bov_line[bov_sample], col="red")
+
+## ------------------------------------------------------------------------
+path_to_a_text_file <- system.file("extdata", "quijote.txt",package = "syuzhet")
+my_text <- get_text_as_string(path_to_a_text_file)
+char_v <- get_sentences(my_text)
+method <- "nrc"
+lang <- "spanish"
+my_text_values <- get_sentiment(char_v, method=method, language=lang)
+my_text_values[1:10]
+
+## ------------------------------------------------------------------------
+my_text <- "I love when I see something beautiful.  I hate it when ugly feelings creep into my head."
+char_v <- get_sentences(my_text)
+method <- "custom"
+custom_lexicon <- data.frame(word=c("love", "hate", "beautiful", "ugly"), value=c(1,-1,1, -1))
+my_custom_values <- get_sentiment(char_v, method = method, lexicon = custom_lexicon)
+my_custom_values
+
+## ----parallel_get_sentiment----------------------------------------------
+require(parallel)
+cl <- makeCluster(2) # or detect_cores() - 1
+clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment", "get_nrc_values", "parLapply"))
+bovary_sentiment_par <- get_sentiment(bovary_v, cl=cl)
+bovary_nrc_par <- get_sentiment(bovary_v, method='nrc', cl=cl)
+stopCluster(cl)
 

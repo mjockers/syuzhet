@@ -67,7 +67,7 @@ poa_word_v <- get_tokens(joyces_portrait, pattern = "\\W")
 
 After you have collected the sentences or word tokens from a text into a vector, you will send them to the ```get_sentiment``` function which will asses the sentiment of each word or sentence. This function takes two arguments: a character vector (of sentences or words) and a "method."  The method you select determines which of the four available sentiment extraction methods to employ.  In the example that follows below, the "syuzhet" (default) method is called.  
 
-Other methods include "bing", "afinn", "nrc", and "stanford"). The documentation for the function provides bibliographic citations for the dictionaries. To see the documentation, simply enter ```?get_sentiment``` into your console.
+Other methods include "bing", "afinn", "nrc", and "stanford". The documentation for the function provides bibliographic citations for the dictionaries. To see the documentation, simply enter ```?get_sentiment``` into your console.
 
 ```{r} 
 syuzhet_vector <- get_sentiment(poa_v, method="syuzhet")
@@ -90,7 +90,7 @@ head(bing_vector)
 afinn_vector <- get_sentiment(poa_v, method="afinn")
 head(afinn_vector)
 
-nrc_vector <- get_sentiment(poa_v, method="nrc")
+nrc_vector <- get_sentiment(poa_v, method="nrc", lang = "english")
 head(nrc_vector)
 
 # Stanford Example: Requires installation of coreNLP and path to directory
@@ -220,6 +220,8 @@ The ```Syuzhet``` package provides two alternatives to percentage-based comparis
 
 ## get_transformed_values
 
+NOTE: ```get_transformed_values``` is maintained for legacy purposes.  Users should consider using ```get_dct_transform()``` instead. 
+
 Shape smoothing and normalization using a Fourier based transformation and low pass filtering is achieved using the ```get_transformed_values``` function as shown below. The various arguments are described in the help documentation.
 
 ```{r, fig.width = 6} 
@@ -308,7 +310,7 @@ Or you can examine only the positive and negative valence:
 pander::pandoc.table(nrc_data[, 9:10])
 ```
 
-These last two columns are the ones used by the ```nrc``` method in the ```get_sentiment`` function discussed above. To calculate a single value of positive or negative valence for each sentence, the values in the negative column are converted to negative numbers and then added to the values in the positive column, like this.  
+These last two columns are the ones used by the ```nrc``` method in the ```get_sentiment``` function discussed above. To calculate a single value of positive or negative valence for each sentence, the values in the negative column are converted to negative numbers and then added to the values in the positive column, like this.  
 
 ```{r}
 valence <- (nrc_data[, 9]*-1) + nrc_data[, 10]
@@ -422,15 +424,45 @@ plot(poa_line[poa_sample],
 lines(bov_line[bov_sample], col="red")
 ```
 
-Collecting sentiment results on large volumes of data can be time consuming. One could call get_sentiment and provide cluster information from parallel::makeCluster() to achieve results quicker on systems with multiple cores. For example, on Madame Bovary as above:
+## Multilingual Sentiment Lexicons
+In version 1.0.4, support for sentiment detection in several languages was added by using the expanded NRC lexicon from Saif Mohammed.  The lexicon includes sentiment values for 13,901 words in each of the following languages: 
+
+Arabic, Basque, Bengali, Catalan, Chinese_simplified, Chinese_traditional, Danish, Dutch, English, Esperanto, Finnish, French, German, Greek, Gujarati, Hebrew, Hindi, Irish, Italian, Japanese, Latin, Marathi, Persian, Portuguese, Romanian, Russian, Somali, Spanish, Sudanese, Swahili, Swedish, Tamil, Telugu, Thai, Turkish, Ukranian, Urdu, Vietnamese, Welsh, Yiddish, Zulu.
+
+At the time of this release, Syuzhet will only work with languages that use Latin character sets.  This effectively means that "Arabic", "Bengali", "Chinese_simplified", "Chinese_traditional", "Greek", "Gujarati", "Hebrew", "Hindi", "Japanese", "Marathi", "Persian", "Russian", "Tamil", "Telugu", "Thai", "Ukranian", "Urdu", "Yiddish" are not supported even though these languages are part of the extended NRC dictionary.
+
+It is also important to note that the sentence tokenizer inside the get_sentences() function is inherently biased for English syntax. Care should be taken to insure that the language being used is parsed properly by the get_sentences() function.  It may be advisable to skip sentence tokenization in favor of word based tokenization using the get_tokens() function.  Below is an example of how to call the Spanish lexicon to detect sentiment in *Don Quixote*.
 
 ```{r}
-require(parallel)
-cl <- makeCluster(detectCores()-1)
-clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment", "get_nrc_values", "parLapply"))
+path_to_a_text_file <- system.file("extdata", "quijote.txt",package = "syuzhet")
+my_text <- get_text_as_string(path_to_a_text_file)
+char_v <- get_sentences(my_text)
+method <- "nrc"
+lang <- "spanish"
+my_text_values <- get_sentiment(char_v, method=method, language=lang)
+my_text_values[1:10]
+```
 
+## Custom Sentiment Lexicons
+In Version 1.0.4, functionality to allow uses to load their own custom sentiment lexicons was added to the get_sentiments() function.  To work, users need to create their custom lexicon as a data frame with at least two columns named "word" and "value."  Here is a simplified example:
+
+```{r}
+my_text <- "I love when I see something beautiful.  I hate it when ugly feelings creep into my head."
+char_v <- get_sentences(my_text)
+method <- "custom"
+custom_lexicon <- data.frame(word=c("love", "hate", "beautiful", "ugly"), value=c(1,-1,1, -1))
+my_custom_values <- get_sentiment(char_v, method = method, lexicon = custom_lexicon)
+my_custom_values
+```
+
+## Parallelization
+Collecting sentiment results on large volumes of data can be time consuming. One could call ```get_sentiment``` and provide cluster information from ```parallel::makeCluster()``` to achieve results quicker on systems with multiple cores. For example, on *Madame Bovary* as above:
+
+```{r parallel_get_sentiment}
+require(parallel)
+cl <- makeCluster(2) # or detect_cores() - 1
+clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment", "get_nrc_values", "parLapply"))
 bovary_sentiment_par <- get_sentiment(bovary_v, cl=cl)
 bovary_nrc_par <- get_sentiment(bovary_v, method='nrc', cl=cl)
-
 stopCluster(cl)
 ```

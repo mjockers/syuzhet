@@ -67,7 +67,7 @@ poa_word_v <- get_tokens(joyces_portrait, pattern = "\\W")
 
 After you have collected the sentences or word tokens from a text into a vector, you will send them to the ```get_sentiment``` function which will asses the sentiment of each word or sentence. This function takes two arguments: a character vector (of sentences or words) and a "method."  The method you select determines which of the four available sentiment extraction methods to employ.  In the example that follows below, the "syuzhet" (default) method is called.  
 
-Other methods include "bing", "afinn", "nrc", and "stanford"). The documentation for the function provides bibliographic citations for the dictionaries. To see the documentation, simply enter ```?get_sentiment``` into your console.
+Other methods include "bing", "afinn", "nrc", and "stanford". The documentation for the function provides bibliographic citations for the dictionaries. To see the documentation, simply enter ```?get_sentiment``` into your console.
 
 ```{r} 
 syuzhet_vector <- get_sentiment(poa_v, method="syuzhet")
@@ -220,7 +220,7 @@ The ```Syuzhet``` package provides two alternatives to percentage-based comparis
 
 ## get_transformed_values
 
-NOTE: ```get_transformed_values```is maintained for legacy purposes.  Users should consider using ```get_dct_transform()``` instead. 
+NOTE: ```get_transformed_values``` is maintained for legacy purposes.  Users should consider using ```get_dct_transform()``` instead. 
 
 Shape smoothing and normalization using a Fourier based transformation and low pass filtering is achieved using the ```get_transformed_values``` function as shown below. The various arguments are described in the help documentation.
 
@@ -310,7 +310,7 @@ Or you can examine only the positive and negative valence:
 pander::pandoc.table(nrc_data[, 9:10])
 ```
 
-These last two columns are the ones used by the ```nrc``` method in the ```get_sentiment`` function discussed above. To calculate a single value of positive or negative valence for each sentence, the values in the negative column are converted to negative numbers and then added to the values in the positive column, like this.  
+These last two columns are the ones used by the ```nrc``` method in the ```get_sentiment``` function discussed above. To calculate a single value of positive or negative valence for each sentence, the values in the negative column are converted to negative numbers and then added to the values in the positive column, like this.  
 
 ```{r}
 valence <- (nrc_data[, 9]*-1) + nrc_data[, 10]
