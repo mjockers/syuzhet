@@ -9,8 +9,10 @@ get_sentiment_dictionary(dictionary = "syuzhet", language = "english")
 \arguments{
 \item{dictionary}{A string indicating which sentiment dictionary to return.  Options include "syuzhet", "bing", "afinn", and "nrc".}
 
-\item{language}{A string indicating the language to choose if using the NRC dictionary and a language other than English
-#' @return A \code{\link[base]{data.frame}}}
+\item{language}{A string indicating the language to choose if using the NRC dictionary and a language other than English}
+}
+\value{
+A \code{\link[base]{data.frame}}
 }
 \description{
 Get the sentiment dictionaries used in \pkg{syuzhet}.

@@ -38,13 +38,13 @@ syuzhet_vector <- get_sentiment(poa_v, method="syuzhet")
 head(syuzhet_vector)
 
 ## ------------------------------------------------------------------------
-bing_vector <- get_sentiment(poa_v, method="bing")
+bing_vector <- get_sentiment(poa_v, method = "bing")
 head(bing_vector)
 
-afinn_vector <- get_sentiment(poa_v, method="afinn")
+afinn_vector <- get_sentiment(poa_v, method = "afinn")
 head(afinn_vector)
 
-nrc_vector <- get_sentiment(poa_v, method="nrc", lang = "english")
+nrc_vector <- get_sentiment(poa_v, method = "nrc", lang = "english")
 head(nrc_vector)
 
 # Stanford Example: Requires installation of coreNLP and path to directory
@@ -301,4 +301,28 @@ clusterExport(cl = cl, c("get_sentiment", "get_sent_values", "get_nrc_sentiment"
 bovary_sentiment_par <- get_sentiment(bovary_v, cl=cl)
 bovary_nrc_par <- get_sentiment(bovary_v, method='nrc', cl=cl)
 stopCluster(cl)
+
+## ---- fig.height=8, fig.width = 6----------------------------------------
+path_to_a_text_file <- system.file("extdata", "bovary.txt", package = "syuzhet")
+sample <- get_text_as_string(path_to_a_text_file)
+sample_sents <- get_sentences(sample)
+test <- lapply(sample_sents, mixed_messages)
+entropes <- do.call(rbind, test)
+out <- data.frame(entropes, sample_sents, stringsAsFactors = FALSE)
+simple_plot(out$entropy,title = "Emotional Entropy in Madame Bovary",legend_pos = "top")
+
+## ---- fig.height=8, fig.width = 6----------------------------------------
+simple_plot(out$metric_entropy,title = "Metric Entropy in Madame Bovary",legend_pos = "bottom")
+
+## ------------------------------------------------------------------------
+library(dplyr)
+sorted <- arrange(out, desc(entropy)) %>%
+  select(entropy, sample_sents)
+sorted[7:10, ]
+
+## ------------------------------------------------------------------------
+library(dplyr)
+metric_sorted <- arrange(out, desc(metric_entropy)) %>%
+  select(metric_entropy, sample_sents)
+metric_sorted[4:7,]
 

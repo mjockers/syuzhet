@@ -436,7 +436,7 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
 #' Get the sentiment dictionaries used in \pkg{syuzhet}.
 #' @param dictionary A string indicating which sentiment dictionary to return.  Options include "syuzhet", "bing", "afinn", and "nrc".
 #' @param language A string indicating the language to choose if using the NRC dictionary and a language other than English
-#' #' @return A \code{\link[base]{data.frame}} 
+#' @return A \code{\link[base]{data.frame}} 
 #' @examples
 #' get_sentiment_dictionary()
 #' get_sentiment_dictionary('bing')
@@ -456,4 +456,49 @@ get_sentiment_dictionary <- function(dictionary = 'syuzhet', language = 'english
       dict <- dplyr::filter_(dict, ~lang == language)
     }
     return(dict)
+}
+
+#' Mixed Messages
+#' @description
+#' This function calculates the "emotional entropy" of a string based on the amount of conflicting valence. Emotional entropy is a measure of unpredictability and surprise based on the consistency or inconsistency of the emotional language in a given string. A string with conflicting emotional language may be said to express a "mixed message."
+#' @param string A string of words
+#' @param remove_neutral Logical indicating whether or not to remove words with neutral valence before computing the emotional entropy of the string.  Default is TRUE
+#' @return A \code{\link[base]{vector}} containing two named values
+#' @examples
+#' text_v <- "That's the love and the hate of it" 
+#' mixed_messages(text_v) # [1] 1.0 0.5 = high (1.0, 0.5) entropy
+#' mixed_messages(text_v, TRUE)
+
+#' # Example of a predictable message i.e. no surprise
+#' text_v <- "I absolutley love, love, love it." 
+#' mixed_messages(text_v) # [1] 0 0 = low entropy e.g. totally consistent emotion, i.e. no surprise
+#' mixed_messages(text_v, FALSE)
+
+#' # A more realistic example with a lot of mixed emotion.
+#' text_v <- "I loved the way he looked at me but I hated that he was no longer my lover"
+#' mixed_messages(text_v) # [1] 0.91829583 0.05101644 pretty high entropy.
+#' mixed_messages(text_v, FALSE)
+
+#' # A more realistic example without a lot of mixed emotion.
+#' text_v <- "I loved the way he looked at me and I was happy that he was my lover."
+#' mixed_messages(text_v) # [1] 0 0 low entropy, no surprise.
+#' mixed_messages(text_v, FALSE)
+
+#' # An urealistic example with a lot of mixed emotion.
+#' text_v <- "I loved, hated and despised the way he looked at me and 
+#' I was happy as hell that he was my white hot lover."
+#' mixed_messages(text_v)
+#' mixed_messages(text_v, FALSE)
+#' @export
+
+mixed_messages <- function(string, remove_neutral = TRUE){
+  tokens <- get_tokens(string)
+  sen <- sign(get_sentiment(tokens))
+  if(remove_neutral){
+    sen <- sen[sen != 0] # By default remove neutral values. 
+  }
+  freqs <- table(sen)/length(sen)
+  entropy <- -sum(freqs * log2(freqs)) # shannon-entropy
+  metric_entropy <- entropy/length(tokens) # metric-entropy
+  c(entropy = entropy, metric_entropy = metric_entropy)
 }
