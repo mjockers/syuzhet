@@ -221,19 +221,10 @@ get_nrc_values <- function(word_vector, language = "english", lexicon = NULL){
   }
   # if (! all(c("word", "sentiment", "value") %in% names(lexicon)))
   #    stop("lexicon must have a 'word', a 'sentiment' and a 'value' field")
-
-  data <- dplyr::filter_(lexicon, ~word %in% word_vector)
-  data <- dplyr::group_by_(data, ~sentiment)
-  data <- dplyr::summarise_at(data, "value", sum)
-
-  all_sent <- unique(lexicon$sentiment)
-  sent_present <- unique(data$sentiment)
-  sent_absent  <- setdiff(all_sent, sent_present)
-  if (length(sent_absent) > 0) {
-    missing_data <- dplyr::data_frame(sentiment = sent_absent, value = 0)
-    data <- rbind(data, missing_data)
-  }
-  tidyr::spread_(data, "sentiment", "value")
+  
+  word_vector <- unique(word_vector)
+  lexicon <- split(lexicon, lexicon$sentiment)
+  vapply(lexicon, function(l) sum(l$value[l$word %in% word_vector]), 0)
 }
 
 #' Fourier Transform and Reverse Transform Values
@@ -414,14 +405,18 @@ simple_plot <- function (raw_values, title = "Syuzhet Plot", legend_pos = "top",
 get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100, scale_vals = FALSE, scale_range = FALSE){
   if (!is.numeric(raw_values)) 
     stop("Input must be an numeric vector")
-  if (low_pass_size > length(raw_values)) 
+  if (low_pass_size > (l <- length(raw_values)))
     stop("low_pass_size must be less than or equal to the length of raw_values input vector")
-  values_dct <- dtt::dct(raw_values, variant = 2)
-  keepers <- values_dct[1:low_pass_size]
-  padded_keepers <- c(keepers, rep(0, x_reverse_len-low_pass_size))
-  dct_out <- dtt::dct(padded_keepers, inverted = T)
-  if (scale_vals & scale_range) 
+  if (scale_vals && scale_range) 
     stop("ERROR: scale_vals and scale_range cannot both be true.")
+  dct_out <- numeric(x_reverse_len)
+  s <- (seq_len(l) - .5) * pi / l
+  for(i in seq_len(low_pass_size)) dct_out[i] <- sum(raw_values * cos(s * (i - 1)))
+  raw_values <- dct_out[-1]
+  b <- dct_out[1] * .5
+  s <- seq_len(x_reverse_len - 1) * pi / x_reverse_len
+  for(i in seq_len(x_reverse_len)) dct_out[i] <- sum(raw_values * cos(s * (i - .5)))
+  dct_out <- (b + dct_out) * 2 / x_reverse_len
   if (scale_vals) {
     return(scale(dct_out))
   }
