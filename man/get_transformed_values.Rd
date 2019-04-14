@@ -4,8 +4,9 @@
 \alias{get_transformed_values}
 \title{Fourier Transform and Reverse Transform Values}
 \usage{
-get_transformed_values(raw_values, low_pass_size = 2, x_reverse_len = 100,
-  padding_factor = 2, scale_vals = FALSE, scale_range = FALSE)
+get_transformed_values(raw_values, low_pass_size = 2,
+  x_reverse_len = 100, padding_factor = 2, scale_vals = FALSE,
+  scale_range = FALSE)
 }
 \arguments{
 \item{raw_values}{the raw sentiment values calculated for each sentence}
