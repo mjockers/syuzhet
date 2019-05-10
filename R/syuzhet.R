@@ -119,6 +119,7 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
     # lexicon <- nrc[which(nrc$lang == language & nrc$sentiment %in% c("positive", "negative")),]
     lexicon <- dplyr::filter_(nrc, ~lang == tolower(language), ~sentiment %in% c("positive", "negative"))
     lexicon[which(lexicon$sentiment == "negative"), "value"] <- -1
+    lexicon$word <- tolower(lexicon$word)
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   } 
   else if(method == "custom"){
