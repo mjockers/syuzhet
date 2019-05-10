@@ -95,7 +95,7 @@ replace_curly <- function(x, ...){
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, language = "english", lexicon = NULL){
+get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, language = "english", lexicon = NULL, regex = "[^A-Za-z']+"){
   language <- tolower(language)
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford", "custom")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
@@ -105,7 +105,7 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
     char_v <- gsub("-", "", char_v) # syuzhet lexicon removes hyphens from compound words.
   }
   if(method == "afinn" || method == "bing" || method == "syuzhet"){
-    word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
+    word_l <- strsplit(tolower(char_v), regex)
     if(is.null(cl)){
       result <- unlist(lapply(word_l, get_sent_values, method))
     }
@@ -115,14 +115,14 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
   }
   else if(method == "nrc"){ 
     # TODO Try parallelize nrc sentiment
-    word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
+    word_l <- strsplit(tolower(char_v), regex)
     # lexicon <- nrc[which(nrc$lang == language & nrc$sentiment %in% c("positive", "negative")),]
     lexicon <- dplyr::filter_(nrc, ~lang == tolower(language), ~sentiment %in% c("positive", "negative"))
     lexicon[which(lexicon$sentiment == "negative"), "value"] <- -1
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   } 
   else if(method == "custom"){
-    word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
+    word_l <- strsplit(tolower(char_v), regex)
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   }
   else if(method == "stanford") {
