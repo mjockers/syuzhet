@@ -15,12 +15,16 @@ get_text_as_string <- function(path_to_file){
 #' Parses a string into a vector of word tokens.
 #' @param text_of_file A Text String
 #' @param pattern A regular expression for token breaking
+#' @param lowercase should tokens be converted to lowercase. Default equals TRUE
 #' @return A Character Vector of Words
 #' @export
 #' 
-get_tokens <- function(text_of_file, pattern = "\\W"){
+get_tokens <- function(text_of_file, pattern = "\\W", lowercase = TRUE){
+  if(lowercase){
+    text_of_file <- tolower(text_of_file)
+  }
   tokens <- unlist(strsplit(text_of_file, pattern))
-  tolower(tokens[which(tokens != "")])
+  tokens[which(tokens != "")]
 }
 
 #' Sentence Tokenization
@@ -80,6 +84,8 @@ replace_curly <- function(x, ...){
 #' @param cl Optional, for parallel sentiment analysis.
 #' @param path_to_tagger local path to location of Stanford CoreNLP package
 #' @param lexicon a data frame with at least two columns labeled "word" and "value."
+#' @param regex A regular expression for splitting words.  Default is "[^A-Za-z']+"
+#' @param lowercase should tokens be converted to lowercase. Default equals TRUE
 #' @references Bing Liu, Minqing Hu and Junsheng Cheng. "Opinion Observer: Analyzing and Comparing Opinions on the Web." Proceedings of the 14th International World Wide Web conference (WWW-2005), May 10-14, 2005, Chiba, Japan.  
 #' 
 #' @references Minqing Hu and Bing Liu. "Mining and Summarizing Customer Reviews." Proceedings of the ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD-2004), Aug 22-25, 2004, Seattle, Washington, USA.  See: http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon
@@ -95,7 +101,10 @@ replace_curly <- function(x, ...){
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
 #' @export
 #' 
-get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, language = "english", lexicon = NULL, regex = "[^A-Za-z']+"){
+get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, language = "english", lexicon = NULL, regex = "[^A-Za-z']+", lowercase = TRUE){
+  if(lowercase == TRUE){
+    char_v <- tolower(char_v)
+  }
   language <- tolower(language)
   if(is.na(pmatch(method, c("syuzhet", "afinn", "bing", "nrc", "stanford", "custom")))) stop("Invalid Method")
   if(!is.character(char_v)) stop("Data must be a character vector.")
@@ -105,7 +114,7 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
     char_v <- gsub("-", "", char_v) # syuzhet lexicon removes hyphens from compound words.
   }
   if(method == "afinn" || method == "bing" || method == "syuzhet"){
-    word_l <- strsplit(tolower(char_v), regex)
+    word_l <- strsplit(char_v, regex)
     if(is.null(cl)){
       result <- unlist(lapply(word_l, get_sent_values, method))
     }
@@ -115,15 +124,17 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
   }
   else if(method == "nrc"){ 
     # TODO Try parallelize nrc sentiment
-    word_l <- strsplit(tolower(char_v), regex)
+    word_l <- strsplit(char_v, regex)
     # lexicon <- nrc[which(nrc$lang == language & nrc$sentiment %in% c("positive", "negative")),]
     lexicon <- dplyr::filter_(nrc, ~lang == tolower(language), ~sentiment %in% c("positive", "negative"))
     lexicon[which(lexicon$sentiment == "negative"), "value"] <- -1
-    lexicon$word <- tolower(lexicon$word)
+    if(lowercase){
+      lexicon$word <- tolower(lexicon$word)
+    }
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   } 
   else if(method == "custom"){
-    word_l <- strsplit(tolower(char_v), regex)
+    word_l <- strsplit(char_v, regex)
     result <- unlist(lapply(word_l, get_sent_values, method, lexicon))
   }
   else if(method == "stanford") {
@@ -170,6 +181,7 @@ get_sent_values <- function(char_v, method = "syuzhet", lexicon = NULL){
 #' @param char_v A character vector
 #' @param language A string
 #' @param cl Optional, for parallel analysis
+#' @param lowercase should tokens be converted to lowercase. Default equals TRUE
 #' @return A data frame where each row represents a sentence
 #' from the original file.  The columns include one for each
 #' emotion type as well as a positive or negative valence.  
@@ -177,11 +189,14 @@ get_sent_values <- function(char_v, method = "syuzhet", lexicon = NULL){
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #'
 #' @export
-get_nrc_sentiment <- function(char_v, cl=NULL, language = "english"){
+get_nrc_sentiment <- function(char_v, cl=NULL, language = "english", lowercase = TRUE){
   if (!is.character(char_v)) stop("Data must be a character vector.")
   if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
   lexicon <- dplyr::filter_(nrc, ~lang == language) # filter lexicon to language
-  word_l <- strsplit(tolower(char_v), "[^A-Za-z']+")
+  if(lowercase){
+    char_v <- tolower(char_v)
+  }
+  word_l <- strsplit(char_v, "[^A-Za-z']+")
   
   if(is.null(cl)){
     nrc_data <- lapply(word_l, get_nrc_values, lexicon = lexicon)
