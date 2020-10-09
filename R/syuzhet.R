@@ -331,7 +331,7 @@ get_percentage_values <- function(raw_values, bins = 100){
 #' @export 
 get_stanford_sentiment <- function(text_vector, path_to_stanford_tagger){
   write(text_vector, file = file.path(getwd(), "temp_text.txt"))
-  cmd <- paste("cd ", path_to_stanford_tagger, "; java -cp \"*\" -mx5g edu.stanford.nlp.sentiment.SentimentPipeline -file ", file.path(getwd(), "temp_text.txt"), sep = "")
+  cmd <- paste("cd ", path_to_stanford_tagger, "; java -cp \"*\" -Xmx5g edu.stanford.nlp.sentiment.SentimentPipeline -file ", file.path(getwd(), "temp_text.txt"), sep = "")
   results <- system(cmd, intern = TRUE, ignore.stderr = TRUE)
   file.remove(file.path(getwd(), "temp_text.txt"))
   values <- results[seq(2, length(results), by = 2)]
