@@ -4,8 +4,13 @@
 \alias{simple_plot}
 \title{Plots simple and rolling shapes overlayed}
 \usage{
-simple_plot(raw_values, title = "Syuzhet Plot", legend_pos = "top",
-  lps = 10, window = 0.1)
+simple_plot(
+  raw_values,
+  title = "Syuzhet Plot",
+  legend_pos = "top",
+  lps = 10,
+  window = 0.1
+)
 }
 \arguments{
 \item{raw_values}{the raw sentiment values

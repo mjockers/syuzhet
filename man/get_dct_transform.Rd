@@ -4,8 +4,13 @@
 \alias{get_dct_transform}
 \title{Discrete Cosine Transformation with Reverse Transform.}
 \usage{
-get_dct_transform(raw_values, low_pass_size = 5, x_reverse_len = 100,
-  scale_vals = FALSE, scale_range = FALSE)
+get_dct_transform(
+  raw_values,
+  low_pass_size = 5,
+  x_reverse_len = 100,
+  scale_vals = FALSE,
+  scale_range = FALSE
+)
 }
 \arguments{
 \item{raw_values}{the raw sentiment values

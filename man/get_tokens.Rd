@@ -4,12 +4,14 @@
 \alias{get_tokens}
 \title{Word Tokenization}
 \usage{
-get_tokens(text_of_file, pattern = "\\\\W")
+get_tokens(text_of_file, pattern = "\\\\W", lowercase = TRUE)
 }
 \arguments{
 \item{text_of_file}{A Text String}
 
 \item{pattern}{A regular expression for token breaking}
+
+\item{lowercase}{should tokens be converted to lowercase. Default equals TRUE}
 }
 \value{
 A Character Vector of Words

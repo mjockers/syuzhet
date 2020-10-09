@@ -4,8 +4,16 @@
 \alias{get_sentiment}
 \title{Get Sentiment Values for a String}
 \usage{
-get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL,
-  cl = NULL, language = "english", lexicon = NULL)
+get_sentiment(
+  char_v,
+  method = "syuzhet",
+  path_to_tagger = NULL,
+  cl = NULL,
+  language = "english",
+  lexicon = NULL,
+  regex = "[^A-Za-z']+",
+  lowercase = TRUE
+)
 }
 \arguments{
 \item{char_v}{A vector of strings for evaluation.}
@@ -19,6 +27,10 @@ get_sentiment(char_v, method = "syuzhet", path_to_tagger = NULL,
 \item{language}{A string. Only works for "nrc" method}
 
 \item{lexicon}{a data frame with at least two columns labeled "word" and "value."}
+
+\item{regex}{A regular expression for splitting words.  Default is "[^A-Za-z']+"}
+
+\item{lowercase}{should tokens be converted to lowercase. Default equals TRUE}
 }
 \value{
 Return value is a numeric vector of sentiment values, one value for each input sentence.
