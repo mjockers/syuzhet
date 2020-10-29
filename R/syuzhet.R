@@ -99,6 +99,7 @@ replace_curly <- function(x, ...){
 #' @references Richard Socher, Alex Perelygin, Jean Wu, Jason Chuang, Christopher Manning, Andrew Ng and Christopher Potts.  "Recursive Deep Models for Semantic Compositionality Over a Sentiment Treebank Conference on Empirical Methods in Natural Language Processing" (EMNLP 2013).  See: http://nlp.stanford.edu/sentiment/
 #' 
 #' @return Return value is a numeric vector of sentiment values, one value for each input sentence.
+#' @importFrom rlang .data
 #' @export
 #' 
 get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=NULL, language = "english", lexicon = NULL, regex = "[^A-Za-z']+", lowercase = TRUE){
@@ -126,7 +127,7 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
     # TODO Try parallelize nrc sentiment
     word_l <- strsplit(char_v, regex)
     # lexicon <- nrc[which(nrc$lang == language & nrc$sentiment %in% c("positive", "negative")),]
-    lexicon <- dplyr::filter_(nrc, ~lang == tolower(language), ~sentiment %in% c("positive", "negative"))
+    lexicon <- dplyr::filter(nrc, .data$lang == tolower(language), .data$sentiment %in% c("positive", "negative"))
     lexicon[which(lexicon$sentiment == "negative"), "value"] <- -1
     if(lowercase){
       lexicon$word <- tolower(lexicon$word)
@@ -153,7 +154,8 @@ get_sentiment <- function(char_v, method = "syuzhet", path_to_tagger = NULL, cl=
 #' @return A single numerical value (positive or negative)
 #' based on the assessed sentiment in the string
 #' @export
-#'
+#' @importFrom rlang .data
+#' 
 get_sent_values <- function(char_v, method = "syuzhet", lexicon = NULL){
   if(method == "bing") {
     result <- sum(bing[which(bing$word %in% char_v), "value"])
@@ -166,7 +168,7 @@ get_sent_values <- function(char_v, method = "syuzhet", lexicon = NULL){
     result <- sum(syuzhet_dict[which(syuzhet_dict$word %in% char_v), "value"])
   }
   else if(method == "nrc" || method == "custom") {
-    data <- dplyr::filter_(lexicon, ~word %in% char_v)
+    data <- dplyr::filter(lexicon, .data$word %in% char_v)
     result <- sum(data$value)
   }
   return(result)
@@ -187,12 +189,12 @@ get_sent_values <- function(char_v, method = "syuzhet", lexicon = NULL){
 #' emotion type as well as a positive or negative valence.  
 #' The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive." 
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
-#'
+#' @importFrom rlang .data
 #' @export
 get_nrc_sentiment <- function(char_v, cl=NULL, language = "english", lowercase = TRUE){
   if (!is.character(char_v)) stop("Data must be a character vector.")
   if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
-  lexicon <- dplyr::filter_(nrc, ~lang == language) # filter lexicon to language
+  lexicon <- dplyr::filter(nrc, .data$lang == language) # filter lexicon to language
   if(lowercase){
     char_v <- tolower(char_v)
   }
@@ -230,23 +232,24 @@ get_nrc_sentiment <- function(char_v, cl=NULL, language = "english", lowercase =
 #' @param lexicon A data frame with at least the columns "word", "sentiment" and "value". If NULL, internal data will be taken.
 #' @return A vector of values for the emotions and valence
 #' detected in the input vector.
+#' @importFrom rlang .data
 #' @export
 get_nrc_values <- function(word_vector, language = "english", lexicon = NULL){
   if (is.null(lexicon)) {
-    lexicon <- dplyr::filter_(nrc, ~lang == language)
+    lexicon <- dplyr::filter(nrc, .data$lang == language)
   }
   # if (! all(c("word", "sentiment", "value") %in% names(lexicon)))
   #    stop("lexicon must have a 'word', a 'sentiment' and a 'value' field")
 
-  data <- dplyr::filter_(lexicon, ~word %in% word_vector)
-  data <- dplyr::group_by_(data, ~sentiment)
+  data <- dplyr::filter(lexicon, .data$word %in% word_vector)
+  data <- dplyr::group_by(data, .data$sentiment)
   data <- dplyr::summarise_at(data, "value", sum)
 
   all_sent <- unique(lexicon$sentiment)
   sent_present <- unique(data$sentiment)
   sent_absent  <- setdiff(all_sent, sent_present)
   if (length(sent_absent) > 0) {
-    missing_data <- dplyr::data_frame(sentiment = sent_absent, value = 0)
+    missing_data <- dplyr::tibble(sentiment = sent_absent, value = 0)
     data <- rbind(data, missing_data)
   }
   tidyr::spread_(data, "sentiment", "value")
@@ -456,6 +459,7 @@ get_dct_transform <- function(raw_values, low_pass_size = 5, x_reverse_len = 100
 #' get_sentiment_dictionary('bing')
 #' get_sentiment_dictionary('afinn')
 #' get_sentiment_dictionary('nrc', language = "spanish")
+#' @importFrom rlang .data
 #' @export
 #'
 get_sentiment_dictionary <- function(dictionary = 'syuzhet', language = 'english'){
@@ -467,7 +471,7 @@ get_sentiment_dictionary <- function(dictionary = 'syuzhet', language = 'english
         stop("Must be one of: 'syuzhet', 'bing', 'nrc', or 'afinn'")
     )
     if(dictionary == 'nrc'){
-      dict <- dplyr::filter_(dict, ~lang == language)
+      dict <- dplyr::filter(dict, .data$lang == language)
     }
     return(dict)
 }
