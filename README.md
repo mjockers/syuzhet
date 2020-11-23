@@ -26,7 +26,7 @@ Syuzhet incorporates four sentiment lexicons:
 
 The default "Syuzhet" lexicon was developed in the Nebraska Literary Lab under the direction of Matthew L. Jockers 
 
-The "afinn" lexicon was develoepd by Finn Arup Nielsen as the AFINN WORD DATABASE
+The "afinn" lexicon was developed by Finn Arup Nielsen as the AFINN WORD DATABASE
 See: See http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010
 The AFINN database of words is copyright protected and distributed under
 "Open Database License (ODbL) v1.0" http://www.opendatacommons.org/licenses/odbl/1.0/ or a similar copyleft license.
