@@ -33,12 +33,13 @@ Imports:
 LazyData: true
 Suggests:
     devtools,
-    readxl,
-    stringr,
     knitr,
     pander,
-    testthat (>= 0.9.1),
-    parallel
+    parallel,
+    readxl,
+    rmarkdown,
+    stringr,
+    testthat (>= 0.9.1)
 NeedsCompilation: no
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
