@@ -278,7 +278,7 @@ simple_plot(bovary_sentiment)
 ```
 
 ## get_nrc_sentiment
-The ```get_nrc_sentiment``` implements Saif Mohammad's NRC Emotion lexicon.  According to Mohammad, "the NRC emotion lexicon is a list of words and their associations with eight emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive)" (See http://www.purl.org/net/NRCemotionlexicon).  The ```get_nrc_sentiment``` function returns a data frame in which each row represents a sentence from the original file.  The columns include one for each emotion type was well as the positive or negative sentiment valence. The example below calls the function using the simple twelve sentence example passage stored in the ```s_v``` object from above.
+The ```get_nrc_sentiment``` implements Saif Mohammad's NRC Emotion lexicon.  According to Mohammad, "the NRC emotion lexicon is a list of words and their associations with eight emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive)" (See http://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm).  The ```get_nrc_sentiment``` function returns a data frame in which each row represents a sentence from the original file.  The columns include one for each emotion type was well as the positive or negative sentiment valence. The example below calls the function using the simple twelve sentence example passage stored in the ```s_v``` object from above.
 
 ```{r}
 nrc_data <- get_nrc_sentiment(s_v)
