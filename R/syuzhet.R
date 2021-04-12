@@ -176,25 +176,35 @@ get_sent_values <- function(char_v, method = "syuzhet", lexicon = NULL){
 
 #' Get Emotions and Valence from NRC Dictionary
 #' @description
-#' Calls the NRC sentiment dictionary to calculate
-#' the presence of eight different emotions and their
-#' corresponding valence in a text file.
-#' 
+#' Calls the NRC sentiment dictionary to calculate the presence of eight different emotions and their corresponding valence in a text file.
 #' @param char_v A character vector
 #' @param language A string
 #' @param cl Optional, for parallel analysis
 #' @param lowercase should tokens be converted to lowercase. Default equals TRUE
-#' @return A data frame where each row represents a sentence
-#' from the original file.  The columns include one for each
-#' emotion type as well as a positive or negative valence.  
-#' The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive." 
+#' @param lexicon a custom lexicon provided by the user and formatted as a data frame containing two columns labeled as "word" and "sentiment". The "sentiment" column must indicate either the valence of the word (using either the term "positive" or "negative") or the emotional category of the word, using one of the following terms: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust".  For example: the English word "abandon" may appear in your lexicon twice, first with a emotional category of "fear" and again with a value of "negative."  Not all words necessarily need to have a valence indicator.  See example section below
+#' @return A data frame where each row represents a sentence From the original file.  The columns include one for each emotion type as well as a positive or negative valence. The ten columns are as follows: "anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust", "negative", "positive." 
 #' @references Saif Mohammad and Peter Turney.  "Emotions Evoked by Common Words and Phrases: Using Mechanical Turk to Create an Emotion Lexicon." In Proceedings of the NAACL-HLT 2010 Workshop on Computational Approaches to Analysis and Generation of Emotion in Text, June 2010, LA, California.  See: http://saifmohammad.com/WebPages/lexicons.html
 #' @importFrom rlang .data
+#' @examples  
+#' my_lexicon <- data.frame(
+#' word = c("love","love", "hate", "hate"), 
+#' sentiment = c("positive", "joy", "negative", "anger")
+#' )
+#' my_example_text <- "I am in love with R programming.  
+#'   I hate writing code in C."
+#' s_v <- get_sentences(my_example_text)
+#' get_nrc_sentiment(s_v, lexicon=my_lexicon)
 #' @export
-get_nrc_sentiment <- function(char_v, cl=NULL, language = "english", lowercase = TRUE){
+get_nrc_sentiment <- function(char_v, cl=NULL, language = "english", lowercase = TRUE, lexicon = NULL){
   if (!is.character(char_v)) stop("Data must be a character vector.")
   if(!is.null(cl) && !inherits(cl, 'cluster')) stop("Invalid Cluster")
-  lexicon <- dplyr::filter(nrc, .data$lang == language) # filter lexicon to language
+  if(is.null(lexicon)){
+    lexicon <- dplyr::filter(nrc, .data$lang == language) # select the built in NRC lexicon and filter to language
+  } else { # check that the user's custom dictionary meets specs and bind a value column so format matches that of the NRC dictionary.
+    if (! all(c("word", "sentiment") %in% colnames(lexicon)))
+      stop("custom lexicon must have a 'word', a 'sentiment' and a 'value' column")
+    lexicon <- dplyr::bind_cols(lexicon, value = 1) # to match the formatting of the NRC lexicon
+  }
   if(lowercase){
     char_v <- tolower(char_v)
   }
@@ -220,6 +230,8 @@ get_nrc_sentiment <- function(char_v, cl=NULL, language = "english", lowercase =
     "negative", 
     "positive"
   )
+  missing_cols <- setdiff(my_col_order, names(result_df))
+  result_df[missing_cols] <- 0
   result_df[, my_col_order]
 }
 
@@ -238,8 +250,8 @@ get_nrc_values <- function(word_vector, language = "english", lexicon = NULL){
   if (is.null(lexicon)) {
     lexicon <- dplyr::filter(nrc, .data$lang == language)
   }
-  # if (! all(c("word", "sentiment", "value") %in% names(lexicon)))
-  #    stop("lexicon must have a 'word', a 'sentiment' and a 'value' field")
+  if (! all(c("word", "sentiment", "value") %in% colnames(lexicon)))
+    stop("custom lexicon must have a 'word', a 'sentiment' and a 'value' column")
 
   data <- dplyr::filter(lexicon, .data$word %in% word_vector)
   data <- dplyr::group_by(data, .data$sentiment)
