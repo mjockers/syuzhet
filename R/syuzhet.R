@@ -264,7 +264,7 @@ get_nrc_values <- function(word_vector, language = "english", lexicon = NULL){
     missing_data <- dplyr::tibble(sentiment = sent_absent, value = 0)
     data <- rbind(data, missing_data)
   }
-  tidyr::spread_(data, "sentiment", "value")
+  tidyr::spread(data, "sentiment", "value")
 }
 
 #' Fourier Transform and Reverse Transform Values
