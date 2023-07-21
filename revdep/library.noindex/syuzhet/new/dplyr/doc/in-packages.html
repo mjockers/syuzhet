@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Using dplyr in packages</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Using dplyr in packages</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<p>This vignette is aimed at package authors who use dplyr in their
+packages. We will discuss best practices learned over the years to avoid
+<code>R CMD check</code> notes and warnings, and how to handle when
+dplyr deprecates functions.</p>
+<div id="join-helpers" class="section level2">
+<h2>Join helpers</h2>
+<p>As of dplyr 1.1.0, we’ve introduced <code>join_by()</code> along 4
+helpers for performing various types of joins:</p>
+<ul>
+<li><p><code>closest()</code></p></li>
+<li><p><code>between()</code></p></li>
+<li><p><code>within()</code></p></li>
+<li><p><code>overlaps()</code></p></li>
+</ul>
+<p><code>join_by()</code> implements a domain specific language (DSL)
+for joins, and internally interprets calls to these functions.</p>
+<p>You’ll notice that <code>dplyr::closest()</code> isn’t an exported
+function from dplyr (<code>dplyr::between()</code> and
+<code>base::within()</code> do happen to be preexisting functions). If
+you use <code>closest()</code> in your package, then this will cause an
+<code>R CMD check</code> note letting you know that you’ve used a symbol
+that doesn’t belong to any package.</p>
+<p>To silence this, place <code>utils::globalVariables(&quot;closest&quot;)</code>
+in a source file in your package (but outside of any function). dbplyr
+does a similar thing for SQL functions, so you can see an example of
+that <a href="https://github.com/tidyverse/dbplyr/blob/7edf5d607fd6b0b897721ea96d1c9ca9401f0f9b/R/backend-redshift.R#L144">here</a>.</p>
+<p>You may also have to add utils to your package Imports, even though
+it is a base package. You can do that easily with
+<code>usethis::use_package(&quot;utils&quot;)</code>.</p>
+</div>
+<div id="data-masking-and-tidy-selection-notes" class="section level2">
+<h2>Data masking and tidy selection NOTEs</h2>
+<p>If you’re writing a package and you have a function that uses data
+masking or tidy selection:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>my_summary_function <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(grp, x, y) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(x <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(grp) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">y =</span> <span class="fu">mean</span>(y), <span class="at">n =</span> <span class="fu">n</span>())</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>You’ll get an <code>NOTE</code> because <code>R CMD check</code>
+doesn’t know that dplyr functions use tidy evaluation:</p>
+<pre><code>N  checking R code for possible problems
+   my_summary_function: no visible binding for global variable ‘grp’, ‘x’, ‘y’
+   Undefined global functions or variables:
+     grp x y</code></pre>
+<p>To eliminate this note:</p>
+<ul>
+<li>For data masking, import <code>.data</code> from <a href="https://rlang.r-lib.org/">rlang</a> and then use
+<code>.data$var</code> instead of <code>var</code>.</li>
+<li>For tidy selection, use <code>&quot;var&quot;</code> instead of
+<code>var</code>.</li>
+</ul>
+<p>That yields:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @importFrom rlang .data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>my_summary_function <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  data <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">&quot;grp&quot;</span>, <span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(.data<span class="sc">$</span>x <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(.data<span class="sc">$</span>grp) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">y =</span> <span class="fu">mean</span>(.data<span class="sc">$</span>y), <span class="at">n =</span> <span class="fu">n</span>())</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>For more about programming with dplyr, see
+<code>vignette(&quot;programming&quot;, package = &quot;dplyr&quot;)</code>.</p>
+</div>
+<div id="deprecation" class="section level2">
+<h2>Deprecation</h2>
+<p>This section is focused on updating package code to deal with
+backwards incompatible changes in dplyr. We do try and minimize backward
+incompatible changes as much as possible, but sometimes they are
+necessary in order to radically simplify existing code, or unlock a lot
+of potential value in the future.</p>
+<p>We will start with some general advice about supporting multiple
+versions of dplyr at once, and then we will discuss some specific
+changes in dplyr.</p>
+<div id="multiple-dplyr-versions" class="section level3">
+<h3>Multiple dplyr versions</h3>
+<p>Ideally, when we introduce a breaking change you’ll want to make sure
+that your package works with both the released version and the
+development version of dplyr. This is typically a little bit more work,
+but has two big advantages:</p>
+<ul>
+<li><p>It’s more convenient for your users, since your package will work
+for them regardless of what version of dplyr they have
+installed.</p></li>
+<li><p>It’s easier on CRAN since it doesn’t require a massive
+coordinated release of multiple packages.</p></li>
+</ul>
+<p>If we break your package, we will typically send you a pull request
+that implements a patch before releasing the next version of dplyr. Most
+of the time, this patch will be backwards compatible with older versions
+of dplyr as well. Ideally, you’ll accept this patch and submit a new
+version of your package to CRAN before the new version of dplyr is
+released.</p>
+<p>To make code work with multiple versions of a package, your first
+tool is the simple if statement:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (utils<span class="sc">::</span><span class="fu">packageVersion</span>(<span class="st">&quot;dplyr&quot;</span>) <span class="sc">&gt;</span> <span class="st">&quot;0.5.0&quot;</span>) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># code for new version</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># code for old version</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Always condition on <code>&gt; current-version</code>, not
+<code>&gt;= next-version</code> because this will ensure that this
+branch is also used for the development version of the package. For
+example, if the current release is version <code>&quot;0.5.0&quot;</code>, the
+development version will be <code>&quot;0.5.0.9000&quot;</code>.</p>
+<p>This typically works well if the branch for the “new version”
+introduces a new argument or has a slightly different return value.</p>
+<p>This <em>doesn’t</em> work if we’ve introduced a new function that
+you need to switch to, like:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (utils<span class="sc">::</span><span class="fu">packageVersion</span>(<span class="st">&quot;dplyr&quot;</span>) <span class="sc">&gt;</span> <span class="st">&quot;1.0.10&quot;</span>) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">reframe</span>(df, <span class="at">x =</span> <span class="fu">unique</span>(x))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(df, <span class="at">x =</span> <span class="fu">unique</span>(x))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>In this case, when checks are run with dplyr 1.0.10 you’ll get a
+warning about using a function from dplyr that doesn’t exist
+(<code>reframe()</code>) even though that branch will never run. You can
+get around this by using <code>utils::getFromNamespace()</code> to
+indirectly call the new dplyr function:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (utils<span class="sc">::</span><span class="fu">packageVersion</span>(<span class="st">&quot;dplyr&quot;</span>) <span class="sc">&gt;</span> <span class="st">&quot;1.0.10&quot;</span>) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  utils<span class="sc">::</span><span class="fu">getFromNamespace</span>(<span class="st">&quot;reframe&quot;</span>, <span class="st">&quot;dplyr&quot;</span>)(df, <span class="at">x =</span> <span class="fu">unique</span>(x))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarise</span>(df, <span class="at">x =</span> <span class="fu">unique</span>(x))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>As soon as the next version of dplyr is actually on CRAN (1.1.0 in
+this case), you should feel free to remove this code and unconditionally
+use <code>reframe()</code> as long as you also require
+<code>dplyr (&gt;= 1.1.0)</code> in your <code>DESCRIPTION</code> file.
+This is typically not very painful for users, because they’d already be
+updating your package when they run into this requirement, so updating
+one more package along the way is generally easy. It also helps them get
+the latest bug fixes and features from dplyr.</p>
+<p>Sometimes, it isn’t possible to avoid a call to
+<code>@importFrom</code>. For example you might be importing a generic
+so that you can define a method for it, but that generic has moved
+between packages. In this case, you can take advantage of a little-known
+feature in the <code>NAMESPACE</code> file: you can include raw
+<code>if</code> statements.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; @rawNamespace</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; if (utils::packageVersion(&quot;dplyr&quot;) &gt; &quot;0.5.0&quot;) {</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;   importFrom(&quot;dbplyr&quot;, &quot;build_sql&quot;)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; } else {</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39;   importFrom(&quot;dplyr&quot;, &quot;build_sql&quot;)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&#39; }</span></span></code></pre></div>
+</div>
+<div id="deprecation-of-mutate_-and-summarise_" class="section level3">
+<h3>Deprecation of <code>mutate_*()</code> and
+<code>summarise_*()</code></h3>
+<p>The following <code>mutate()</code> and <code>summarise()</code>
+variants were deprecated in dplyr 0.7.0:</p>
+<ul>
+<li><code>mutate_each()</code>, <code>summarise_each()</code></li>
+</ul>
+<p>and the following variants were superseded in dplyr 1.0.0:</p>
+<ul>
+<li><p><code>mutate_all()</code>, <code>summarise_all()</code></p></li>
+<li><p><code>mutate_if()</code>, <code>summarise_if()</code></p></li>
+<li><p><code>mutate_at()</code>, <code>summarise_at()</code></p></li>
+</ul>
+<p>These have all been replaced by using <code>mutate()</code> or
+<code>summarise()</code> in combination with <code>across()</code>,
+which was introduced in dplyr 1.0.0.</p>
+<p>If you used <code>mutate_all()</code> or <code>mutate_each()</code>
+without supplying a selection, you should update to use
+<code>across(everything())</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate_each</span>(<span class="fu">funs</span>(as.character))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate_all</span>(<span class="fu">funs</span>(as.character))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.character))</span></code></pre></div>
+<p>If you provided a selection through <code>mutate_at()</code> or
+<code>mutate_each()</code>, then you can switch to <code>across()</code>
+with a selection:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate_each</span>(<span class="fu">funs</span>(as.character), height, mass)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate_at</span>(<span class="fu">vars</span>(height, mass), as.character)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(height, mass), as.character))</span></code></pre></div>
+<p>If you used predicates with <code>mutate_if()</code>, you can switch
+to using <code>across()</code> in combination with
+<code>where()</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate_if</span>(is.factor, as.character)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>starwars <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.factor), as.character))</span></code></pre></div>
+</div>
+</div>
+<div id="data-frame-subclasses" class="section level2">
+<h2>Data frame subclasses</h2>
+<p>If you are a package author that is <em>extending</em> dplyr to work
+with a new data frame subclass, then we encourage you to read the
+documentation in <code>?dplyr_extending</code>. This contains advice on
+how to implement the minimal number of extension generics possible to
+get maximal compatibility across dplyr’s verbs.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

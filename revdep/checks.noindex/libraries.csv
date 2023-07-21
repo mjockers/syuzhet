@@ -1,0 +1,6 @@
+package,old,new,delta
+syuzhet,1.0.6,1.0.7,*
+data.table,NA,1.14.8,*
+dplyr,NA,1.1.2,*
+stringi,NA,1.7.12,*
+zoo,NA,1.8-12,*

@@ -1,0 +1,154 @@
+pkgname <- "VOSONDash"
+source(file.path(R.home("share"), "R", "examples-header.R"))
+options(warn = 1)
+library('VOSONDash')
+
+base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+cleanEx()
+nameEx("applyCategoricalFilters")
+### * applyCategoricalFilters
+
+flush(stderr()); flush(stdout())
+
+### Name: applyCategoricalFilters
+### Title: Filter out graph vertices not in selected category
+### Aliases: applyCategoricalFilters
+
+### ** Examples
+
+## Not run: 
+##D # return a graph containing only vertices that have the vertex category 
+##D # attribute "vosonCA_Stance" value "liberal"
+##D g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
+##D 
+##D g <- applyCategoricalFilters(g, "Stance", c("liberal"))
+## End(Not run)
+
+
+
+
+cleanEx()
+nameEx("dtbGraph")
+### * dtbGraph
+
+flush(stderr()); flush(stdout())
+
+### Name: dtbGraph
+### Title: Load the package included "Divided They Blog" network graph
+### Aliases: dtbGraph
+### Keywords: internal
+
+### ** Examples
+
+## Not run: 
+##D # load the "Divided They Blog" network graph
+##D g <- dtbGraph()
+## End(Not run)
+
+
+
+
+cleanEx()
+nameEx("eawGraph")
+### * eawGraph
+
+flush(stderr()); flush(stdout())
+
+### Name: eawGraph
+### Title: Load the package included "Enviro Activist Websites 2006"
+###   network graph
+### Aliases: eawGraph
+### Keywords: internal
+
+### ** Examples
+
+## Not run: 
+##D # load the "Enviro Activist Websites 2006" network graph
+##D g <- eawGraph()
+## End(Not run)
+
+
+
+
+cleanEx()
+nameEx("getVertexCategories")
+### * getVertexCategories
+
+flush(stderr()); flush(stdout())
+
+### Name: getVertexCategories
+### Title: Get a list of vertex category attribute names and values
+### Aliases: getVertexCategories
+
+### ** Examples
+
+## Not run: 
+##D # get a list of voson vertex categories and values
+##D g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
+##D 
+##D vcats <- getVertexCategories(g)
+##D 
+##D # vcats
+##D # $Stance
+##D # [1] "conservative" "liberal"  
+## End(Not run)
+
+
+
+
+cleanEx()
+nameEx("loadPackageGraph")
+### * loadPackageGraph
+
+flush(stderr()); flush(stdout())
+
+### Name: loadPackageGraph
+### Title: Load package included network graph
+### Aliases: loadPackageGraph
+
+### ** Examples
+
+## Not run: 
+##D # load the "Divided They Blog" package included network graph by file name
+##D g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
+## End(Not run)
+
+
+
+
+cleanEx()
+nameEx("mixmat")
+### * mixmat
+
+flush(stderr()); flush(stdout())
+
+### Name: mixmat
+### Title: Create a mixing matrix
+### Aliases: mixmat
+
+### ** Examples
+
+## Not run: 
+##D # create a mixing matrix of the demonstration network based on vertex 
+##D # categorical attribute for political stance "vosonCA_Stance"
+##D g <- loadPackageGraph("DividedTheyBlog_40Alist_release.graphml")
+##D 
+##D mm <- mixmat(g, "vosonCA_Stance", use_density = FALSE)
+## End(Not run)
+
+
+
+
+### * <FOOTER>
+###
+cleanEx()
+options(digits = 7L)
+base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+grDevices::dev.off()
+###
+### Local variables: ***
+### mode: outline-minor ***
+### outline-regexp: "\\(> \\)?### [*]+" ***
+### End: ***
+quit('no')

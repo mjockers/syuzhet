@@ -1,0 +1,20 @@
+* using log directory ‘/Users/matthewjockers/Documents/syuzhet/revdep/checks.noindex/TextMiningGUI/new/TextMiningGUI.Rcheck’
+* using R version 4.2.2 (2022-10-31)
+* using platform: aarch64-apple-darwin20 (64-bit)
+* using session charset: UTF-8
+* using options ‘--no-manual --no-build-vignettes’
+* checking for file ‘TextMiningGUI/DESCRIPTION’ ... OK
+* this is package ‘TextMiningGUI’ version ‘0.3’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘TextMiningGUI’ can be installed ... ERROR
+Installation failed.
+See ‘/Users/matthewjockers/Documents/syuzhet/revdep/checks.noindex/TextMiningGUI/new/TextMiningGUI.Rcheck/00install.out’ for details.
+* DONE
+Status: 1 ERROR

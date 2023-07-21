@@ -1,0 +1,16 @@
+get_dct_transform	get_dct_transform
+get_nrc_sentiment	get_nrc_sentiment
+get_nrc_values	get_nrc_values
+get_percentage_values	get_percentage_values
+get_sentences	get_sentences
+get_sentiment	get_sentiment
+get_sentiment_dictionary	get_sentiment_dictionary
+get_sent_values	get_sent_values
+get_stanford_sentiment	get_stanford_sentiment
+get_text_as_string	get_text_as_string
+get_tokens	get_tokens
+get_transformed_values	get_transformed_values
+mixed_messages	mixed_messages
+rescale	rescale
+rescale_x_2	rescale_x_2
+simple_plot	simple_plot

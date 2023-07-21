@@ -1,0 +1,20 @@
+get_dct_transform       Discrete Cosine Transformation with Reverse
+                        Transform.
+get_nrc_sentiment       Get Emotions and Valence from NRC Dictionary
+get_nrc_values          Summarize NRC Values
+get_percentage_values   Chunk a Text and Get Means
+get_sent_values         Assigns Sentiment Values
+get_sentences           Sentence Tokenization
+get_sentiment           Get Sentiment Values for a String
+get_sentiment_dictionary
+                        Sentiment Dictionaries
+get_stanford_sentiment
+                        Get Sentiment from the Stanford Tagger
+get_text_as_string      Load Text from a File
+get_tokens              Word Tokenization
+get_transformed_values
+                        Fourier Transform and Reverse Transform Values
+mixed_messages          Mixed Messages
+rescale                 Vector Value Rescaling
+rescale_x_2             Bi-Directional x and y axis Rescaling
+simple_plot             Plots simple and rolling shapes overlayed

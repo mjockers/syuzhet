@@ -1,0 +1,181 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "disclosuR"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('disclosuR')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("conference_call_segmenter")
+> ### * conference_call_segmenter
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: conference_call_segmenter
+> ### Title: Earnings call segmenter
+> ### Aliases: conference_call_segmenter
+> 
+> ### ** Examples
+> 
+> earnings_calls_df <- conference_call_segmenter(file = system.file("inst",
++ "examples",
++ "earnings_calls", "earnings_example_01.pdf",
++ package = "disclosuR"));
+Warning in conference_call_segmenter(file = system.file("inst", "examples",  :
+  File does not exist
+> earnings_calls_df_sentiment <- conference_call_segmenter(file = system.file("inst",
++ "examples",
++ "newswire", "earnings_example_01.pdf",
++ package = "disclosuR"),
++ sentiment = TRUE);
+Warning in conference_call_segmenter(file = system.file("inst", "examples",  :
+  File does not exist
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("conference_call_segmenter_folder")
+> ### * conference_call_segmenter_folder
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: conference_call_segmenter_folder
+> ### Title: Earnings call segmenter (multiple files)
+> ### Aliases: conference_call_segmenter_folder
+> 
+> ### ** Examples
+> 
+> earnings_calls_df <- conference_call_segmenter_folder(
++ folder_path = system.file("inst",
++ "examples",
++ "earnings_calls",
++ package = "disclosuR"));
+Warning in conference_call_segmenter_folder(folder_path = system.file("inst",  :
+  File does not exist
+Folder to analyze: 
+Warning: Unknown or uninitialised column: `date`.
+> earnings_calls_df_sentiment <- conference_call_segmenter_folder(
++ folder_path = system.file("inst",
++ "examples",
++ "newswire",
++ sentiment = TRUE,
++ package = "disclosuR"));
+Warning in conference_call_segmenter_folder(folder_path = system.file("inst",  :
+  File does not exist
+Folder to analyze: 
+Warning: Unknown or uninitialised column: `date`.
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("impression_offsetting")
+> ### * impression_offsetting
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: impression_offsetting
+> ### Title: Impression offsetting
+> ### Aliases: impression_offsetting
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D impression_offsetting(event_data, press_data)
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("newswire_segmenter")
+> ### * newswire_segmenter
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: newswire_segmenter
+> ### Title: Newswire segmenter
+> ### Aliases: newswire_segmenter
+> 
+> ### ** Examples
+> 
+> newswire_df <- newswire_segmenter(
++ file = system.file("inst",
++ "examples",
++ "newswire", "newswire_example_01.pdf",
++ package = "disclosuR"));
+Warning in newswire_segmenter(file = system.file("inst", "examples", "newswire",  :
+  File does not exist
+> newswire_df_sentiment <- newswire_segmenter(
++ file = system.file("inst",
++ "examples",
++ "newswire", "newswire_example_01.pdf",
++ sentiment = TRUE,
++ package = "disclosuR"));
+Warning in newswire_segmenter(file = system.file("inst", "examples", "newswire",  :
+  File does not exist
+> 
+> 
+> 
+> cleanEx()
+> nameEx("newswire_segmenter_folder")
+> ### * newswire_segmenter_folder
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: newswire_segmenter_folder
+> ### Title: Newswire segmenter (multiple files)
+> ### Aliases: newswire_segmenter_folder
+> 
+> ### ** Examples
+> 
+> newswire_df <- newswire_segmenter_folder(
++ folder_path = system.file("inst",
++ "examples",
++ "newswire",
++ package = "disclosuR"));
+Folder to analyze: 
+> newswire_df_sentiment <- newswire_segmenter_folder(
++ folder_path = system.file("inst",
++ "examples",
++ "newswire",
++ package = "dislosuR"), sentiment = TRUE);
+Folder to analyze: 
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.335 0.027 0.365 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

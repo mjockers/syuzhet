@@ -1,0 +1,35 @@
+Package: stringi
+Version: 1.7.12
+Date: 2023-01-09
+Title: Fast and Portable Character String Processing Facilities
+Description: A collection of character string/text/natural language
+    processing tools for pattern searching (e.g., with 'Java'-like regular
+    expressions or the 'Unicode' collation algorithm), random string generation,
+    case mapping, string transliteration, concatenation, sorting, padding,
+    wrapping, Unicode normalisation, date-time formatting and parsing,
+    and many more. They are fast, consistent, convenient, and -
+    thanks to 'ICU' (International Components for Unicode) -
+    portable across all locales and platforms. Documentation about 'stringi' is
+    provided via its website at <https://stringi.gagolewski.com/> and
+    the paper by Gagolewski (2022, <doi:10.18637/jss.v103.i02>).
+URL: https://stringi.gagolewski.com/,
+        https://github.com/gagolews/stringi, https://icu.unicode.org/
+BugReports: https://github.com/gagolews/stringi/issues
+SystemRequirements: C++11, ICU4C (>= 55, optional)
+Type: Package
+Depends: R (>= 3.1)
+Imports: tools, utils, stats
+Biarch: TRUE
+License: file LICENSE
+Author: Marek Gagolewski [aut, cre, cph] (<https://orcid.org/0000-0003-0637-6028>),
+    Bartek Tartanus [ctb], and others (stringi source code);
+    Unicode, Inc. and others (ICU4C source code, Unicode Character Database)
+Maintainer: Marek Gagolewski <marek@gagolewski.com>
+RoxygenNote: 7.2.1
+Encoding: UTF-8
+NeedsCompilation: yes
+Packaged: 2023-01-09 07:28:38 UTC; gagolews
+License_is_FOSS: yes
+Repository: CRAN
+Date/Publication: 2023-01-11 10:10:02 UTC
+Built: R 4.2.0; aarch64-apple-darwin20; 2023-04-01 09:36:23 UTC; unix

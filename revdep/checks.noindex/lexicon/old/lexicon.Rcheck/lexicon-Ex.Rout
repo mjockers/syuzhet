@@ -1,0 +1,335 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "lexicon"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('lexicon')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("available_data")
+> ### * available_data
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: available_data
+> ### Title: Get Available 'lexicon' Data
+> ### Aliases: available_data
+> 
+> ### ** Examples
+> 
+> available_data()
+                                  Data
+1                              cliches
+2                         common_names
+3       constraining_loughran_mcdonald
+4                     emojis_sentiment
+5                     freq_first_names
+6                      freq_last_names
+7                       function_words
+8                      grady_augmented
+9                          hash_emojis
+10              hash_emojis_identifier
+11                      hash_emoticons
+12                      hash_grady_pos
+13                 hash_internet_slang
+14                         hash_lemmas
+15                   hash_nrc_emotions
+16               hash_sentiment_emojis
+17                hash_sentiment_huliu
+18              hash_sentiment_jockers
+19       hash_sentiment_jockers_rinker
+20    hash_sentiment_loughran_mcdonald
+21                  hash_sentiment_nrc
+22            hash_sentiment_senticnet
+23            hash_sentiment_sentiword
+24              hash_sentiment_slangsd
+25         hash_sentiment_socal_google
+26               hash_valence_shifters
+27                    key_contractions
+28 key_corporate_social_responsibility
+29                           key_grade
+30                          key_rating
+31              key_regressive_imagery
+32               key_sentiment_jockers
+33             modal_loughran_mcdonald
+34                        nrc_emotions
+35                     pos_action_verb
+36              pos_df_irregular_nouns
+37                     pos_df_pronouns
+38                   pos_interjections
+39                     pos_preposition
+40                   profanity_alvarez
+41                   profanity_arr_bad
+42                    profanity_banned
+43                    profanity_racist
+44                 profanity_zac_anger
+45                            sw_dolch
+46                          sw_fry_100
+47                         sw_fry_1000
+48                          sw_fry_200
+49                           sw_fry_25
+50                          sw_jockers
+51           sw_loughran_mcdonald_long
+52          sw_loughran_mcdonald_short
+53                           sw_lucene
+54                           sw_mallet
+55                           sw_python
+                                                                     Description
+1                                                                 Common Cliches
+2                                                             First Names (U.S.)
+3                                           Loughran-McDonald Constraining Words
+4                                                           Emoji Sentiment Data
+5                                                      Frequent U.S. First Names
+6                                                       Frequent U.S. Last Names
+7                                                                 Function Words
+8  Augmented List of Grady Ward's English Words and Mark Kantrowitz's Names List
+9                                                 Emoji Description Lookup Table
+10                                                 Emoji Identifier Lookup Table
+11                                                                     Emoticons
+12                                             Grady Ward's Moby Parts of Speech
+13                             List of Internet Slang and Corresponding Meanings
+14                                                            Lemmatization List
+15                                                             NRC Emotion Table
+16                                         Emoji Sentiment Polarity Lookup Table
+17                                                  Hu Liu Polarity Lookup Table
+18                                              Jockers Sentiment Polarity Table
+19                               Combined Jockers & Rinker Polarity Lookup Table
+20                                              Loughran-McDonald Polarity Table
+21                                                  NRC Sentiment Polarity Table
+22                                            Augmented SenticNet Polarity Table
+23                                            Augmented Sentiword Polarity Table
+24                                              SlangSD Sentiment Polarity Table
+25                                                  SO-CAL Google Polarity Table
+26                                                              Valence Shifters
+27                                                       Contraction Conversions
+28  Nadra Pencle and Irina Mălăescu's Corporate Social Responsibility Dictionary
+29                                                               Grades Data Set
+30                                                              Ratings Data Set
+31                      Colin Martindale's English Regressive Imagery Dictionary
+32                                                    Jockers Sentiment Data Set
+33                                                  Loughran-McDonald Modal List
+34                                                                  NRC Emotions
+35                                                              Action Word List
+36                                                Irregular Nouns Word Dataframe
+37                                                                      Pronouns
+38                                                                 Interjections
+39                                                             Preposition Words
+40                                  Alejandro U. Alvarez's List of Profane Words
+41                             Stackoverflow user2592414's List of Profane Words
+42                                    bannedwordlist.com's List of Profane Words
+43                                           Titus Wormer's List of Racist Words
+44                                             Zac Anger's List of Profane Words
+45                                        Leveled Dolch List of 220 Common Words
+46                                    Fry's 100 Most Commonly Used English Words
+47                                   Fry's 1000 Most Commonly Used English Words
+48                                    Fry's 200 Most Commonly Used English Words
+49                                     Fry's 25 Most Commonly Used English Words
+50                        Matthew Jocker's Expanded Topic Modeling Stopword List
+51                                          Loughran-McDonald Long Stopword List
+52                                         Loughran-McDonald Short Stopword List
+53                                                          Lucene Stopword List
+54                                                          MALLET Stopword List
+55                                                          Python Stopword List
+> available_data('hash_')
+                               Data
+9                       hash_emojis
+10           hash_emojis_identifier
+11                   hash_emoticons
+12                   hash_grady_pos
+13              hash_internet_slang
+14                      hash_lemmas
+15                hash_nrc_emotions
+16            hash_sentiment_emojis
+17             hash_sentiment_huliu
+18           hash_sentiment_jockers
+19    hash_sentiment_jockers_rinker
+20 hash_sentiment_loughran_mcdonald
+21               hash_sentiment_nrc
+22         hash_sentiment_senticnet
+23         hash_sentiment_sentiword
+24           hash_sentiment_slangsd
+25      hash_sentiment_socal_google
+26            hash_valence_shifters
+                                         Description
+9                     Emoji Description Lookup Table
+10                     Emoji Identifier Lookup Table
+11                                         Emoticons
+12                 Grady Ward's Moby Parts of Speech
+13 List of Internet Slang and Corresponding Meanings
+14                                Lemmatization List
+15                                 NRC Emotion Table
+16             Emoji Sentiment Polarity Lookup Table
+17                      Hu Liu Polarity Lookup Table
+18                  Jockers Sentiment Polarity Table
+19   Combined Jockers & Rinker Polarity Lookup Table
+20                  Loughran-McDonald Polarity Table
+21                      NRC Sentiment Polarity Table
+22                Augmented SenticNet Polarity Table
+23                Augmented Sentiword Polarity Table
+24                  SlangSD Sentiment Polarity Table
+25                      SO-CAL Google Polarity Table
+26                                  Valence Shifters
+> available_data('hash_sentiment')
+                               Data
+16            hash_sentiment_emojis
+17             hash_sentiment_huliu
+18           hash_sentiment_jockers
+19    hash_sentiment_jockers_rinker
+20 hash_sentiment_loughran_mcdonald
+21               hash_sentiment_nrc
+22         hash_sentiment_senticnet
+23         hash_sentiment_sentiword
+24           hash_sentiment_slangsd
+25      hash_sentiment_socal_google
+                                       Description
+16           Emoji Sentiment Polarity Lookup Table
+17                    Hu Liu Polarity Lookup Table
+18                Jockers Sentiment Polarity Table
+19 Combined Jockers & Rinker Polarity Lookup Table
+20                Loughran-McDonald Polarity Table
+21                    NRC Sentiment Polarity Table
+22              Augmented SenticNet Polarity Table
+23              Augmented Sentiword Polarity Table
+24                SlangSD Sentiment Polarity Table
+25                    SO-CAL Google Polarity Table
+> available_data('python')
+        Data          Description
+55 sw_python Python Stopword List
+> available_data('prof')
+                  Data                                       Description
+40   profanity_alvarez      Alejandro U. Alvarez's List of Profane Words
+41   profanity_arr_bad Stackoverflow user2592414's List of Profane Words
+42    profanity_banned        bannedwordlist.com's List of Profane Words
+43    profanity_racist               Titus Wormer's List of Racist Words
+44 profanity_zac_anger                 Zac Anger's List of Profane Words
+> available_data('English')
+                     Data
+8         grady_augmented
+31 key_regressive_imagery
+46             sw_fry_100
+47            sw_fry_1000
+48             sw_fry_200
+49              sw_fry_25
+                                                                     Description
+8  Augmented List of Grady Ward's English Words and Mark Kantrowitz's Names List
+31                      Colin Martindale's English Regressive Imagery Dictionary
+46                                    Fry's 100 Most Commonly Used English Words
+47                                   Fry's 1000 Most Commonly Used English Words
+48                                    Fry's 200 Most Commonly Used English Words
+49                                     Fry's 25 Most Commonly Used English Words
+> available_data('Stopword')
+                         Data
+50                 sw_jockers
+51  sw_loughran_mcdonald_long
+52 sw_loughran_mcdonald_short
+53                  sw_lucene
+54                  sw_mallet
+55                  sw_python
+                                              Description
+50 Matthew Jocker's Expanded Topic Modeling Stopword List
+51                   Loughran-McDonald Long Stopword List
+52                  Loughran-McDonald Short Stopword List
+53                                   Lucene Stopword List
+54                                   MALLET Stopword List
+55                                   Python Stopword List
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hash_emoticons")
+> ### * hash_emoticons
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hash_emoticons
+> ### Title: Emoticons
+> ### Aliases: hash_emoticons
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D library(data.table)
+> ##D hash_emoticons[c(':-(', '0:)')]
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hash_grady_pos")
+> ### * hash_grady_pos
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hash_grady_pos
+> ### Title: Grady Ward's Moby Parts of Speech
+> ### Aliases: hash_grady_pos grady_pos_feature
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D library(data.table)
+> ##D 
+> ##D hash_grady_pos <- grady_pos_feature(hash_grady_pos)
+> ##D hash_grady_pos['dog']
+> ##D hash_grady_pos[primary == TRUE, ]
+> ##D hash_grady_pos[primary == TRUE & space == FALSE, ]
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("hash_sentiment_nrc")
+> ### * hash_sentiment_nrc
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: hash_sentiment_nrc
+> ### Title: NRC Sentiment Polarity Table
+> ### Aliases: hash_sentiment_nrc
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D library(data.table)
+> ##D hash_sentiment_nrc[c('happy', 'angry')]
+> ## End(Not run)
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.117 0.009 0.128 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

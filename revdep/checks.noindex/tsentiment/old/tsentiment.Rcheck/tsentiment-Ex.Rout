@@ -1,0 +1,159 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "tsentiment"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('tsentiment')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("checkConfirmForUSer")
+> ### * checkConfirmForUSer
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: checkConfirmForUSer
+> ### Title: User file permission checker
+> ### Aliases: checkConfirmForUSer
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D checkConfirmForUser()
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("checkVersionForSentiment")
+> ### * checkVersionForSentiment
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: checkVersionForSentiment
+> ### Title: Check r Version
+> ### Aliases: checkVersionForSentiment
+> 
+> ### ** Examples
+> 
+> checkVersionForSentiment()
+[1] TRUE
+> 
+> 
+> 
+> cleanEx()
+> nameEx("getAnalysis")
+> ### * getAnalysis
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: getAnalysis
+> ### Title: Start analysis after defined Twitter API information
+> ### Aliases: getAnalysis
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D clearPrevious()
+> ##D getCloudSentiment()
+> ##D getBarSentiment()
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("getTweet")
+> ### * getTweet
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: getTweet
+> ### Title: Get Tweet
+> ### Aliases: getTweet
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D fetchParams <- list(headers = headers,params = params,url = APIinfo$url)
+> ##D getTweet(fetchParams)
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("setAccount")
+> ### * setAccount
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: setAccount
+> ### Title: Set Twitter Developer Account Api Information
+> ### Aliases: setAccount
+> 
+> ### ** Examples
+> 
+> params <- list(BEARER_TOKEN = "DSEFS55SSS",query = "binance")
+> setAccount(params)
+The tsentiment package will save the analysis results in png and csv format to the
+/Users/matthewjockers/Library/Application Support/org.R-project.R/R/tsentiment/results/ path.
+            Your approval is required for these transactions            
+                     Please enter using the y/n key                     
+Answer : 
+Permission Need!
+                  User file writing confirmation fail,                  
+            permission is needed to print analysis results,             
+                     you can try again to allow it.                     
+> 
+> 
+> 
+> cleanEx()
+> nameEx("writeToCSV")
+> ### * writeToCSV
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: writeToCSV
+> ### Title: Create CSV
+> ### Aliases: writeToCSV
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D writeToCSV()
+> ## End(Not run)
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  0.73 0.044 0.774 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')
