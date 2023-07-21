@@ -1,7 +1,7 @@
 Package: syuzhet
 Type: Package
 Title: Extracts Sentiment and Sentiment-Derived Plot Arcs from Text
-Version: 1.0.6
+Version: 1.0.7
 Date: 2020-10-29
 Authors@R: person("Matthew", "Jockers", email = "mjockers@gmail.com",
   role = c("aut", "cre"))
@@ -30,7 +30,6 @@ Imports:
     dplyr,
     tidyr,
     rlang
-LazyData: true
 Suggests:
     devtools,
     knitr,
