@@ -8,3 +8,4 @@
 ^revdep$
 ^data-raw$
 ^CRAN-RELEASE$
+^CRAN-SUBMISSION$
