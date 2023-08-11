@@ -3,3 +3,5 @@
 .RData
 .DS_Store
 revdep/**
+CRAN-SUBMISSION
+syuzhet.Rcheck/**
