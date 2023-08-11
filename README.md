@@ -30,7 +30,7 @@ See: See http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010
 The AFINN database of words is copyright protected and distributed under
 "Open Database License (ODbL) v1.0" http://www.opendatacommons.org/licenses/odbl/1.0/ or a similar copyleft license.
 
-The "bing" lexicon was develoepd by Minqing Hu and Bing Liu as the OPINION LEXICON
+The "bing" lexicon was developed by Minqing Hu and Bing Liu as the OPINION LEXICON
 See: http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
 
 The "nrc" lexicon was developed by Mohammad, Saif M. and Turney, Peter D. as the NRC EMOTION LEXICON.  
